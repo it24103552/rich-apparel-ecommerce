@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #000000;
+  --color-background: #ffffff;
+  --font-montserrat: "Montserrat", sans-serif;
+  /* ... existing theme variables ... */
+  --color-on-primary-fixed-variant: #e2e2e2;
+  --color-on-background: #1a1c1c;
+  --color-secondary-fixed-dim: #adabaa;
+  --color-surface-tint: #5e5e5e;
+  --color-error-container: #ffdad6;
+  --color-on-secondary-fixed-variant: #3c3b3b;
+  --color-on-tertiary-fixed-variant: #e4e2e2;
+  --color-on-secondary-fixed: #1c1b1b;
+  --color-on-tertiary: #e4e2e2;
+  --color-on-primary: #e2e2e2;
+  --color-primary-fixed: #5e5e5e;
+  --color-on-secondary: #ffffff;
+  --color-on-error-container: #410002;
+  --color-primary-fixed-dim: #474747;
+  --color-on-primary-container: #ffffff;
+  --color-on-error: #ffffff;
+  --color-outline-variant: #c6c6c6;
+  --color-surface-bright: #ffffff;
+  --color-secondary-container: #d7d4d3;
+  --color-on-surface: #1a1c1c;
+  --color-tertiary-fixed-dim: #464747;
+  --color-tertiary-fixed: #5e5e5e;
+  --color-surface: #ffffff;
+  --color-surface-container-highest: #e2e2e2;
+  --color-inverse-primary: #c6c6c6;
+  --color-error: #ba1a1a;
+  --color-surface-container-low: #f3f3f3;
+  --color-on-tertiary-container: #ffffff;
+  --color-secondary: #5f5e5e;
+  --color-on-tertiary-fixed: #ffffff;
+  --color-on-primary-fixed: #ffffff;
+  --color-tertiary: #3b3b3b;
+  --color-primary-container: #3b3b3b;
+  --color-surface-container: #eeeeee;
+  --color-outline: #777777;
+  --color-surface-dim: #dadada;
+  --color-inverse-surface: #2f3131;
+  --color-secondary-fixed: #c8c6c5;
+  --color-on-surface-variant: #474747;
+  --color-inverse-on-surface: #f1f1f1;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-variant: #e2e2e2;
+  --color-surface-container-high: #e8e8e8;
+  --color-tertiary-container: #757474;
+  --color-on-secondary-container: #1c1b1b;
+
+  --font-headline: "Montserrat", sans-serif;
+  --font-body: "Montserrat", sans-serif;
+  --font-label: "Montserrat", sans-serif;
+}
+
+::selection {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+body {
+  font-family: var(--font-montserrat);
+  @apply bg-white text-black antialiased;
+}
+
+@layer utilities {
+  .thin-chart-line {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+  }
+/* ... rest of the file ... */
+
+  .hide-scrollbar::-webkit-scrollbar,
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar,
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  /* Dark variant for black backgrounds */
+  .custom-scrollbar-dark::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .custom-scrollbar-dark::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .custom-scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@layer components {
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-1rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-up {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-in-out;
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.4s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.4s ease-out;
+  }
+
+  .animate-scale-up {
+    animation: scale-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Rich Apparel Admin — Visual Depth & Organic Layering System (UI-only) */
+  .admin-surface {
+    background-color: #FAF8F5;
+    background-image:
+      radial-gradient(circle at 90% 8%, rgba(201, 167, 122, 0.08), transparent 40%),
+      radial-gradient(circle at 8% 88%, rgba(235, 226, 214, 0.65), transparent 46%);
+  }
+
+  .admin-sidebar-surface {
+    background: linear-gradient(180deg, #FAF8F5 0%, #F6F1EA 58%, #EFE7DC 100%);
+    border-right: 1px solid #E4DED6;
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.65);
+  }
+
+  .admin-header-gradient {
+    background: linear-gradient(120deg, #FAF8F5 0%, #F6F1EA 52%, #EDE3D6 100%);
+    border: 1px solid #E4DED6;
+    box-shadow: 0 8px 30px rgba(45, 35, 25, 0.05);
+  }
+
+  .admin-organic-shape {
+    border-radius: 58% 42% 65% 35% / 45% 55% 45% 55%;
+    pointer-events: none;
+  }
+
+  .admin-organic-shape-alt {
+    border-radius: 42% 58% 48% 52% / 60% 40% 60% 40%;
+    pointer-events: none;
+  }
+
+  .admin-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FCFBF9 100%);
+    border: 1px solid #E4DED6;
+    box-shadow: 0 8px 30px rgba(45, 35, 25, 0.045);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .admin-card:hover {
+    border-color: #D6CDBF;
+    box-shadow: 0 12px 32px rgba(45, 35, 25, 0.075);
+  }
+
+  .admin-section {
+    background: linear-gradient(145deg, #FAF8F5 0%, #F4EDE3 100%);
+    border: 1px solid #EAE3D9;
+  }
+
+  .admin-table-header {
+    background: linear-gradient(90deg, #F6F1EA 0%, #EFE8DF 55%, #F6F1EA 100%);
+    border: 1px solid #E4DED6;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+}
