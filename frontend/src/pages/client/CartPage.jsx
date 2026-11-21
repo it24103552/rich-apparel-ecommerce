@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/useAuth";
 import { useCart } from "../../hooks/useCart";
 import { Button } from "../../components/common/Button";
-import { Spinner } from "../../components/common/Spinner";
+import { CartSkeleton } from "../../components/loading/ClientSkeletons";
 import { formatPrice } from "../../utils/formatters";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ChevronRight } from "lucide-react";
 
@@ -27,10 +27,6 @@ export const CartPage = () => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
-  }
-
-  if (loading) {
-    return <Spinner fullPage />;
   }
 
   const handleQuantityChange = async (item, newQuantity) => {
@@ -65,13 +61,15 @@ export const CartPage = () => {
               Shopping Bag
             </h1>
             <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.25em]">
-              {items.length} item{items.length !== 1 ? "s" : ""} • Review before checkout
+              {loading ? "Loading your bag..." : `${items.length} item${items.length !== 1 ? "s" : ""} • Review before checkout`}
             </p>
           </div>
         </div>
 
         {/* Main Content */}
-        {items.length === 0 ? (
+        {loading ? (
+          <CartSkeleton />
+        ) : items.length === 0 ? (
           // Empty State
           <div className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-16 text-center animate-fade-in">
             <div className="w-16 h-16 rounded-2xl bg-[#f5efe6] border border-[#e8dfd1] flex items-center justify-center mx-auto mb-5">

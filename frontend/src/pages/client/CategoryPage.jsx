@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight, LayoutGrid } from "lucide-react";
 import { productsService } from "../../services";
 import { ProductCard } from "../../components/common/ProductCard";
-import { Spinner } from "../../components/common/Spinner";
+import { ProductGridSkeleton } from "../../components/loading/ClientSkeletons";
 import { EmptyState } from "../../components/common/EmptyState";
 
 export const CategoryPage = () => {
@@ -149,7 +149,7 @@ export const CategoryPage = () => {
           </div>
 
           {loading ? (
-            <div className="py-20 flex justify-center"><Spinner /></div>
+            <ProductGridSkeleton />
           ) : filteredProducts.length === 0 ? (
             <EmptyState
               title="Nothing matching found"

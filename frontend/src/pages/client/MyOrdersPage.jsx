@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { useAuth } from "../../hooks/useAuth";
 import { ordersService } from "../../services";
-import { Spinner } from "../../components/common/Spinner";
+import { OrdersGridSkeleton } from "../../components/loading/ClientSkeletons";
 import { Button } from "../../components/common/Button";
 import { formatPrice, formatDate } from "../../utils/formatters";
 import {
@@ -47,8 +47,6 @@ export const MyOrdersPage = () => {
     }
   };
 
-  if (loading) return <Spinner fullPage />;
-
   const getImgUrl = (img) => {
     if (!img) return null;
     if (img.startsWith("http")) return img;
@@ -83,7 +81,9 @@ export const MyOrdersPage = () => {
                   My Orders
                 </h1>
                 <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.25em]">
-                  {orders.length} order{orders.length !== 1 ? "s" : ""} • Purchase History
+                  {loading
+                    ? "Loading Purchase History..."
+                    : `${orders.length} order${orders.length !== 1 ? "s" : ""} • Purchase History`}
                 </p>
               </div>
             </div>
@@ -96,7 +96,7 @@ export const MyOrdersPage = () => {
             </button>
           </div>
 
-          {orders.length > 0 && (
+          {!loading && orders.length > 0 && (
             <div className="grid grid-cols-3 gap-3 sm:gap-5 mt-6">
               <div className="bg-white rounded-2xl border border-neutral-100/80 px-4 sm:px-6 py-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
                 <span className="block text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 mb-1">
@@ -127,14 +127,29 @@ export const MyOrdersPage = () => {
         </motion.div>
 
         {/* Error */}
-        {error && (
+        {!loading && error && orders.length > 0 && (
           <div className="bg-red-50 text-red-700 border border-red-200/80 px-4 py-3 rounded-2xl text-[11px] font-semibold uppercase tracking-wider mb-6">
             {error}
           </div>
         )}
 
         {/* ──── 2. My Orders Section ──── */}
-        {orders.length === 0 ? (
+        {loading ? (
+          <OrdersGridSkeleton />
+        ) : error && orders.length === 0 ? (
+          <div className="py-20 px-6 text-center bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
+            <div className="w-16 h-16 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto mb-5">
+              <XCircle size={28} className="text-red-500" />
+            </div>
+            <h2 className="text-lg font-bold uppercase tracking-tight text-black mb-2">Unable to load orders</h2>
+            <p className="text-xs text-neutral-500 font-medium mb-7 max-w-sm mx-auto">
+              {error}
+            </p>
+            <Button onClick={fetchOrders} variant="dark" className="rounded-full px-10 py-3 cursor-pointer text-[10px]">
+              Retry
+            </Button>
+          </div>
+        ) : orders.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}

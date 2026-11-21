@@ -278,8 +278,13 @@ export const ClientHeader = () => {
 
           {/* Desktop Actions */}
           <div className="flex items-center gap-3 md:gap-5">
-            <button onClick={() => navigate("/orders")} className={`p-2 rounded-full transition-colors hidden sm:block group cursor-pointer ${isLightHeader ? 'hover:bg-white/10' : 'hover:bg-white/10'}`} title="Track Order">
-              <Truck className={`w-5 h-5 transition-colors ${isLightHeader ? 'text-white/80 group-hover:text-white drop-shadow-md' : 'text-white/80 group-hover:text-white drop-shadow-md'}`} />
+            <button
+              onClick={() => navigate("/orders")}
+              className={`p-2 rounded-full transition-all duration-150 active:scale-95 hidden sm:block group cursor-pointer ${location.pathname.startsWith("/orders") ? "bg-white/20 text-white" : "hover:bg-white/10"}`}
+              title="Track Order"
+              aria-label="Track Order"
+            >
+              <Truck className="w-5 h-5 transition-colors text-white/90 group-hover:text-white drop-shadow-md" />
             </button>
 
             {/* Promo / Coupons Dropdown */}

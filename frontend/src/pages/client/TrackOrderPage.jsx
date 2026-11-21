@@ -45,14 +45,30 @@ const STATUS_PILL_STYLES = {
 
 /* ───── skeleton ───── */
 const Skeleton = () => (
-  <div className="min-h-screen bg-[#fafafa]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+  <div className="min-h-screen bg-[#fafafa]" style={{ fontFamily: "'Montserrat', sans-serif" }} aria-busy="true" aria-label="Loading order tracking">
     <div className="max-w-[1200px] mx-auto px-[5%] lg:px-[6%] pt-8 md:pt-12 pb-20">
-      <div className="h-9 w-36 bg-neutral-200/60 rounded-full animate-pulse mb-6" />
-      <div className="h-14 w-72 bg-neutral-200/60 rounded-xl animate-pulse mb-8" />
-      <div className="h-44 bg-white border border-neutral-100 rounded-2xl animate-pulse mb-6" />
+      <div className="skeleton-box h-9 w-36 rounded-full mb-6" />
+      <div className="skeleton-box h-12 w-72 rounded-xl mb-8" />
+      <div className="h-44 bg-white border border-neutral-100 rounded-2xl p-6 mb-6 flex flex-col justify-between">
+        <div className="skeleton-box h-4 w-40 rounded" />
+        <div className="grid grid-cols-4 gap-4">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="skeleton-box h-12 rounded-xl" />
+          ))}
+        </div>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-7 h-72 bg-white border border-neutral-100 rounded-2xl animate-pulse" />
-        <div className="lg:col-span-5 h-72 bg-white border border-neutral-100 rounded-2xl animate-pulse" />
+        <div className="lg:col-span-7 h-72 bg-white border border-neutral-100 rounded-2xl p-6 space-y-4">
+          <div className="skeleton-box h-4 w-32 rounded" />
+          <div className="skeleton-box h-20 w-full rounded-xl" />
+          <div className="skeleton-box h-20 w-full rounded-xl" />
+        </div>
+        <div className="lg:col-span-5 h-72 bg-white border border-neutral-100 rounded-2xl p-6 space-y-4">
+          <div className="skeleton-box h-4 w-32 rounded" />
+          <div className="skeleton-box h-4 w-full rounded" />
+          <div className="skeleton-box h-4 w-3/4 rounded" />
+          <div className="skeleton-box h-10 w-full rounded-xl mt-6" />
+        </div>
       </div>
     </div>
   </div>
@@ -76,6 +92,7 @@ export const TrackOrderPage = () => {
 
   const fetchOrder = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true); else setLoading(true);
+    setError("");
     try {
       const res = await ordersService.getById(orderId);
       setOrder(res.data.data);
@@ -92,10 +109,15 @@ export const TrackOrderPage = () => {
 
   if (loading) return <Skeleton />;
   if (!order) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
-      <div className="text-center space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-4">
+      <div className="text-center space-y-4 bg-white border border-neutral-100 rounded-2xl p-8 shadow-xs max-w-md w-full">
         <p className="text-red-600 font-bold uppercase tracking-widest text-xs">{error || "Order not found"}</p>
-        <button onClick={() => navigate("/orders")} className="bg-black text-white px-8 py-3 rounded-full text-[11px] font-bold uppercase tracking-widest cursor-pointer">Back</button>
+        <div className="flex items-center justify-center gap-3 pt-2">
+          <button onClick={() => navigate("/orders")} className="bg-white border border-neutral-200 text-black px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-widest hover:border-black transition-colors cursor-pointer">Back</button>
+          {error && (
+            <button onClick={() => fetchOrder()} className="bg-black text-white px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-neutral-800 transition-colors cursor-pointer">Retry</button>
+          )}
+        </div>
       </div>
     </div>
   );

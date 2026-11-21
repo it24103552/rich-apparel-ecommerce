@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../hooks/useAuth";
 import { ordersService, reviewsService, returnsService } from "../../services";
-import { Spinner } from "../../components/common/Spinner";
+import { OrderDetailsSkeleton } from "../../components/loading/ClientSkeletons";
 import { Modal } from "../../components/common/Modal";
 import { ConfirmDialog } from "../../components/common/ConfirmDialog";
 import { Button } from "../../components/common/Button";
@@ -154,12 +154,17 @@ export const OrderDetailsPage = () => {
   };
   const handleCancelReturn = async () => { setCancellingReturn(true); try { await returnsService.cancel(order.returns[0].id); setShowCancelReturnConfirm(false); await fetchOrder(); toast.success("Return cancelled"); } catch (err) { toast.error(err.response?.data?.message || "Failed"); } finally { setCancellingReturn(false); } };
 
-  if (loading) return <Spinner fullPage />;
+  if (loading) return <OrderDetailsSkeleton />;
   if (!order) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
-      <div className="text-center">
-        <p className="text-red-500 font-bold uppercase tracking-widest text-xs mb-4">{error || "Order not found"}</p>
-        <Button onClick={() => navigate("/orders")} variant="dark" className="rounded-full px-8 cursor-pointer">Back</Button>
+    <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-4">
+      <div className="text-center bg-white border border-neutral-100 rounded-2xl p-8 shadow-xs max-w-md w-full space-y-4">
+        <p className="text-red-600 font-bold uppercase tracking-widest text-xs">{error || "Order not found"}</p>
+        <div className="flex items-center justify-center gap-3 pt-1">
+          <Button onClick={() => navigate("/orders")} variant="secondary" className="rounded-full px-7 cursor-pointer">Back</Button>
+          {error && (
+            <Button onClick={fetchOrder} variant="dark" className="rounded-full px-7 cursor-pointer">Retry</Button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { productsService } from "../../services";
 import { formatPrice } from "../../utils/formatters";
-import { Spinner } from "../../components/common/Spinner";
+import { NewArrivalsSkeleton } from "../../components/loading/ClientSkeletons";
 import { EmptyState } from "../../components/common/EmptyState";
 import { useCart } from "../../hooks/useCart";
 
@@ -682,7 +682,7 @@ export const HomePage = () => {
 
           {/* Split Layout: Left Image + Right Product Grid */}
           {loading ? (
-            <div className="py-40 flex justify-center"><Spinner /></div>
+            <NewArrivalsSkeleton />
           ) : filteredNewArrivals.length === 0 ? (
             <EmptyState title={`No ${activeTab} products found`} description="Check back later for exciting new drops in this category." />
           ) : (

@@ -1,5 +1,3 @@
-import { createPortal } from "react-dom";
-
 export const Spinner = ({ size = "md", fullPage = false, color, dark = false }) => {
   const isDark = Boolean(dark);
 
@@ -24,12 +22,11 @@ export const Spinner = ({ size = "md", fullPage = false, color, dark = false }) 
   );
 
   if (fullPage) {
-    const overlay = (
-      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+    return (
+      <div className="min-h-[60vh] w-full flex items-center justify-center bg-[#fafafa]">
         {spinner}
       </div>
     );
-    return typeof document !== "undefined" ? createPortal(overlay, document.body) : overlay;
   }
 
   return <div className="flex justify-center items-center">{spinner}</div>;

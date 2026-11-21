@@ -19,6 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "../../hooks/useCart";
 import toast from "react-hot-toast";
 import { getDisplayColor } from "../../utils/colorUtils";
+import { ProductDetailSkeleton } from "../../components/loading/ClientSkeletons";
 
 // Utils
 const formatPrice = (price) => {
@@ -323,14 +324,7 @@ const ProductDetailPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-neutral-100 border-t-black rounded-full animate-spin" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-400">Loading Product</span>
-        </div>
-      </div>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (!product) {
