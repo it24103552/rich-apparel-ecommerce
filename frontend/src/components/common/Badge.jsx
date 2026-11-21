@@ -1,5 +1,5 @@
-export const Badge = ({ color = "blue", children, dark }) => {
-  const isDark = dark ?? (typeof window !== "undefined" && window.location.pathname.startsWith("/admin"));
+export const Badge = ({ color = "blue", children, dark = false }) => {
+  const isDark = Boolean(dark);
 
   const colorClasses = isDark
     ? {

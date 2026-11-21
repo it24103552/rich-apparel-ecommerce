@@ -1,7 +1,7 @@
 import { Button } from "./Button";
 
-export const EmptyState = ({ title = "No data found", description = "There's nothing to display right now.", action = null, dark }) => {
-  const isDark = dark ?? (typeof window !== "undefined" && window.location.pathname.startsWith("/admin"));
+export const EmptyState = ({ title = "No data found", description = "There's nothing to display right now.", action = null, dark = false }) => {
+  const isDark = Boolean(dark);
 
   return (
     <div className="flex flex-col items-center justify-center py-14 px-4">

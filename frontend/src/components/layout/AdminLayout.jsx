@@ -24,17 +24,17 @@ export const AdminLayout = () => {
       : "p-4 md:p-6";
 
   return (
-    <div className={`font-body antialiased flex h-screen overflow-hidden print:h-auto print:overflow-visible ${rootTheme}`}>
+    <div className={`admin-layout font-body antialiased print:min-h-0 print:block ${rootTheme}`}>
       {/* Sidebar */}
       <AdminSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} light={isLight} />
 
       {/* Main content wrapper */}
-      <div className="flex-1 flex flex-col min-w-0 md:ml-64 print:ml-0">
+      <div className="admin-main print:min-h-0">
         {/* Topbar */}
         <AdminTopbar dark={isDark} light={isLight} />
 
         {/* Content */}
-        <main className={`flex-1 overflow-auto relative z-0 print:overflow-visible print:p-0 ${mainTheme}`}>
+        <main className={`admin-content print:overflow-visible print:p-0 ${mainTheme}`}>
           <Outlet />
         </main>
       </div>

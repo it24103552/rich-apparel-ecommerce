@@ -10,9 +10,9 @@ export const Table = ({
   onDelete = null,
   onView = null,
   emptyMessage = "No data found",
-  dark,
+  dark = false,
 }) => {
-  const isDark = dark ?? (typeof window !== "undefined" && window.location.pathname.startsWith("/admin"));
+  const isDark = Boolean(dark);
 
   if (loading) {
     return (

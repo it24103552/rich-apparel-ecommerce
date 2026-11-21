@@ -1,7 +1,7 @@
 import { Search, X } from "lucide-react";
 
-export const SearchBar = ({ value, onChange, placeholder = "Search...", dark, className = "" }) => {
-  const isDark = dark ?? (typeof window !== "undefined" && window.location.pathname.startsWith("/admin"));
+export const SearchBar = ({ value, onChange, placeholder = "Search...", dark = false, className = "" }) => {
+  const isDark = Boolean(dark);
 
   return (
     <div className="relative group">

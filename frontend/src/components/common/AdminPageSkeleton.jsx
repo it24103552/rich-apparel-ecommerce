@@ -1,5 +1,5 @@
-export const AdminPageSkeleton = ({ dark }) => {
-    const isDark = dark ?? (typeof window !== "undefined" && window.location.pathname.startsWith("/admin"));
+export const AdminPageSkeleton = ({ dark = false }) => {
+    const isDark = Boolean(dark);
     if (isDark) {
       return (
         <div className="min-h-[calc(100vh-120px)] w-full animate-fade-in pointer-events-none select-none overflow-x-hidden space-y-6">

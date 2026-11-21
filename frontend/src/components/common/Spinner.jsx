@@ -1,5 +1,7 @@
-export const Spinner = ({ size = "md", fullPage = false, color, dark }) => {
-  const isDark = dark ?? (typeof window !== "undefined" && window.location.pathname.startsWith("/admin"));
+import { createPortal } from "react-dom";
+
+export const Spinner = ({ size = "md", fullPage = false, color, dark = false }) => {
+  const isDark = Boolean(dark);
 
   const sizeClasses = {
     xs: "h-3.5 w-3.5",
@@ -22,11 +24,12 @@ export const Spinner = ({ size = "md", fullPage = false, color, dark }) => {
   );
 
   if (fullPage) {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    const overlay = (
+      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
         {spinner}
       </div>
     );
+    return typeof document !== "undefined" ? createPortal(overlay, document.body) : overlay;
   }
 
   return <div className="flex justify-center items-center">{spinner}</div>;

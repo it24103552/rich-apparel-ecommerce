@@ -1,8 +1,8 @@
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { Button } from "./Button";
 
-export const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange, dark }) => {
-  const isDark = dark ?? (typeof window !== "undefined" && window.location.pathname.startsWith("/admin"));
+export const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange, dark = false }) => {
+  const isDark = Boolean(dark);
   if (totalPages <= 1) return null;
 
   const getPageNumbers = () => {
@@ -60,7 +60,7 @@ export const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange, dark
           size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={isDark ? "h-9 w-9 p-0 rounded-xl flex items-center justify-center bg-[#141414]! text-neutral-300! border border-white/[0.08] hover:border-white hover:bg-white! hover:text-black! transition-all disabled:opacity-30 disabled:hover:bg-[#141414]! disabled:hover:text-neutral-300! disabled:hover:border-white/[0.08]" : "h-9 w-9 p-0 rounded-xl flex items-center justify-center bg-white border border-neutral-200 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-neutral-400 disabled:hover:border-neutral-200"}
+          className={isDark ? "h-9 w-9 p-0 rounded-xl flex items-center justify-center bg-[#141414]! text-neutral-300! border border-white/[0.08] hover:border-white hover:bg-white! hover:text-black! transition-all disabled:opacity-30 disabled:hover:bg-[#141414]! disabled:hover:text-neutral-300! disabled:hover:border-white/[0.08]" : "h-9 w-9 p-0 rounded-xl flex items-center justify-center bg-white border border-[#E4DED6] text-[#171717] hover:border-[#171717] hover:bg-[#171717] hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#77736E] disabled:hover:border-[#E4DED6]"}
         >
           <ChevronLeft size={16} />
         </Button>
@@ -69,7 +69,7 @@ export const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange, dark
           {pages.map((page, i) => {
             if (page === "ellipsis-start" || page === "ellipsis-end") {
               return (
-                <div key={`${page}-${i}`} className={`w-8 h-9 flex items-center justify-center ${isDark ? "text-neutral-600" : "text-neutral-300"}`}>
+                <div key={`${page}-${i}`} className={`w-8 h-9 flex items-center justify-center ${isDark ? "text-neutral-600" : "text-[#8a857d]"}`}>
                   <MoreHorizontal size={14} />
                 </div>
               );
@@ -82,8 +82,8 @@ export const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange, dark
                 onClick={() => onPageChange(page)}
                 className={`h-9 min-w-[36px] px-2 rounded-xl text-[12px] font-bold tracking-tight transition-all duration-200 ${
                   isSelected
-                    ? (isDark ? "bg-white text-black shadow-md shadow-white/10 scale-105" : "bg-black text-white shadow-md shadow-black/10 scale-105")
-                    : (isDark ? "bg-[#141414] text-neutral-400 hover:text-white border border-white/[0.06] hover:border-white/20 hover:bg-[#1a1a1a]" : "bg-white text-neutral-400 hover:text-black border border-neutral-100 hover:border-neutral-900/10 hover:bg-neutral-50")
+                    ? (isDark ? "bg-white text-black shadow-md shadow-white/10 scale-105" : "bg-[#171717] text-white shadow-sm scale-105")
+                    : (isDark ? "bg-[#141414] text-neutral-400 hover:text-white border border-white/[0.06] hover:border-white/20 hover:bg-[#1a1a1a]" : "bg-white text-[#5f5a53] hover:text-[#171717] border border-[#E4DED6] hover:border-[#C9A77A] hover:bg-[#FAF8F5]")
                 }`}
               >
                 {page}
@@ -98,17 +98,17 @@ export const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange, dark
           size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={isDark ? "h-9 w-9 p-0 rounded-xl flex items-center justify-center bg-[#141414]! text-neutral-300! border border-white/[0.08] hover:border-white hover:bg-white! hover:text-black! transition-all disabled:opacity-30 disabled:hover:bg-[#141414]! disabled:hover:text-neutral-300! disabled:hover:border-white/[0.08]" : "h-9 w-9 p-0 rounded-xl flex items-center justify-center bg-white border border-neutral-200 hover:border-black hover:bg-black hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-neutral-400 disabled:hover:border-neutral-200"}
+          className={isDark ? "h-9 w-9 p-0 rounded-xl flex items-center justify-center bg-[#141414]! text-neutral-300! border border-white/[0.08] hover:border-white hover:bg-white! hover:text-black! transition-all disabled:opacity-30 disabled:hover:bg-[#141414]! disabled:hover:text-neutral-300! disabled:hover:border-white/[0.08]" : "h-9 w-9 p-0 rounded-xl flex items-center justify-center bg-white border border-[#E4DED6] text-[#171717] hover:border-[#171717] hover:bg-[#171717] hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-[#77736E] disabled:hover:border-[#E4DED6]"}
         >
           <ChevronRight size={16} />
         </Button>
       </div>
 
-      <div className={`hidden md:flex items-center gap-2 pl-4 ml-4 border-l ${isDark ? "border-white/10" : "border-neutral-100"}`}>
-        <span className={`text-[10px] uppercase tracking-widest font-black ${isDark ? "text-neutral-600" : "text-neutral-300"}`}>Page</span>
-        <span className={`text-[12px] font-black ${isDark ? "text-white" : "text-black"}`}>{currentPage}</span>
-        <span className={`text-[10px] uppercase tracking-widest font-black ${isDark ? "text-neutral-600" : "text-neutral-300"}`}>of</span>
-        <span className={`text-[12px] font-black ${isDark ? "text-white" : "text-black"}`}>{totalPages}</span>
+      <div className={`hidden md:flex items-center gap-2 pl-4 ml-4 border-l ${isDark ? "border-white/10" : "border-[#E4DED6]"}`}>
+        <span className={`text-[10px] uppercase tracking-widest font-black ${isDark ? "text-neutral-600" : "text-[#8a857d]"}`}>Page</span>
+        <span className={`text-[12px] font-black ${isDark ? "text-white" : "text-[#171717]"}`}>{currentPage}</span>
+        <span className={`text-[10px] uppercase tracking-widest font-black ${isDark ? "text-neutral-600" : "text-[#8a857d]"}`}>of</span>
+        <span className={`text-[12px] font-black ${isDark ? "text-white" : "text-[#171717]"}`}>{totalPages}</span>
       </div>
     </div>
   );

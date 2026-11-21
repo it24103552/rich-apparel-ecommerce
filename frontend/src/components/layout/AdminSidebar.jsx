@@ -61,14 +61,14 @@ export const AdminSidebar = ({ isOpen, setIsOpen, light = false }) => {
       {/* Mobile menu button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`md:hidden print:hidden fixed top-4 left-4 z-50 p-2 rounded-xl ${light ? "bg-white border border-[#E4DED6] text-[#171717] shadow-sm" : "bg-[#141414] border border-white/10 text-white"}`}
+        className={`md:hidden print:hidden fixed top-4 left-4 z-[35] p-2 rounded-xl ${light ? "bg-white border border-[#E4DED6] text-[#171717] shadow-sm" : "bg-[#141414] border border-white/10 text-white"}`}
       >
         <span className="material-symbols-outlined text-[20px]">{isOpen ? 'close' : 'menu'}</span>
       </button>
 
       {/* Sidebar */}
       <aside
-        className={`print:hidden fixed left-0 top-0 h-full w-64 flex flex-col py-8 z-40 transition-transform duration-300 ${light ? "admin-sidebar-surface" : "bg-[#080808] border-r border-white/[0.06]"} ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+        className={`admin-sidebar print:hidden fixed md:sticky left-0 top-0 h-full md:h-screen w-64 flex flex-col py-8 z-30 transition-transform duration-300 ${light ? "admin-sidebar-surface" : "bg-[#080808] border-r border-white/[0.06]"} ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         {/* Subtle decorative organic layers clipped behind navigation */}
         {light && (
@@ -138,7 +138,7 @@ export const AdminSidebar = ({ isOpen, setIsOpen, light = false }) => {
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 md:hidden print:hidden z-30"
+          className="fixed inset-0 bg-black/50 md:hidden print:hidden z-[29]"
           onClick={() => setIsOpen(false)}
         />
       )}

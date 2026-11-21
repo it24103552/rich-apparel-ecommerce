@@ -5,19 +5,19 @@ export const Button = ({
   disabled = false,
   className = "",
   children,
-  dark,
+  dark = false,
   ...props
 }) => {
-  const isDark = dark ?? (typeof window !== "undefined" && window.location.pathname.startsWith("/admin"));
+  const isDark = Boolean(dark);
 
   const baseClasses = isDark
-    ? "font-headline font-semibold rounded-2xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-95"
-    : "font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
+    ? "font-headline font-semibold rounded-2xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-95 inline-flex items-center justify-center gap-2"
+    : "font-headline font-semibold rounded-2xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A77A]/60 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-95 inline-flex items-center justify-center gap-2";
 
   const sizeClasses = {
     sm: "px-3.5 py-2 text-[12px]",
-    md: isDark ? "px-5 py-2.5 text-[13px]" : "px-4 py-2 text-base",
-    lg: isDark ? "px-6 py-3 text-[14px]" : "px-6 py-3 text-lg",
+    md: "px-5 py-2.5 text-[13px]",
+    lg: "px-6 py-3 text-[14px]",
   };
 
   const variantClasses = isDark
@@ -31,23 +31,23 @@ export const Button = ({
         white: "bg-white text-black hover:bg-neutral-200 uppercase font-bold tracking-widest shadow-lg",
       }
     : {
-        primary: "bg-black text-white hover:bg-zinc-800 focus:ring-black",
-        secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500",
-        danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
-        outline: "border-2 border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500",
-        ghost: "bg-transparent text-black hover:bg-neutral-50 focus:ring-black border border-black",
-        dark: "bg-black text-white hover:bg-zinc-800 focus:ring-black rounded-xl uppercase font-bold tracking-widest",
-        white: "bg-white text-black hover:bg-neutral-100 focus:ring-white rounded-xl uppercase font-bold tracking-widest shadow-lg",
+        primary: "bg-[#171717] text-white hover:bg-[#292929] shadow-[0_6px_16px_rgba(23,23,23,0.14)]",
+        secondary: "bg-white text-[#171717] hover:bg-[#F1ECE5] border border-[#E4DED6]",
+        danger: "bg-red-600 text-white hover:bg-red-700 shadow-sm",
+        outline: "bg-white border border-[#E4DED6] text-[#292929] hover:bg-[#FAF8F5] hover:border-[#D6CDBF]",
+        ghost: "bg-transparent text-[#171717] hover:bg-[#F1ECE5] border border-[#E4DED6]",
+        dark: "bg-[#171717] text-white hover:bg-[#292929] uppercase font-bold tracking-widest",
+        white: "bg-white text-[#171717] hover:bg-[#FAF8F5] uppercase font-bold tracking-widest shadow-lg",
       };
 
   return (
     <button
-      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant] || variantClasses.primary} ${className}`}
+      className={`${baseClasses} ${sizeClasses[size] || sizeClasses.md} ${variantClasses[variant] || variantClasses.primary} ${className}`}
       disabled={disabled || loading}
       {...props}
     >
       {loading ? (
-        <span className="flex items-center gap-2">
+        <span className="flex items-center justify-center gap-2">
           <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />

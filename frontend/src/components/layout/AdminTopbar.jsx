@@ -204,7 +204,7 @@ export const AdminTopbar = ({ dark = false, light = false }) => {
 
   if (light) {
     return (
-      <header className="print:hidden sticky top-0 right-0 w-full px-4 md:px-8 pt-4 md:pt-6 pb-2 bg-[#FAF8F5]/85 backdrop-blur-xl z-30">
+      <header className="print:hidden sticky top-0 w-full px-4 md:px-8 pt-4 md:pt-6 pb-2 bg-[#FAF8F5]/85 backdrop-blur-xl z-20">
         <div className="relative admin-header-gradient w-full rounded-[24px] px-5 md:px-8 py-5 md:py-6 flex justify-between items-center gap-4">
           {/* Subtle organic layered shapes clipped strictly to header radius so popovers remain unclipped */}
           <div
@@ -241,7 +241,7 @@ export const AdminTopbar = ({ dark = false, light = false }) => {
 
   if (dark) {
     return (
-      <header className="print:hidden sticky top-0 right-0 w-full px-4 md:px-8 pt-4 md:pt-6 pb-2 bg-[#0a0a0a]/90 backdrop-blur-xl z-30">
+      <header className="print:hidden sticky top-0 w-full px-4 md:px-8 pt-4 md:pt-6 pb-2 bg-[#0a0a0a]/90 backdrop-blur-xl z-20">
         <div className="w-full bg-[#141414] border border-white/[0.08] rounded-[26px] px-5 md:px-8 py-4 md:py-5 flex justify-between items-center gap-4 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
           <div className="flex-1 min-w-0 pl-9 md:pl-0">
             {headerContent}
@@ -266,7 +266,7 @@ export const AdminTopbar = ({ dark = false, light = false }) => {
   }
 
   return (
-    <header className={`sticky top-0 right-0 w-full px-4 md:px-8 flex justify-between items-center backdrop-blur-xl z-30 transition-shadow duration-300 ${dark ? "h-24 bg-[#0f0f0f]/85" : "h-20 bg-white/80 focus-within:shadow-lg"}`}>
+    <header className={`sticky top-0 w-full px-4 md:px-8 flex justify-between items-center backdrop-blur-xl z-20 transition-shadow duration-300 ${dark ? "h-24 bg-[#0f0f0f]/85" : "h-20 bg-white/80 focus-within:shadow-lg"}`}>
       <div className="flex-1 max-w-xl hidden md:block">
         {headerContent}
       </div>
