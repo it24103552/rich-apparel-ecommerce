@@ -184,7 +184,7 @@ export const ProductDashboard = () => {
       </section>
 
       {/* Contextual FAB (Only on relevant screens) */}
-      <button className="fixed bottom-8 right-8 w-14 h-14 bg-[#171717] text-white rounded-full flex items-center justify-center shadow-[0_10px_28px_rgba(23,23,23,0.22)] hover:bg-[#292929] hover:scale-105 active:scale-95 transition-all z-50">
+      <button className="fixed bottom-8 right-8 w-14 h-14 bg-[#171717] text-white rounded-full flex items-center justify-center shadow-[0_10px_28px_rgba(23,23,23,0.22)] hover:bg-[#292929] hover:scale-105 active:scale-95 transition-all z-10">
         <span className="material-symbols-outlined text-2xl">add</span>
       </button>
     </div>

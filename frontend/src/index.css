@@ -176,6 +176,41 @@ body {
   }
 
   /* Rich Apparel Admin — Visual Depth & Organic Layering System (UI-only) */
+  :root {
+    --z-admin-base: 0;
+    --z-admin-header: 20;
+    --z-admin-sidebar: 30;
+    --z-admin-dropdown: 40;
+    --z-admin-modal-backdrop: 49;
+    --z-admin-modal: 50;
+    --z-admin-toast: 60;
+  }
+
+  .admin-layout {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+  }
+
+  .admin-sidebar {
+    flex-shrink: 0;
+  }
+
+  .admin-main {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-content {
+    flex: 1;
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
   .admin-surface {
     background-color: #FAF8F5;
     background-image:

@@ -33,28 +33,28 @@ export const NotificationCenter = ({ dark = false, light = false }) => {
                     if (!n.isRead && !processedIds.current.has(n.id)) {
                         // Trigger toast for new unread notification
                         toast.custom((t) => (
-                            <div className={`${t.visible ? 'animate-fade-in' : 'opacity-0'} max-w-md w-full bg-[#141414] shadow-2xl rounded-2xl pointer-events-auto flex ring-1 ring-white ring-opacity-5 border border-white/[0.06] transition-all duration-300`}>
+                            <div className={`${t.visible ? 'animate-fade-in' : 'opacity-0'} max-w-md w-full bg-white shadow-[0_20px_50px_rgba(23,23,23,0.14)] rounded-2xl pointer-events-auto flex border border-[#E4DED6] transition-all duration-300`}>
                                 <div className="flex-1 w-0 p-4">
                                     <div className="flex items-start">
                                         <div className="flex-shrink-0 pt-0.5">
-                                            <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center text-black shadow-lg">
+                                            <div className="h-10 w-10 rounded-full bg-[#171717] flex items-center justify-center text-white shadow-sm">
                                                 <Bell className="w-5 h-5" />
                                             </div>
                                         </div>
                                         <div className="ml-3 flex-1">
-                                            <p className="text-sm font-bold text-white uppercase tracking-tight">
+                                            <p className="text-sm font-headline font-bold text-[#171717] uppercase tracking-tight">
                                                 {n.title}
                                             </p>
-                                            <p className="mt-1 text-xs text-neutral-400 leading-relaxed">
+                                            <p className="mt-1 text-xs text-[#5f5a53] leading-relaxed">
                                                 {n.message}
                                             </p>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex border-l border-white/[0.06]">
+                                <div className="flex border-l border-[#E4DED6]">
                                     <button
                                         onClick={() => toast.dismiss(t.id)}
-                                        className="w-full border border-transparent rounded-none rounded-r-2xl p-4 flex items-center justify-center text-xs font-black text-neutral-500 hover:text-white focus:outline-none transition-colors uppercase tracking-widest"
+                                        className="w-full border border-transparent rounded-none rounded-r-2xl p-4 flex items-center justify-center text-xs font-black text-[#77736E] hover:text-[#171717] hover:bg-[#FAF8F5] focus:outline-none transition-colors uppercase tracking-widest"
                                     >
                                         Close
                                     </button>
@@ -159,7 +159,7 @@ export const NotificationCenter = ({ dark = false, light = false }) => {
             </button>
 
             {isOpen && (
-                <div className={`absolute top-14 -right-11 sm:right-0 w-[min(20rem,calc(100vw-2rem))] sm:w-96 max-h-[calc(100vh-110px)] flex flex-col rounded-2xl shadow-[0_20px_50px_rgba(23,23,23,0.12)] overflow-hidden z-50 animate-fade-in origin-top-right border ${light ? "bg-white text-[#171717] border-[#E4DED6]" : "bg-[#141414] text-white backdrop-blur-xl border-white/[0.08]"}`}>
+                <div className={`absolute top-14 -right-11 sm:right-0 w-[min(20rem,calc(100vw-2rem))] sm:w-96 max-h-[calc(100vh-110px)] flex flex-col rounded-2xl shadow-[0_20px_50px_rgba(23,23,23,0.12)] overflow-hidden z-40 animate-fade-in origin-top-right border ${light ? "bg-white text-[#171717] border-[#E4DED6]" : "bg-[#141414] text-white backdrop-blur-xl border-white/[0.08]"}`}>
                     <div className={`p-4 border-b flex items-center justify-between shrink-0 ${light ? "border-[#E4DED6] bg-[#FAF8F5]" : "border-white/[0.06] bg-[#141414]/50"}`}>
                         <h3 className="text-sm font-headline font-bold uppercase tracking-widest">Notifications</h3>
                         {unreadCount > 0 && (

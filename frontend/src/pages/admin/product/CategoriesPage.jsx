@@ -645,7 +645,7 @@ export const CategoriesPage = () => {
                           }
                         }}
                       />
-                      <div className="absolute inset-0 bg-[#171717]/55 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center z-30">
+                      <div className="absolute inset-0 bg-[#171717]/55 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center z-10">
                         <span className="material-symbols-outlined text-white text-[24px] mb-2 animate-bounce">sync</span>
                         <span className="text-white text-[10px] font-black uppercase tracking-widest">Update Identity</span>
                       </div>

@@ -269,47 +269,51 @@ export const CreateOrderPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black/5 relative overflow-hidden selection:bg-black selection:text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-      {/* Premium Background Decorative Elements */}
+    <div className="min-h-screen bg-[#fafafa] relative overflow-x-clip selection:bg-black selection:text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+      {/* Subtle Warm Ambient Accents */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-[10%] -left-[20%] w-[80%] h-[40%] bg-black rounded-full blur-[150px] opacity-100"></div>
-        <div className="absolute top-[70%] -right-[20%] w-[40%] h-[40%] bg-black rounded-full blur-[100px] opacity-100"></div>
-        <div className="absolute top-[40%] left-[60%] w-[15%] h-[15%] bg-black/[0.03] rounded-full blur-[80px] opacity-30"></div>
-        <div className="absolute bottom-[10%] left-[10%] w-[25%] h-[25%] bg-neutral-50 rounded-full blur-[100px] opacity-50"></div>
-        <div className="absolute bottom-0 right-0 w-[40%] h-[40%] bg-black/[0.02] rounded-full blur-[120px] opacity-20"></div>
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#f5efe6] rounded-full blur-[120px] opacity-80"></div>
+        <div className="absolute bottom-0 right-0 w-[420px] h-[420px] bg-[#f5efe6] rounded-full blur-[140px] opacity-70"></div>
       </div>
 
-      <div className="max-w-[1440px] mx-auto px-4 md:px-[8%] pt-24 md:pt-32 pb-12 md:pb-24 relative z-10">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-[8%] pt-8 md:pt-12 pb-12 md:pb-24 relative z-10">
 
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-12 md:mb-16"
+          className="mb-10 md:mb-12 pb-8 border-b border-neutral-200/70"
         >
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-neutral-400 hover:text-white transition-colors mb-6 group cursor-pointer"
+            className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-neutral-500 hover:text-black transition-colors mb-6 group cursor-pointer"
           >
             <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" />
             Back to Shop
           </button>
-          <h1 className="absolute top-[10%] text-3xl md:text-5xl font-bold tracking-tighter uppercase text-white leading-none">
-            Checkout
-          </h1>
-          <p className="text-neutral-400 text-xs md:text-sm font-semibold uppercase tracking-[0.3em] mt-4 flex items-center gap-3">
-
-          </p>
+          <div className="flex items-start gap-4">
+            <div className="w-1.5 h-10 md:h-12 bg-black rounded-full mt-1 shrink-0" />
+            <div>
+              <h1 className="text-3xl md:text-5xl font-bold tracking-tighter uppercase text-black leading-none">
+                Checkout
+              </h1>
+              <p className="text-neutral-400 text-[11px] font-bold uppercase tracking-[0.25em] mt-2">
+                Shipping, payment & order confirmation
+              </p>
+            </div>
+          </div>
         </motion.div>
 
+        {error && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-red-50/50 backdrop-blur-sm border border-red-100 text-red-600 px-6 py-4 rounded-2xl mb-10 text-[11px] font-semibold uppercase tracking-wider overflow-hidden"
+            className="bg-red-50/80 backdrop-blur-sm border border-red-200 text-red-700 px-6 py-4 rounded-2xl mb-10 text-[11px] font-semibold uppercase tracking-wider overflow-hidden"
           >
             {error}
           </motion.div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-20 items-start">
 

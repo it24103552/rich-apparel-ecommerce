@@ -90,7 +90,7 @@ export const PasswordRequestsCenter = ({ dark = false, light = false }) => {
             </button>
 
             {isOpen && (
-                <div className={`absolute top-14 -right-24 sm:right-0 w-[min(340px,calc(100vw-2rem))] sm:w-[400px] max-h-[calc(100vh-110px)] flex flex-col rounded-2xl shadow-[0_20px_50px_rgba(23,23,23,0.12)] overflow-hidden z-50 animate-fade-in origin-top-right border ${light ? "bg-white text-[#171717] border-[#E4DED6]" : "bg-[#141414] text-white backdrop-blur-xl border-white/[0.08]"}`}>
+                <div className={`absolute top-14 -right-24 sm:right-0 w-[min(340px,calc(100vw-2rem))] sm:w-[400px] max-h-[calc(100vh-110px)] flex flex-col rounded-2xl shadow-[0_20px_50px_rgba(23,23,23,0.12)] overflow-hidden z-40 animate-fade-in origin-top-right border ${light ? "bg-white text-[#171717] border-[#E4DED6]" : "bg-[#141414] text-white backdrop-blur-xl border-white/[0.08]"}`}>
                     <div className={`p-5 border-b shrink-0 ${light ? "border-[#E4DED6] bg-[#FAF8F5]" : "border-white/[0.06] bg-white/[0.03]"}`}>
                         <div className="flex items-center justify-between">
                             <h3 className="text-sm font-headline font-bold uppercase tracking-widest">Password Resets</h3>

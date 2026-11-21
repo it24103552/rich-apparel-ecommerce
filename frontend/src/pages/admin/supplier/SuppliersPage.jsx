@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../../../hooks/useAuth";
 import { suppliersService, restockRequestService } from "../../../services";
 import { Table } from "../../../components/common/Table";
-import { Modal } from "../../../components/common/Modal";
+import { ModalPortal } from "../../../components/common/Modal";
 import { ConfirmDialog } from "../../../components/common/ConfirmDialog";
 import { Button } from "../../../components/common/Button";
 import { Input } from "../../../components/common/Input";
@@ -696,10 +696,13 @@ export const SuppliersPage = () => {
       </div>
 
       {/* Create/Edit Modal */}
-      {modalMode && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-[#171717]/40 backdrop-blur-sm transition-opacity duration-300" onClick={closeModal} />
-
+      <ModalPortal
+        isOpen={!!modalMode}
+        onClose={closeModal}
+        backdropClassName="bg-[#171717]/40 backdrop-blur-sm transition-opacity duration-300"
+        containerClassName="p-4"
+      >
+        {modalMode && (
           <div className="relative w-full max-w-5xl bg-white rounded-[32px] shadow-[0_24px_64px_rgba(23,23,23,0.18)] border border-[#E4DED6] overflow-hidden transform transition-all duration-500 scale-100 opacity-100 flex flex-col max-h-[90vh]">
 
             {/* Modal Header */}
@@ -1008,8 +1011,8 @@ export const SuppliersPage = () => {
             </div>
 
           </div>
-        </div>
-      )}
+        )}
+      </ModalPortal>
 
       {/* Delete Confirm Dialog */}
       <ConfirmDialog
@@ -1024,10 +1027,13 @@ export const SuppliersPage = () => {
       />
 
       {/* Supplier Details Viewer (Crystal Clear Read-Only) */}
-      {viewSupplier && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 animate-fade-in">
-          <div className="absolute inset-0 bg-[#171717]/45 backdrop-blur-sm transition-all duration-700" onClick={closeViewModal} />
-
+      <ModalPortal
+        isOpen={!!viewSupplier}
+        onClose={closeViewModal}
+        backdropClassName="bg-[#171717]/45 backdrop-blur-sm transition-all duration-700"
+        containerClassName="p-4 md:p-8"
+      >
+        {viewSupplier && (
           <div className="bg-white w-full max-w-5xl h-full max-h-[85vh] rounded-[32px] border border-[#E4DED6] shadow-[0_40px_100px_rgba(23,23,23,0.22)] overflow-hidden flex flex-col md:flex-row relative animate-scale-up">
             {/* Close Button Pin */}
             <button
@@ -1193,8 +1199,8 @@ export const SuppliersPage = () => {
 
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalPortal>
     </div>
   );
 };

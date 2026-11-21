@@ -16,7 +16,9 @@ import {
   ordersService,
 } from "../../../services";
 import { Table } from "../../../components/common/Table";
-import { Modal } from "../../../components/common/Modal";
+import { Modal, ModalPortal } from "../../../components/common/Modal";
+import { SectionCard } from "../../../components/common/SectionCard";
+import { ProductImageGallery } from "../../../components/common/ProductImageGallery";
 import { ConfirmDialog } from "../../../components/common/ConfirmDialog";
 import { Button } from "../../../components/common/Button";
 import { Input } from "../../../components/common/Input";
@@ -68,25 +70,25 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
     <div className="relative">
       <div
         onClick={() => setIsPickerOpen(!isPickerOpen)}
-        className="flex flex-wrap gap-1.5 p-2 bg-neutral-50 border border-neutral-100 rounded-[10px] min-h-[42px] min-w-[140px] cursor-pointer hover:border-black/20 transition-all items-center"
+        className="flex flex-wrap gap-1.5 p-2 bg-[#FAF8F5] border border-[#E4DED6] rounded-[12px] min-h-[42px] min-w-[140px] cursor-pointer hover:border-[#C9A77A] transition-all items-center"
       >
         {currentTones.length === 0 ? (
-          <span className="text-neutral-400 text-[11px] font-black uppercase tracking-widest pl-1">Pick Color</span>
+          <span className="text-[#8a857d] text-[11px] font-black uppercase tracking-widest pl-1">Pick Color</span>
         ) : (
           currentTones.map(t => (
-            <div key={t} className="group/chip flex items-center gap-1.5 bg-white border border-neutral-100 rounded-[6px] pl-1 pr-1.5 py-0.5 shadow-sm">
+            <div key={t} className="group/chip flex items-center gap-1.5 bg-white border border-[#E4DED6] rounded-[8px] pl-1.5 pr-1.5 py-0.5 shadow-2xs">
               <div
-                className="w-3 h-3 rounded-full border border-neutral-300"
+                className="w-3 h-3 rounded-full border border-[#D6CDBF]"
                 style={{ backgroundColor: getDisplayColor(t) }}
               />
-              <span className="text-[9px] font-black text-neutral-900 uppercase truncate max-w-[60px]">{resolveColorName(t)}</span>
+              <span className="text-[9px] font-black text-[#171717] uppercase truncate max-w-[60px]">{resolveColorName(t)}</span>
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleTone(t);
                 }}
-                className="w-3 h-3 flex items-center justify-center text-neutral-300 hover:text-red-500 transition-all"
+                className="w-3.5 h-3.5 flex items-center justify-center text-[#8a857d] hover:text-red-600 transition-all"
               >
                 <span className="material-symbols-outlined text-[12px]">close</span>
               </button>
@@ -97,10 +99,10 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
 
       {isPickerOpen && (
         <>
-          <div className="fixed inset-0 z-[60]" onClick={() => setIsPickerOpen(false)} />
-          <div className="absolute bottom-full left-0 mb-2 z-[70] bg-white border border-neutral-100 shadow-[0_-15px_40px_rgba(0,0,0,0.06)] rounded-[18px] pt-4 px-4 pb-2 w-[280px] animate-in slide-in-from-bottom-2 duration-300 origin-bottom-left max-h-[480px] overflow-y-auto custom-scrollbar">
+          <div className="fixed inset-0 z-30" onClick={() => setIsPickerOpen(false)} />
+          <div className="absolute bottom-full left-0 mb-2 z-40 bg-white border border-[#E4DED6] shadow-[0_18px_48px_rgba(23,23,23,0.12)] rounded-[18px] pt-4 px-4 pb-3 w-[280px] animate-in slide-in-from-bottom-2 duration-300 origin-bottom-left max-h-[480px] overflow-y-auto custom-scrollbar">
             <div className="mb-4">
-              <h4 className="text-[11px] font-black text-black uppercase tracking-[0.2em] mb-2.5">Colour Picker</h4>
+              <h4 className="text-[11px] font-black text-[#171717] uppercase tracking-[0.2em] mb-2.5">Colour Picker</h4>
               <div className="grid grid-cols-5 gap-2">
                 {options.map(opt => {
                   const colorVal = getDisplayColor(opt);
@@ -110,7 +112,7 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
                       key={opt}
                       type="button"
                       onClick={() => toggleTone(opt)}
-                      className={`w-9 h-9 rounded-[10px] border-2 transition-all duration-300 ${isSelected ? 'border-black scale-110 shadow-lg ring-4 ring-black/5' : 'border-neutral-200 hover:scale-105 hover:border-neutral-400'}`}
+                      className={`w-9 h-9 rounded-[10px] border-2 transition-all duration-300 ${isSelected ? 'border-[#171717] scale-110 shadow-md ring-4 ring-[#C9A77A]/25' : 'border-[#E4DED6] hover:scale-105 hover:border-[#9A7B4A]'}`}
                       style={{ backgroundColor: colorVal }}
                       title={opt}
                     />
@@ -120,8 +122,8 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
             </div>
 
             {synapticPalette?.length > 0 && (
-              <div className="mb-4 pt-4 border-t border-neutral-50/50">
-                <h4 className="text-[11px] font-black text-black uppercase tracking-[0.2em] mb-2.5">Recent Colours</h4>
+              <div className="mb-4 pt-4 border-t border-[#EFEAE2]">
+                <h4 className="text-[11px] font-black text-[#171717] uppercase tracking-[0.2em] mb-2.5">Recent Colours</h4>
                 <div className="grid grid-cols-5 gap-2">
                   {synapticPalette.slice(-10).map(t => {
                     const isSelected = currentTones.includes(t.hex);
@@ -130,7 +132,7 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
                         key={t.hex}
                         type="button"
                         onClick={() => toggleTone(t.hex)}
-                        className={`w-9 h-9 rounded-[10px] border-2 transition-all duration-300 ${isSelected ? 'border-black scale-110 shadow-lg ring-4 ring-black/5' : 'border-transparent hover:scale-105 hover:bg-neutral-50 hover:border-neutral-100'}`}
+                        className={`w-9 h-9 rounded-[10px] border-2 transition-all duration-300 ${isSelected ? 'border-[#171717] scale-110 shadow-md ring-4 ring-[#C9A77A]/25' : 'border-[#E4DED6] hover:scale-105 hover:border-[#9A7B4A]'}`}
                         style={{ backgroundColor: t.hex }}
                         title={t.name}
                       />
@@ -140,11 +142,11 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
               </div>
             )}
 
-            <div className="pt-4 border-t border-neutral-50/50 mb-2">
-              <h4 className="text-[11px] font-black text-black uppercase tracking-[0.2em] mb-3">New Colour Discovery</h4>
+            <div className="pt-4 border-t border-[#EFEAE2] mb-1">
+              <h4 className="text-[11px] font-black text-[#171717] uppercase tracking-[0.2em] mb-3">New Colour Discovery</h4>
               <div className="space-y-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-[10px] border border-neutral-100 p-0.5 bg-neutral-50 shadow-sm relative overflow-hidden flex-shrink-0 group/picker hover:border-black/10 transition-all">
+                  <div className="w-10 h-10 rounded-[10px] border border-[#E4DED6] p-0.5 bg-[#FAF8F5] shadow-2xs relative overflow-hidden flex-shrink-0 group/picker hover:border-[#C9A77A] transition-all">
                     <input
                       type="color"
                       value={customColor}
@@ -157,13 +159,13 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
                     placeholder="Colour Name"
                     value={customName}
                     onChange={(e) => setCustomName(e.target.value)}
-                    className="flex-1 bg-neutral-50 border border-neutral-100 rounded-[10px] px-3.5 h-10 text-[11px] font-black uppercase tracking-widest outline-none focus:bg-white focus:border-black transition-all shadow-sm"
+                    className="flex-1 bg-[#FAF8F5] border border-[#E4DED6] text-[#171717] placeholder:text-[#9d978f] rounded-[10px] px-3.5 h-10 text-[11px] font-bold uppercase tracking-widest outline-none focus:bg-white focus:border-[#C9A77A] transition-all"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={handleApplyCustom}
-                  className="w-full bg-black text-white text-[10px] font-black uppercase tracking-[0.15em] h-10 rounded-[10px] hover:bg-neutral-800 active:scale-[0.98] transition-all shadow-md flex items-center justify-center gap-2"
+                  className="w-full bg-[#171717] text-white text-[10px] font-black uppercase tracking-[0.15em] h-10 rounded-[10px] hover:bg-[#292929] active:scale-[0.98] transition-all shadow-sm flex items-center justify-center gap-2"
                 >
                   Add Colour
                 </button>
@@ -1036,7 +1038,7 @@ export const ProductsPage = () => {
   ];
 
   if (loading) {
-    return <AdminPageSkeleton dark />;
+    return <AdminPageSkeleton />;
   }
 
   // Visual reference only: stock bars are drawn relative to the largest stock level in the catalogue.
@@ -1554,16 +1556,12 @@ export const ProductsPage = () => {
                           </div>
 
                         {(meta || fulfillment || request.notes) && expandedRequestIds[request.id] && (
-                          <div className="mx-6 p-6 bg-neutral-950 rounded-[28px] border border-white/10 flex flex-col md:flex-row gap-8 animate-fade-in shadow-2xl mt-3 mb-6 relative overflow-hidden">
-                            {/* Decorative background glow */}
-                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-600/10 blur-[80px] rounded-full pointer-events-none" />
-                            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-600/5 blur-[80px] rounded-full pointer-events-none" />
-
+                          <div className="mx-2 sm:mx-6 p-6 bg-[#FAF8F5] rounded-[24px] border border-[#E4DED6] flex flex-col md:flex-row gap-6 animate-fade-in shadow-sm mt-3 mb-6 relative overflow-hidden">
                             {!meta && !fulfillment && request.notes && (
-                              <div className="flex-1 space-y-3">
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 ml-1">Sourcing Notes & Rationale</p>
-                                <div className="bg-white/5 backdrop-blur-md p-5 rounded-[22px] border border-white/10 shadow-lg group/notes hover:border-white/20 transition-all">
-                                  <p className="text-[13px] text-white/80 font-medium leading-relaxed italic">
+                              <div className="flex-1 space-y-2.5">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#77736E] ml-1">Sourcing Notes & Rationale</p>
+                                <div className="bg-white p-5 rounded-[20px] border border-[#E4DED6] shadow-2xs">
+                                  <p className="text-[13px] text-[#292929] font-medium leading-relaxed italic">
                                     "{request.notes.split('||META||')[0].split('||FULFILLMENT||')[0]}"
                                   </p>
                                 </div>
@@ -1571,48 +1569,48 @@ export const ProductsPage = () => {
                             )}
 
                             {meta && (
-                              <div className="flex-[1.4] space-y-5">
+                              <div className="flex-[1.4] space-y-4">
                                 <div>
-                                  <div className="flex items-center gap-2 mb-4 ml-1">
-                                    <div className="w-5 h-5 rounded-md bg-white/10 flex items-center justify-center">
-                                      <span className="material-symbols-outlined text-[14px] text-white/60">person_search</span>
+                                  <div className="flex items-center gap-2 mb-3 ml-1">
+                                    <div className="w-6 h-6 rounded-lg bg-white border border-[#E4DED6] flex items-center justify-center">
+                                      <span className="material-symbols-outlined text-[14px] text-[#9A7B4A]">person_search</span>
                                     </div>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Customer Context</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#77736E]">Customer Context</p>
                                   </div>
-                                  
-                                  <div className="bg-white/[0.03] backdrop-blur-xl p-5 rounded-[24px] border border-white/10 shadow-xl">
-                                    <div className="grid grid-cols-2 gap-y-5 gap-x-8">
+
+                                  <div className="bg-white p-5 rounded-[20px] border border-[#E4DED6] shadow-2xs">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
                                       <div className="min-w-0">
-                                        <p className="text-[8px] font-black text-white/30 uppercase tracking-[0.2em] mb-1.5">Full Name</p>
-                                        <p className="text-[14px] font-black text-white leading-tight truncate">{meta.customerName}</p>
+                                        <p className="text-[9px] font-black text-[#8a857d] uppercase tracking-[0.18em] mb-1">Full Name</p>
+                                        <p className="text-[14px] font-bold text-[#171717] leading-tight truncate">{meta.customerName}</p>
                                       </div>
                                       <div className="min-w-0">
-                                        <p className="text-[8px] font-black text-white/30 uppercase tracking-[0.2em] mb-1.5">Direct Email</p>
-                                        <p className="text-[12px] font-bold text-white/60 truncate lowercase tracking-wide">{meta.customerEmail}</p>
+                                        <p className="text-[9px] font-black text-[#8a857d] uppercase tracking-[0.18em] mb-1">Direct Email</p>
+                                        <p className="text-[12px] font-semibold text-[#5f5a53] truncate lowercase tracking-wide">{meta.customerEmail}</p>
                                       </div>
                                       <div className="min-w-0">
-                                        <p className="text-[8px] font-black text-white/30 uppercase tracking-[0.2em] mb-1.5">Mobile Contact</p>
-                                        <p className="text-[13px] font-black text-white tracking-widest">{meta.customerPhone}</p>
+                                        <p className="text-[9px] font-black text-[#8a857d] uppercase tracking-[0.18em] mb-1">Mobile Contact</p>
+                                        <p className="text-[13px] font-mono font-bold text-[#171717]">{meta.customerPhone}</p>
                                       </div>
                                       <div className="min-w-0">
-                                        <p className="text-[8px] font-black text-white/30 uppercase tracking-[0.2em] mb-1.5">Shipping Address</p>
-                                        <p className="text-[11px] font-bold text-neutral-400 line-clamp-2 leading-relaxed uppercase tracking-tight">
+                                        <p className="text-[9px] font-black text-[#8a857d] uppercase tracking-[0.18em] mb-1">Shipping Address</p>
+                                        <p className="text-[12px] font-medium text-[#5f5a53] line-clamp-2 leading-relaxed">
                                           {meta.customerAddress || 'Direct Pickup/N/A'}
                                         </p>
                                       </div>
                                       <div className="min-w-0">
-                                        <p className="text-[8px] font-black text-white/30 uppercase tracking-[0.2em] mb-1.5">Delivery Method</p>
+                                        <p className="text-[9px] font-black text-[#8a857d] uppercase tracking-[0.18em] mb-1">Delivery Method</p>
                                         <div className="flex items-center gap-1.5">
                                           <div className="w-1.5 h-1.5 rounded-full bg-sky-500" />
-                                          <p className="text-[12px] font-black text-white uppercase tracking-widest">{meta.deliveryMethod || 'Standard'}</p>
+                                          <p className="text-[12px] font-bold text-[#171717] uppercase tracking-wider">{meta.deliveryMethod || 'Standard'}</p>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                                <div className="bg-indigo-500/5 p-4 rounded-[20px] border border-indigo-500/10 group/reason hover:bg-indigo-500/10 transition-all cursor-default">
-                                  <p className="text-[8px] font-black text-indigo-400/60 uppercase tracking-[0.2em] mb-2">Return Rationale</p>
-                                  <p className="text-[12px] text-indigo-100/90 font-bold italic leading-relaxed">
+                                <div className="bg-[#F4EFE8] p-4 rounded-[18px] border border-[#E4DED6]">
+                                  <p className="text-[9px] font-black text-[#8A6D3F] uppercase tracking-[0.18em] mb-1.5">Return Rationale</p>
+                                  <p className="text-[13px] text-[#171717] font-medium italic leading-relaxed">
                                     "{meta.reason}"
                                   </p>
                                 </div>
@@ -1621,15 +1619,15 @@ export const ProductsPage = () => {
 
                             {meta?.returnImage && (
                               <div className="flex-none w-[130px] self-start">
-                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 mb-4 ml-1">Asset Verification</p>
-                                <div className="bg-white/5 p-1.5 rounded-[22px] border border-white/10 shadow-xl group/img hover:border-white/30 transition-all">
-                                  <a href={getFinalImageUrl(meta.returnImage)} target="_blank" rel="noreferrer" className="block relative overflow-hidden rounded-[18px]">
+                                <p className="text-[9px] font-black uppercase tracking-[0.18em] text-[#77736E] mb-3 ml-1">Asset Verification</p>
+                                <div className="bg-white p-1.5 rounded-[20px] border border-[#E4DED6] shadow-2xs group/img hover:border-[#C9A77A] transition-all">
+                                  <a href={getFinalImageUrl(meta.returnImage)} target="_blank" rel="noreferrer" className="block relative overflow-hidden rounded-[16px]">
                                     <img
                                       src={getFinalImageUrl(meta.returnImage)}
                                       alt="Proof"
                                       className="w-full h-[90px] object-cover group-hover/img:scale-110 transition-transform duration-500"
                                     />
-                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity">
+                                    <div className="absolute inset-0 bg-[#171717]/40 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity">
                                       <span className="material-symbols-outlined text-white text-[18px]">fullscreen</span>
                                     </div>
                                   </a>
@@ -1638,28 +1636,28 @@ export const ProductsPage = () => {
                             )}
 
                             {fulfillment && (
-                              <div className="flex-1 bg-black rounded-[28px] p-6 border border-white/10 shadow-2xl animate-in zoom-in-95 duration-500 flex flex-col justify-center relative">
-                                <div className="absolute top-4 right-6 flex items-center gap-2">
-                                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                  <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">Active Fulfilment</span>
+                              <div className="flex-1 bg-white rounded-[22px] p-6 border border-[#E4DED6] shadow-2xs flex flex-col justify-center relative">
+                                <div className="absolute top-4 right-5 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                  <span className="text-[9px] font-bold text-emerald-800 uppercase tracking-wider">Active Fulfilment</span>
                                 </div>
 
-                                <div className="flex items-center gap-2 mb-5">
-                                  <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-[14px] text-emerald-400">local_shipping</span>
+                                <div className="flex items-center gap-2 mb-4">
+                                  <div className="w-7 h-7 rounded-lg bg-[#F4EFE8] border border-[#E4DED6] flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-[15px] text-[#9A7B4A]">local_shipping</span>
                                   </div>
-                                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/60">Replacement Dispatched</p>
+                                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#77736E]">Replacement Dispatched</p>
                                 </div>
-                                <div className="flex items-center gap-5">
-                                  <div className="w-20 h-20 rounded-[22px] bg-white/5 border border-white/10 overflow-hidden shrink-0 shadow-2xl group/sub-img">
+                                <div className="flex items-center gap-4">
+                                  <div className="w-20 h-20 rounded-[18px] bg-[#FAF8F5] border border-[#E4DED6] overflow-hidden shrink-0 group/sub-img">
                                     <img src={getFinalImageUrl(fulfillment.imageUrl)} className="w-full h-full object-cover group-hover/sub-img:scale-110 transition-transform duration-500" alt="" />
                                   </div>
                                   <div className="min-w-0 flex-1">
-                                    <h5 className="text-[15px] font-black text-white truncate leading-tight mb-1">{fulfillment.name}</h5>
-                                    <p className="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em]">SKU ID: {fulfillment.sku}</p>
-                                    <div className="flex flex-wrap gap-1.5 mt-3">
+                                    <h5 className="text-[15px] font-headline font-bold text-[#171717] truncate leading-tight mb-1">{fulfillment.name}</h5>
+                                    <p className="text-[10px] text-[#77736E] font-mono font-bold uppercase tracking-wider">SKU: {fulfillment.sku}</p>
+                                    <div className="flex flex-wrap gap-1.5 mt-2.5">
                                       {Object.entries(fulfillment.variantAttributes || {}).map(([k, v]) => (
-                                        <span key={k} className="px-2.5 py-1 bg-white/5 text-white/70 rounded-[10px] text-[8px] font-black uppercase tracking-widest border border-white/10 shadow-sm">
+                                        <span key={k} className="px-2.5 py-1 bg-[#FAF8F5] text-[#5f5a53] rounded-[8px] text-[9px] font-bold uppercase tracking-wider border border-[#E4DED6]">
                                           {k}: {v}
                                         </span>
                                       ))}
@@ -1686,38 +1684,39 @@ export const ProductsPage = () => {
         size="6xl"
         title={
           <div className="flex flex-col">
-            <div className="flex items-center gap-1.5 text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-1.5">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#77736E] uppercase tracking-widest mb-1.5">
               <span>Products</span>
               <span className="material-symbols-outlined text-[12px] mt-0.5">chevron_right</span>
-              <span className="text-white">{modalMode === "create" ? "Add New Product" : "Edit Item"}</span>
+              <span className="text-[#171717]">{modalMode === "create" ? "Add New Product" : "Edit Item"}</span>
             </div>
-            <h2 className="text-[26px] font-headline font-black tracking-tight text-white leading-none">
+            <h2 className="text-[22px] sm:text-[26px] font-headline font-black tracking-tight text-[#171717] leading-none">
               {modalMode === "create" ? "New Product Item" : "Refine Collection Item"}
             </h2>
           </div>
         }
         actions={
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
             <div
               onClick={() => setIsActive(!isActive)}
-              className="flex items-center gap-2.5 px-3.5 py-2 bg-white/[0.03] hover:bg-white/[0.08] rounded-xl border border-white/[0.06] cursor-pointer transition-all mr-2 group/status"
+              className="flex items-center gap-2.5 px-3.5 py-2 bg-white hover:bg-[#F1ECE5] rounded-xl border border-[#E4DED6] cursor-pointer transition-all group/status"
             >
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[16px] text-neutral-500 group-hover/status:text-white transition-colors">public</span>
-                <span className="text-[11px] font-black text-neutral-300 uppercase tracking-widest hidden sm:block">Public</span>
+                <span className={`material-symbols-outlined text-[16px] transition-colors ${isActive ? 'text-emerald-600' : 'text-[#8a857d]'}`}>public</span>
+                <span className="text-[11px] font-black text-[#171717] uppercase tracking-widest hidden sm:block">Public</span>
               </div>
               <button
                 type="button"
-                className={`w-8 h-4.5 rounded-full relative transition-[background-color] duration-300 ${isActive ? 'bg-white' : 'bg-white/10'}`}
+                aria-label="Toggle public visibility"
+                className={`w-9 h-5 rounded-full relative transition-colors duration-200 ${isActive ? 'bg-[#171717]' : 'bg-[#D6CDBF]'}`}
               >
-                <div className={`absolute top-0.5 w-3.5 h-3.5 bg-[#141414] rounded-full transition-all duration-300 ${isActive ? 'left-4' : 'left-0.5'}`} />
+                <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-2xs transition-all duration-200 ${isActive ? 'left-4.5' : 'left-0.5'}`} />
               </button>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <button
                 onClick={handleCloseAttempt}
                 type="button"
-                className="px-6 py-2.5 rounded-[14px] bg-white/[0.06] hover:bg-white/[0.12] text-white font-bold font-headline text-[13px] tracking-tight transition-all active:scale-95"
+                className="px-5 py-2.5 rounded-[14px] bg-white hover:bg-[#F1ECE5] border border-[#E4DED6] text-[#5f5a53] hover:text-[#171717] font-bold font-headline text-[12.5px] tracking-tight transition-all active:scale-95"
               >
                 Discard
               </button>
@@ -1725,7 +1724,7 @@ export const ProductsPage = () => {
                 onClick={handlePublishRequest}
                 type="button"
                 disabled={saving}
-                className="px-8 py-2.5 rounded-[14px] bg-white hover:bg-neutral-200 text-black font-black font-headline text-[13px] tracking-tight shadow-[0_4px_12px_rgba(0,0,0,0.15)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.2)] transition-all flex items-center gap-2 group active:scale-95 disabled:opacity-70 disabled:pointer-events-none"
+                className="px-6 sm:px-7 py-2.5 rounded-[14px] bg-[#171717] hover:bg-[#292929] text-white font-bold font-headline text-[12.5px] tracking-tight shadow-[0_6px_16px_rgba(23,23,23,0.16)] transition-all flex items-center gap-2 group active:scale-95 disabled:opacity-70 disabled:pointer-events-none"
               >
                 {saving ? (
                   <>
@@ -1735,7 +1734,7 @@ export const ProductsPage = () => {
                 ) : (
                   <>
                     <span>{modalMode === "create" ? "Publish Product" : "Commit Changes"}</span>
-                    <span className="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+                    <span className="material-symbols-outlined text-[17px] transition-transform group-hover:translate-x-0.5">arrow_forward</span>
                   </>
                 )}
               </button>
@@ -1744,26 +1743,21 @@ export const ProductsPage = () => {
         }
       >
         <form id="product-architect-form" onSubmit={handleSubmit(onSubmit)} className="animate-fade-in">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
 
             {/* Left Column: Information & Variants */}
             <div className="lg:col-span-8 space-y-6">
 
               {/* Essential Information Section */}
-              <div className="bg-white/[0.03] rounded-[24px] p-6 border border-white/[0.06] relative overflow-hidden group">
-                <div className="flex items-center gap-2 mb-6">
-                  <span className="material-symbols-outlined text-neutral-500">info</span>
-                  <h3 className="text-[16px] font-bold text-white font-headline">Essential Information</h3>
-                </div>
-
-                <div className="space-y-6">
+              <SectionCard title="Essential Information" icon="info">
+                <div className="space-y-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="relative">
-                      <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1.5 ml-1">Product Name</label>
+                      <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest mb-1.5 ml-1">Product Name</label>
                       <input
                         placeholder="e.g. Minimalist Cashmere Overcoat"
                         {...register("name", productRules.name)}
-                        className={`w-full bg-[#141414] border ${errors.name ? 'border-red-500/40' : 'border-white/10'} rounded-[14px] px-4 py-3.5 text-[14px] font-medium focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all placeholder:text-neutral-600 h-[52px]`}
+                        className={`w-full bg-white text-[#171717] border ${errors.name ? 'border-red-400 focus:ring-red-100' : 'border-[#E4DED6] focus:border-[#C9A77A] focus:ring-[#C9A77A]/15'} rounded-[14px] px-4 py-3.5 text-[14px] font-bold focus:ring-4 outline-none transition-all placeholder:text-[#9d978f] placeholder:font-medium h-[52px]`}
                         onChange={(e) => {
                           const val = e.target.value;
                           setProductName(val);
@@ -1772,16 +1766,16 @@ export const ProductsPage = () => {
                           }
                         }}
                       />
-                      {errors.name && <p className="text-red-400 text-[11px] font-bold mt-1.5 ml-1">{errors.name.message}</p>}
+                      {errors.name && <p className="text-red-600 text-[11px] font-bold mt-1.5 ml-1">{errors.name.message}</p>}
                     </div>
 
                     <div className="relative">
                       <div className="flex items-center justify-between mb-1.5">
-                        <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest ml-1">SKU Identification</label>
+                        <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest ml-1">SKU Identification</label>
                         <button
                           type="button"
                           onClick={() => setSku(generateSKU(productName))}
-                          className="text-[10px] font-black text-white hover:underline uppercase tracking-widest transition-all"
+                          className="text-[10px] font-black text-[#8A6D3F] hover:text-[#171717] hover:underline uppercase tracking-widest transition-all"
                         >
                           Regenerate
                         </button>
@@ -1790,19 +1784,19 @@ export const ProductsPage = () => {
                         placeholder="e.g. RA-MCO-1234"
                         value={sku}
                         onChange={(e) => setSku(e.target.value.toUpperCase().replace(/\s/g, ""))}
-                        className="w-full bg-[#141414] border border-white/10 rounded-[14px] px-4 py-3.5 text-[14px] font-black tracking-widest focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all placeholder:text-neutral-600 h-[52px]"
+                        className="w-full bg-white text-[#171717] border border-[#E4DED6] rounded-[14px] px-4 py-3.5 text-[14px] font-mono font-bold tracking-wider focus:ring-4 focus:ring-[#C9A77A]/15 focus:border-[#C9A77A] outline-none transition-all placeholder:text-[#9d978f] h-[52px]"
                       />
                     </div>
                   </div>
 
                   <div className="relative">
                     <div className="flex items-center justify-between mb-1.5">
-                      <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest ml-1">Description</label>
+                      <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest ml-1">Description</label>
                       <button
                         type="button"
                         onClick={handleGenerateDescription}
                         disabled={generatingDesc || !productName}
-                        className="flex items-center gap-1 text-[10px] font-bold text-white hover:opacity-70 disabled:opacity-30 transition-opacity"
+                        className="flex items-center gap-1 text-[10px] font-bold text-[#8A6D3F] hover:text-[#171717] disabled:opacity-40 transition-colors uppercase tracking-wider"
                       >
                         {generatingDesc ? 'Neural Processing...' : '✨ Generate with AI'}
                       </button>
@@ -1811,60 +1805,60 @@ export const ProductsPage = () => {
                       placeholder="Describe the silhouette, materials, and artisan techniques used..."
                       {...register("description", productRules.description)}
                       rows={4}
-                      className={`w-full bg-[#141414] border ${errors.description ? 'border-red-500/40' : 'border-white/10'} rounded-[14px] px-4 py-3.5 text-[14px] font-medium focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all placeholder:text-neutral-600 resize-none`}
+                      className={`w-full bg-white text-[#171717] border ${errors.description ? 'border-red-400 focus:ring-red-100' : 'border-[#E4DED6] focus:border-[#C9A77A] focus:ring-[#C9A77A]/15'} rounded-[14px] px-4 py-3.5 text-[14px] font-medium focus:ring-4 outline-none transition-all placeholder:text-[#9d978f] resize-none`}
                     />
-                    {errors.description && <p className="text-red-400 text-[11px] font-bold mt-1.5 ml-1">{errors.description.message}</p>}
+                    {errors.description && <p className="text-red-600 text-[11px] font-bold mt-1.5 ml-1">{errors.description.message}</p>}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="relative text-left">
-                      <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1.5 ml-1 text-left">Actual Cost (LKR)</label>
+                      <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest mb-1.5 ml-1 text-left">Actual Cost (LKR)</label>
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 font-bold text-[14px]">Rs.</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#77736E] font-bold text-[14px]">Rs.</span>
                         <input
                           type="number"
                           step="0.01"
                           placeholder="0.00"
                           {...register("costPrice", productRules.costPrice)}
-                          className={`w-full bg-white/[0.03] border ${errors.costPrice ? 'border-red-500/40' : 'border-white/[0.06]'} rounded-[14px] pl-11 pr-4 py-3.5 text-[14px] font-bold focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all h-[52px]`}
+                          className={`w-full bg-white text-[#171717] border ${errors.costPrice ? 'border-red-400 focus:ring-red-100' : 'border-[#E4DED6] focus:border-[#C9A77A] focus:ring-[#C9A77A]/15'} rounded-[14px] pl-11 pr-4 py-3.5 text-[14px] font-bold focus:ring-4 outline-none transition-all h-[52px]`}
                         />
                       </div>
-                      {errors.costPrice && <p className="text-red-400 text-[11px] font-bold mt-1.5 ml-1 text-left">{errors.costPrice.message}</p>}
+                      {errors.costPrice && <p className="text-red-600 text-[11px] font-bold mt-1.5 ml-1 text-left">{errors.costPrice.message}</p>}
                       {watch("price") && watch("costPrice") && (
-                        <p className="text-[10px] font-bold text-neutral-500 mt-1.5 ml-1 text-left">
-                          Est. Profit: <span className="text-white">Rs. {(Number(watch("price")) - Number(watch("costPrice"))).toLocaleString()}</span>
+                        <p className="text-[11px] font-semibold text-[#77736E] mt-1.5 ml-1 text-left">
+                          Est. Profit: <span className="font-bold text-[#171717]">Rs. {(Number(watch("price")) - Number(watch("costPrice"))).toLocaleString()}</span>
                         </p>
                       )}
                     </div>
 
                     <div className="relative group/price">
                       <div className="flex items-center justify-between mb-1.5 ml-1">
-                        <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest text-left">Retail Price (LKR)</label>
+                        <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest text-left">Retail Price (LKR)</label>
                         {watch("price") && watch("costPrice") && (
                           <div className="flex items-center gap-2">
-                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${Number(watch("price")) - Number(watch("costPrice")) > 0 ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${Number(watch("price")) - Number(watch("costPrice")) > 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
                               {Math.round(((Number(watch("price")) - Number(watch("costPrice"))) / Number(watch("price"))) * 100)}% Margin
                             </span>
                           </div>
                         )}
                       </div>
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 font-bold text-[14px]">Rs.</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#77736E] font-bold text-[14px]">Rs.</span>
                         <input
                           type="number"
                           step="0.01"
                           placeholder="0.00"
                           {...register("price", productRules.price)}
-                          className={`w-full bg-[#141414] border ${errors.price ? 'border-red-500/40' : 'border-white/10'} rounded-[14px] pl-11 pr-4 py-3.5 text-[14px] font-black focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all h-[52px]`}
+                          className={`w-full bg-white text-[#171717] border ${errors.price ? 'border-red-400 focus:ring-red-100' : 'border-[#E4DED6] focus:border-[#C9A77A] focus:ring-[#C9A77A]/15'} rounded-[14px] pl-11 pr-4 py-3.5 text-[14px] font-black focus:ring-4 outline-none transition-all h-[52px]`}
                         />
                       </div>
-                      {errors.price && <p className="text-red-400 text-[11px] font-bold mt-1.5 ml-1 text-left">{errors.price.message}</p>}
+                      {errors.price && <p className="text-red-600 text-[11px] font-bold mt-1.5 ml-1 text-left">{errors.price.message}</p>}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="relative text-left">
-                      <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1.5 ml-1 text-left">Collection Category</label>
+                      <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest mb-1.5 ml-1 text-left">Collection Category</label>
                       <div className="relative">
                         <select
                           {...register("categoryId", {
@@ -1888,35 +1882,33 @@ export const ProductsPage = () => {
                               }
                             }
                           })}
-                          style={{ colorScheme: "dark" }}
-                          className={`w-full bg-[#141414] text-white border ${errors.categoryId ? 'border-red-500/40' : 'border-white/10'} rounded-[14px] px-4 py-3.5 text-[14px] font-bold focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all h-[52px] appearance-none cursor-pointer`}
+                          className={`w-full bg-white text-[#171717] border ${errors.categoryId ? 'border-red-400 focus:ring-red-100' : 'border-[#E4DED6] focus:border-[#C9A77A] focus:ring-[#C9A77A]/15'} rounded-[14px] px-4 py-3.5 text-[14px] font-bold focus:ring-4 outline-none transition-all h-[52px] appearance-none cursor-pointer`}
                         >
-                          <option value="" className="bg-[#141414] text-neutral-400">Select Collection</option>
+                          <option value="" className="bg-white text-[#77736E]">Select Collection</option>
                           {categories.filter(c => c.isActive !== false).map((c) => (
-                            <option key={c.id} value={c.id} className="bg-[#141414] text-white">{c.name}</option>
+                            <option key={c.id} value={c.id} className="bg-white text-[#171717]">{c.name}</option>
                           ))}
                         </select>
-                        <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none">unfold_more</span>
+                        <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#77736E] pointer-events-none">unfold_more</span>
                       </div>
-                      {errors.categoryId && <p className="text-red-400 text-[11px] font-bold mt-1.5 ml-1">{errors.categoryId.message}</p>}
+                      {errors.categoryId && <p className="text-red-600 text-[11px] font-bold mt-1.5 ml-1">{errors.categoryId.message}</p>}
                     </div>
 
                     <div className="relative text-left">
-                      <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1.5 ml-1 text-left">Supplier Source</label>
+                      <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest mb-1.5 ml-1 text-left">Supplier Source</label>
                       <div className="relative text-left">
                         <select
                           {...register("supplierId", productRules.supplierId)}
-                          style={{ colorScheme: "dark" }}
-                          className={`w-full bg-[#141414] text-white border ${errors.supplierId ? 'border-red-500/40' : 'border-white/10'} rounded-[14px] px-4 py-3.5 text-[14px] font-bold focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all h-[52px] appearance-none cursor-pointer`}
+                          className={`w-full bg-white text-[#171717] border ${errors.supplierId ? 'border-red-400 focus:ring-red-100' : 'border-[#E4DED6] focus:border-[#C9A77A] focus:ring-[#C9A77A]/15'} rounded-[14px] px-4 py-3.5 text-[14px] font-bold focus:ring-4 outline-none transition-all h-[52px] appearance-none cursor-pointer`}
                         >
-                          <option value="" className="bg-[#141414] text-neutral-400">Select Supplier</option>
+                          <option value="" className="bg-white text-[#77736E]">Select Supplier</option>
                           {suppliers.map((s) => (
-                            <option key={s.id} value={s.id} className="bg-[#141414] text-white">{s.name}</option>
+                            <option key={s.id} value={s.id} className="bg-white text-[#171717]">{s.name}</option>
                           ))}
                         </select>
-                        <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none">factory</span>
+                        <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#77736E] pointer-events-none">factory</span>
                       </div>
-                      {errors.supplierId && <p className="text-red-400 text-[11px] font-bold mt-1.5 ml-1 text-left">{errors.supplierId.message}</p>}
+                      {errors.supplierId && <p className="text-red-600 text-[11px] font-bold mt-1.5 ml-1 text-left">{errors.supplierId.message}</p>}
                     </div>
 
                     {/* Conditional Stock Input for Simple Items */}
@@ -1929,21 +1921,21 @@ export const ProductsPage = () => {
 
                       return (
                         <div className="relative animate-in fade-in slide-in-from-top-2 duration-300">
-                          <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1.5 ml-1">Total Available Stock</label>
+                          <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest mb-1.5 ml-1">Total Available Stock</label>
                           <input
                             type="number"
                             placeholder="0"
                             min="0"
                             {...register("stock", { ...productRules.stock, min: { value: 0, message: "Stock cannot be negative" } })}
-                            className={`w-full bg-[#141414] border ${errors.stock ? 'border-red-500/40' : 'border-white/10'} rounded-[14px] px-4 py-3.5 text-[14px] font-black focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all h-[52px]`}
+                            className={`w-full bg-white text-[#171717] border ${errors.stock ? 'border-red-400 focus:ring-red-100' : 'border-[#E4DED6] focus:border-[#C9A77A] focus:ring-[#C9A77A]/15'} rounded-[14px] px-4 py-3.5 text-[14px] font-black focus:ring-4 outline-none transition-all h-[52px]`}
                           />
-                          {errors.stock && <p className="text-red-400 text-[11px] font-bold mt-1.5 ml-1 text-left">{errors.stock.message}</p>}
+                          {errors.stock && <p className="text-red-600 text-[11px] font-bold mt-1.5 ml-1 text-left">{errors.stock.message}</p>}
                         </div>
                       );
                     })()}
                   </div>
                 </div>
-              </div>
+              </SectionCard>
 
               {/* Product Variants Section - Autonomous Discovery */}
               {(() => {
@@ -1954,49 +1946,46 @@ export const ProductsPage = () => {
                 if (!variantConfig || !Array.isArray(variantConfig) || variantConfig.length === 0) return null;
 
                 return (
-                  <div className="bg-[#141414] rounded-[24px] p-6 border border-white/[0.06] shadow-[0_4px_25px_rgba(0,0,0,0.03)] relative overflow-visible group animate-in zoom-in-95 duration-300">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                          <span className="material-symbols-outlined text-[18px] text-white">inventory_2</span>
-                        </div>
-                        <h3 className="text-[15px] font-black text-white font-headline uppercase tracking-tight">Product Variants</h3>
-                      </div>
+                  <SectionCard
+                    title="Product Variants"
+                    icon="inventory_2"
+                    className="overflow-visible animate-in zoom-in-95 duration-300"
+                    action={
                       <button
                         type="button"
                         onClick={addVariant}
-                        className="flex items-center gap-1.5 text-[10px] font-black text-white uppercase tracking-widest bg-white/[0.06] hover:bg-white/[0.12] px-4 py-2 rounded-[10px] transition-all"
+                        className="flex items-center gap-1.5 text-[10px] font-black text-[#171717] uppercase tracking-widest bg-white hover:bg-[#F1ECE5] border border-[#E4DED6] px-4 py-2 rounded-[10px] transition-all shadow-2xs active:scale-95"
                       >
                         <span className="material-symbols-outlined text-[16px]">add</span>
                         Add Option
                       </button>
-                    </div>
-
-                    <div className="pt-2 pb-6">
+                    }
+                  >
+                    <div className="bg-white rounded-2xl border border-[#E4DED6] shadow-2xs overflow-x-auto">
                       <table className="w-full text-left border-separate border-spacing-0">
                         <thead>
-                          <tr>
+                          <tr className="bg-[#FAF8F5]">
                             {variantConfig.map(cfg => (
-                              <th key={cfg.name} className="pb-3 text-[10px] font-black text-neutral-500 uppercase tracking-widest px-3 border-b border-white/[0.06]">
+                              <th key={cfg.name} className="py-3 text-[10px] font-black text-[#5f5a53] uppercase tracking-widest px-4 border-b border-[#E4DED6]">
                                 {cfg.name}
                               </th>
                             ))}
-                            <th className="pb-3 text-[10px] font-black text-neutral-500 uppercase tracking-widest px-3 border-b border-white/[0.06]">Stock Level</th>
-                            <th className="pb-3 w-10 border-b border-white/[0.06]"></th>
+                            <th className="py-3 text-[10px] font-black text-[#5f5a53] uppercase tracking-widest px-4 border-b border-[#E4DED6]">Stock Level</th>
+                            <th className="py-3 w-12 border-b border-[#E4DED6]"></th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/[0.04]">
+                        <tbody className="divide-y divide-[#EFEAE2]">
                           {variants.length === 0 ? (
                             <tr>
-                              <td colSpan={variantConfig.length + 2} className="py-10 text-center text-neutral-600 text-[12px] font-medium italic">
+                              <td colSpan={variantConfig.length + 2} className="py-10 text-center text-[#77736E] text-[12px] font-medium italic">
                                 No variants configured. Click "Add Option" to begin.
                               </td>
                             </tr>
                           ) : (
                             variants.map((v, i) => (
-                              <tr key={i} className="group/row">
+                              <tr key={i} className="group/row hover:bg-[#FAF8F5]/60 transition-colors">
                                 {variantConfig.map(cfg => (
-                                  <td key={cfg.name} className="py-4 px-2">
+                                  <td key={cfg.name} className="py-3.5 px-3">
                                     {isColorAttribute(cfg.name) ? (
                                       <ColorAtelier
                                         value={v.attributes?.[cfg.name] || []}
@@ -2010,32 +1999,32 @@ export const ProductsPage = () => {
                                       <select
                                         value={v.attributes?.[cfg.name] || ""}
                                         onChange={(e) => updateVariant(i, cfg.name, e.target.value)}
-                                        style={{ colorScheme: "dark" }}
-                                        className="w-full bg-white/[0.03] text-white border border-white/[0.06] rounded-[10px] px-3 py-2 text-[13px] font-bold focus:ring-4 focus:ring-white/10 focus:border-white/40 transition-all outline-none cursor-pointer h-[42px]"
+                                        className="w-full bg-[#FAF8F5] focus:bg-white text-[#171717] border border-[#E4DED6] rounded-[10px] px-3 py-2 text-[13px] font-bold focus:ring-4 focus:ring-[#C9A77A]/15 focus:border-[#C9A77A] transition-all outline-none cursor-pointer h-[42px]"
                                       >
-                                        <option value="" className="bg-[#141414] text-neutral-400">Select {cfg.name}</option>
+                                        <option value="" className="bg-white text-[#77736E]">Select {cfg.name}</option>
                                         {cfg.options?.map(opt => (
-                                          <option key={opt} value={opt} className="bg-[#141414] text-white">{opt}</option>
+                                          <option key={opt} value={opt} className="bg-white text-[#171717]">{opt}</option>
                                         ))}
                                       </select>
                                     )}
                                   </td>
                                 ))}
-                                <td className="py-4 px-2">
+                                <td className="py-3.5 px-3">
                                   <input
                                     type="number"
                                     placeholder="0"
                                     min="0"
                                     value={v.stock}
                                     onChange={(e) => updateVariant(i, 'stock', e.target.value)}
-                                    className="w-24 bg-white/[0.03] border border-white/[0.06] rounded-[10px] px-3 py-2 text-[13px] font-black focus:ring-4 focus:ring-white/10 focus:border-white/40 transition-all outline-none h-[42px]"
+                                    className="w-24 bg-[#FAF8F5] focus:bg-white text-[#171717] border border-[#E4DED6] rounded-[10px] px-3 py-2 text-[13px] font-black focus:ring-4 focus:ring-[#C9A77A]/15 focus:border-[#C9A77A] transition-all outline-none h-[42px]"
                                   />
                                 </td>
-                                <td className="py-4 text-center">
+                                <td className="py-3.5 px-2 text-center">
                                   <button
                                     type="button"
                                     onClick={() => removeVariant(i)}
-                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-600 hover:text-red-400 hover:bg-red-500/10 transition-all opacity-0 group-hover/row:opacity-100"
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-[#8a857d] hover:text-red-600 hover:bg-red-50 transition-all opacity-70 group-hover/row:opacity-100"
+                                    title="Remove variant"
                                   >
                                     <span className="material-symbols-outlined text-[18px]">delete</span>
                                   </button>
@@ -2045,13 +2034,13 @@ export const ProductsPage = () => {
                           )}
                         </tbody>
                         {variants.length > 0 && (
-                          <tfoot className="border-t border-white/[0.06]">
-                            <tr className="bg-white/[0.03]">
-                              <td colSpan={variantConfig.length} className="py-4 px-6 text-right">
-                                <span className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Total Products Count</span>
+                          <tfoot className="border-t border-[#E4DED6]">
+                            <tr className="bg-[#FAF8F5]">
+                              <td colSpan={variantConfig.length} className="py-3.5 px-4 text-right">
+                                <span className="text-[10px] font-black text-[#77736E] uppercase tracking-[0.18em]">Total Products Count</span>
                               </td>
-                              <td className="py-4 px-2">
-                                <div className="w-24 h-[42px] flex items-center justify-center bg-[#141414] border border-white/10 rounded-[10px] text-[14px] font-black text-white shadow-sm animate-in fade-in zoom-in duration-300">
+                              <td className="py-3.5 px-3">
+                                <div className="w-24 h-[38px] flex items-center justify-center bg-[#171717] text-white rounded-[10px] text-[13px] font-black shadow-2xs">
                                   {watch("stock") || 0}
                                 </div>
                               </td>
@@ -2061,98 +2050,20 @@ export const ProductsPage = () => {
                         )}
                       </table>
                     </div>
-                  </div>
+                  </SectionCard>
                 );
               })()}
             </div>
 
             {/* Right Column: Imagery & Status */}
             <div className="lg:col-span-4 space-y-6">
-
-              {/* Product Imagery Section */}
-              <div className="bg-[#0a0a0a] rounded-[28px] p-7 border border-white/[0.08] shadow-[0_20px_60px_rgba(0,0,0,0.5)] group overflow-hidden">
-                <div className="flex items-center gap-3 mb-8 border-b border-white/[0.05] pb-5">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.03] flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[20px] text-white/60">image</span>
-                  </div>
-                  <h3 className="text-[17px] font-black text-white font-headline tracking-tight uppercase">Product Imagery</h3>
-                </div>
-
-                <div className="space-y-6">
-                  <div
-                    className={`relative aspect-[4/5] rounded-[24px] border-2 border-dashed border-white/10 bg-white/[0.01] flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden group/upload ${images.length > 0 ? 'border-none' : 'hover:border-white/[0.08] hover:bg-white/[0.03]'}`}
-                    onClick={() => document.getElementById('image-upload').click()}
-                  >
-                    {images.length > 0 ? (
-                      <img src={images[0].url} alt="Preview" className="w-full h-full object-cover transition-transform duration-700 group-hover/upload:scale-110" />
-                    ) : (
-                      <>
-                        <div className="w-14 h-14 rounded-full bg-white/[0.05] shadow-2xl flex items-center justify-center mb-5 transition-transform group-hover/upload:scale-110 backdrop-blur-md border border-white/10">
-                          <span className="material-symbols-outlined text-white/50 text-[26px]">cloud_upload</span>
-                        </div>
-                        <p className="text-[14px] font-black text-white leading-tight">Drop images here</p>
-                        <p className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] mt-2">OR CLICK TO BROWSE GALLERY (MAX 5)</p>
-                      </>
-                    )}
-                    <input
-                      id="image-upload"
-                      type="file"
-                      multiple
-                      className="hidden"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const files = e.target.files;
-                        if (files.length > 0) handleImageChange(files);
-                      }}
-                    />
-                  </div>
-
-                  {images.length > 0 && (
-                    <div className="flex items-center gap-2.5 overflow-x-auto py-2 hide-scrollbar">
-                      {images.map((img, index) => (
-                        <div
-                          key={img.id}
-                          onClick={(e) => { e.stopPropagation(); setMainImage(img.id); }}
-                          className={`w-16 h-16 rounded-[14px] overflow-hidden shrink-0 relative group/thumb shadow-lg cursor-pointer transition-all duration-200 ${index === 0 ? 'border-2 border-amber-400 ring-2 ring-amber-400/30' : 'border border-white/10 hover:border-white/[0.08]'}`}
-                        >
-                          <img src={img.url} className="w-full h-full object-cover" />
-                          {index === 0 && (
-                            <div className="absolute top-0.5 left-0.5 w-5 h-5 rounded-md bg-amber-400 flex items-center justify-center shadow-md">
-                              <span className="material-symbols-outlined text-white text-[12px]">star</span>
-                            </div>
-                          )}
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/thumb:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                            <button type="button" onClick={(e) => { e.stopPropagation(); removeImage(img.id); }} className="text-white hover:scale-110 transition-transform">
-                              <span className="material-symbols-outlined text-[18px]">close</span>
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                      {images.length < 5 && (
-                        <button
-                          type="button"
-                          onClick={() => document.getElementById('image-upload').click()}
-                          className="w-16 h-16 rounded-[14px] bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 border-dashed flex items-center justify-center transition-all shrink-0 active:scale-90"
-                        >
-                          <span className="material-symbols-outlined text-white/30">add</span>
-                        </button>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="bg-white/[0.02] rounded-[20px] p-5 flex gap-3.5 items-start border border-white/[0.03]">
-                    <span className="material-symbols-outlined text-[20px] text-neutral-400 mt-0.5">info</span>
-                    <div>
-                      <h4 className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] mb-1.5">UPLOAD GUIDELINES</h4>
-                      <p className="text-[11px] text-neutral-500 font-medium leading-relaxed">
-                        High-resolution JPG/PNG. 4:5 aspect ratio recommended. Max 5 images per product.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
+              <ProductImageGallery
+                images={images}
+                maxImages={5}
+                onFilesSelected={handleImageChange}
+                onSetMainImage={setMainImage}
+                onRemoveImage={removeImage}
+              />
             </div>
           </div>
         </form>
@@ -2228,22 +2139,22 @@ export const ProductsPage = () => {
         size={restockModalProduct?.variants?.length > 0 ? "lg" : "md"}
         title={
           <div className="flex flex-col">
-            <div className="flex items-center gap-1.5 text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-1.5">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#77736E] uppercase tracking-widest mb-1.5">
               <span>Inventory</span>
               <span className="material-symbols-outlined text-[12px] mt-0.5">chevron_right</span>
-              <span className="text-white">Restock Protocol</span>
+              <span className="text-[#171717]">Restock Protocol</span>
             </div>
-            <h2 className="text-[20px] font-headline font-black tracking-tight text-white leading-none">
+            <h2 className="text-[20px] font-headline font-black tracking-tight text-[#171717] leading-none">
               {restockModalProduct?.name}
             </h2>
           </div>
         }
         actions={
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={closeRestockModal}
               type="button"
-              className="px-6 py-2 rounded-[12px] bg-white/[0.06] hover:bg-white/[0.12] text-white font-bold font-headline text-[12px] tracking-tight transition-all active:scale-95"
+              className="px-5 py-2 rounded-[12px] bg-white hover:bg-[#F1ECE5] border border-[#E4DED6] text-[#5f5a53] hover:text-[#171717] font-bold font-headline text-[12px] tracking-tight transition-all active:scale-95"
             >
               Cancel
             </button>
@@ -2251,7 +2162,7 @@ export const ProductsPage = () => {
               onClick={handleRestockSubmit}
               type="button"
               disabled={restockLoading}
-              className="px-8 py-2 rounded-[12px] bg-white hover:bg-neutral-200 text-black font-black font-headline text-[12px] tracking-tight shadow-md hover:shadow-lg transition-all flex items-center gap-2 active:scale-95 disabled:opacity-70"
+              className="px-6 py-2 rounded-[12px] bg-[#171717] hover:bg-[#292929] text-white font-bold font-headline text-[12px] tracking-tight shadow-sm transition-all flex items-center gap-2 active:scale-95 disabled:opacity-70"
             >
               {restockLoading ? (
                 <>
@@ -2268,11 +2179,11 @@ export const ProductsPage = () => {
           </div>
         }
       >
-        <div className="py-2 space-y-6">
+        <div className="py-1 space-y-6">
           {/* Product Identity Card */}
-          <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/[0.06] flex items-center justify-between group overflow-hidden relative">
+          <div className="bg-[#FAF8F5] rounded-2xl p-4 border border-[#E4DED6] flex items-center justify-between group overflow-hidden relative">
             <div className="flex items-center gap-4 relative z-10">
-              <div className="w-14 h-14 rounded-xl bg-[#141414] border border-white/10 flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
+              <div className="w-14 h-14 rounded-xl bg-white border border-[#E4DED6] flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
                 {restockModalProduct?.imageUrl ? (
                   <img
                     src={getFinalImageUrl(restockModalProduct.imageUrl)}
@@ -2280,28 +2191,23 @@ export const ProductsPage = () => {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 ) : (
-                  <ImageIcon size={24} className="text-neutral-600" />
+                  <ImageIcon size={24} className="text-[#8a857d]" />
                 )}
               </div>
               <div>
-                <p className="text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-0.5">Reference SKU</p>
-                <p className="text-[14px] font-mono font-bold text-white uppercase">{restockModalProduct?.sku || 'N/A'}</p>
+                <p className="text-[10px] font-black text-[#77736E] uppercase tracking-widest mb-0.5">Reference SKU</p>
+                <p className="text-[14px] font-mono font-bold text-[#171717] uppercase">{restockModalProduct?.sku || 'N/A'}</p>
               </div>
             </div>
 
             <div className="text-right relative z-10">
-              <p className="text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-0.5">Current Inventory</p>
+              <p className="text-[10px] font-black text-[#77736E] uppercase tracking-widest mb-0.5">Current Inventory</p>
               <div className="flex items-center gap-2 justify-end">
-                <span className={`w-2 h-2 rounded-full ${restockModalProduct?.stock < 10 ? 'bg-red-500 animate-pulse' : 'bg-green-500'}`}></span>
-                <p className={`text-[18px] font-black font-headline ${restockModalProduct?.stock < 10 ? 'text-red-400' : 'text-white'}`}>
+                <span className={`w-2 h-2 rounded-full ${restockModalProduct?.stock < 10 ? 'bg-red-500 animate-pulse' : 'bg-emerald-500'}`}></span>
+                <p className={`text-[18px] font-black font-headline ${restockModalProduct?.stock < 10 ? 'text-red-600' : 'text-[#171717]'}`}>
                   {restockModalProduct?.stock} Units
                 </p>
               </div>
-            </div>
-
-            {/* Subtle background decoration */}
-            <div className="absolute -right-4 -bottom-4 opacity-[0.03] pointer-events-none">
-              <span className="material-symbols-outlined text-[120px]">package_2</span>
             </div>
           </div>
 
@@ -2310,33 +2216,33 @@ export const ProductsPage = () => {
             {restockModalProduct?.variants && restockModalProduct.variants.length > 0 ? (
               <div className="animate-fade-in">
                 <div className="flex items-center justify-between mb-3 px-1">
-                  <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[14px]">tune</span>
+                  <label className="text-[10px] font-black text-[#77736E] uppercase tracking-widest flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[14px] text-[#9A7B4A]">tune</span>
                     Variant Breakdown
                   </label>
-                  <span className="text-[10px] font-black text-neutral-400 bg-white/[0.06] px-2.5 py-1 rounded-full uppercase tracking-tighter">
+                  <span className="text-[10px] font-black text-[#5f5a53] bg-[#F1ECE5] border border-[#E4DED6] px-2.5 py-1 rounded-full uppercase tracking-tighter">
                     {restockModalProduct.variants.length} Configs
                   </span>
                 </div>
 
-                <div className="border border-white/10 rounded-2xl overflow-hidden shadow-sm">
-                  <table className="w-full border-collapse bg-[#141414]">
+                <div className="border border-[#E4DED6] rounded-2xl overflow-hidden shadow-2xs">
+                  <table className="w-full border-collapse bg-white">
                     <thead>
-                      <tr className="bg-white/[0.03] border-bottom border-white/[0.06]">
-                        <th className="text-left py-3 px-4 text-[9px] font-bold text-neutral-400 uppercase tracking-widest border-b border-white/[0.06]">Configuration</th>
-                        <th className="text-right py-3 px-4 text-[9px] font-bold text-neutral-400 uppercase tracking-widest border-b border-white/[0.06]">On Hand</th>
-                        <th className="text-right py-3 px-4 text-[9px] font-bold text-neutral-400 uppercase tracking-widest border-b border-white/[0.06]">Request Amount</th>
+                      <tr className="bg-[#FAF8F5]">
+                        <th className="text-left py-3 px-4 text-[10px] font-bold text-[#5f5a53] uppercase tracking-widest border-b border-[#E4DED6]">Configuration</th>
+                        <th className="text-right py-3 px-4 text-[10px] font-bold text-[#5f5a53] uppercase tracking-widest border-b border-[#E4DED6]">On Hand</th>
+                        <th className="text-right py-3 px-4 text-[10px] font-bold text-[#5f5a53] uppercase tracking-widest border-b border-[#E4DED6]">Request Amount</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/[0.04]">
+                    <tbody className="divide-y divide-[#EFEAE2]">
                       {restockModalProduct.variants.map((v, idx) => (
-                        <tr key={idx} className="hover:bg-white/[0.05] transition-colors">
+                        <tr key={idx} className="hover:bg-[#FAF8F5] transition-colors">
                           <td className="py-3 px-4">
                             <div className="flex flex-wrap gap-1.5">
                               {v.attributes ? (
                                 Object.entries(v.attributes).map(([key, value]) => (
-                                  <span key={key} className="px-2 py-0.5 bg-white/[0.06] text-neutral-300 text-[10px] font-bold rounded-md uppercase tracking-tight flex items-center gap-1">
-                                    <span className="text-neutral-500 font-medium lowercase italic">{key}:</span>
+                                  <span key={key} className="px-2 py-0.5 bg-[#F1ECE5] border border-[#E4DED6] text-[#171717] text-[10px] font-bold rounded-md uppercase tracking-tight flex items-center gap-1">
+                                    <span className="text-[#77736E] font-medium lowercase italic">{key}:</span>
                                     <span>{typeof value === 'object' ? Object.values(value).filter(val => typeof val !== 'object').join(' / ') : String(value)}</span>
                                   </span>
                                 ))
@@ -2344,8 +2250,8 @@ export const ProductsPage = () => {
                                 Object.entries(v).map(([key, value]) => {
                                   if (['stock', 'priceAdj', 'price', 'quantity', 'attributes'].includes(key)) return null;
                                   return (
-                                    <span key={key} className="px-2 py-0.5 bg-white/[0.06] text-neutral-300 text-[10px] font-bold rounded-md uppercase tracking-tight flex items-center gap-1">
-                                      <span className="text-neutral-500 font-medium lowercase italic">{key}:</span>
+                                    <span key={key} className="px-2 py-0.5 bg-[#F1ECE5] border border-[#E4DED6] text-[#171717] text-[10px] font-bold rounded-md uppercase tracking-tight flex items-center gap-1">
+                                      <span className="text-[#77736E] font-medium lowercase italic">{key}:</span>
                                       <span>{typeof value === 'object' ? Object.values(value).filter(val => typeof val !== 'object').join(' / ') : String(value)}</span>
                                     </span>
                                   );
@@ -2354,7 +2260,7 @@ export const ProductsPage = () => {
                             </div>
                           </td>
                           <td className="py-3 px-4 text-right">
-                            <span className={`text-[12px] font-bold ${v.stock < 5 ? 'text-red-400' : 'text-neutral-400'}`}>
+                            <span className={`text-[12px] font-bold ${v.stock < 5 ? 'text-red-600' : 'text-[#5f5a53]'}`}>
                               {v.stock || 0}
                             </span>
                           </td>
@@ -2367,7 +2273,7 @@ export const ProductsPage = () => {
                                 ...variantQuantities,
                                 [idx]: Math.max(0, parseInt(e.target.value) || 0)
                               })}
-                              className="w-20 bg-white/[0.03] border border-white/10 hover:border-white/20 focus:border-white/40 rounded-lg px-2 py-1 text-[13px] font-bold text-right outline-none transition-all"
+                              className="w-20 bg-[#FAF8F5] focus:bg-white border border-[#E4DED6] focus:border-[#C9A77A] text-[#171717] rounded-lg px-2 py-1 text-[13px] font-bold text-right outline-none transition-all"
                               placeholder="0"
                             />
                           </td>
@@ -2375,7 +2281,7 @@ export const ProductsPage = () => {
                       ))}
                     </tbody>
                     <tfoot>
-                      <tr className="bg-white text-black">
+                      <tr className="bg-[#171717] text-white">
                         <td colSpan={2} className="py-3 px-4 text-[10px] font-black uppercase tracking-widest">Total Request Yield</td>
                         <td className="py-3 px-4 text-right font-headline font-black text-[16px]">
                           {Object.values(variantQuantities).reduce((a, b) => a + (b || 0), 0)}
@@ -2387,15 +2293,15 @@ export const ProductsPage = () => {
               </div>
             ) : (
               <div>
-                <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1.5 ml-1">Restock Quantity</label>
+                <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest mb-1.5 ml-1">Restock Quantity</label>
                 <div className="relative group">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-white transition-colors">inventory</span>
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#77736E] group-focus-within:text-[#171717] transition-colors">inventory</span>
                   <input
                     type="number"
                     min="1"
                     value={restockQuantity}
                     onChange={(e) => setRestockQuantity(parseInt(e.target.value))}
-                    className="w-full bg-[#141414] border border-white/10 rounded-[14px] pl-12 pr-4 py-3 text-[14px] font-bold focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all h-[52px] shadow-sm"
+                    className="w-full bg-white text-[#171717] border border-[#E4DED6] rounded-[14px] pl-12 pr-4 py-3 text-[14px] font-bold focus:ring-4 focus:ring-[#C9A77A]/15 focus:border-[#C9A77A] outline-none transition-all h-[52px]"
                     placeholder="Enter quantity to request..."
                   />
                 </div>
@@ -2403,15 +2309,15 @@ export const ProductsPage = () => {
             )}
 
             <div>
-              <label className="block text-[10px] font-black text-neutral-500 uppercase tracking-widest mb-1.5 ml-1 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[14px]">notes</span>
+              <label className="block text-[10px] font-black text-[#77736E] uppercase tracking-widest mb-1.5 ml-1 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[14px] text-[#9A7B4A]">notes</span>
                 Collaborative Notes (Optional)
               </label>
               <textarea
                 value={restockNotes}
                 onChange={(e) => setRestockNotes(e.target.value)}
                 rows={3}
-                className="w-full bg-[#141414] border border-white/10 rounded-[14px] px-4 py-3 text-[14px] font-medium focus:ring-4 focus:ring-white/10 focus:border-white/40 outline-none transition-all placeholder:text-neutral-600 resize-none shadow-sm min-h-[100px]"
+                className="w-full bg-white text-[#171717] border border-[#E4DED6] rounded-[14px] px-4 py-3 text-[14px] font-medium focus:ring-4 focus:ring-[#C9A77A]/15 focus:border-[#C9A77A] outline-none transition-all placeholder:text-[#9d978f] resize-none min-h-[100px]"
                 placeholder="Mention specific requirements for the supplier..."
               />
             </div>
@@ -2419,31 +2325,35 @@ export const ProductsPage = () => {
         </div>
       </Modal>
 
-      {/* Product Details Viewer (Crystal Clear Edit) */}
-      {viewProduct && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 animate-fade-in shadow-[0_0_100px_rgba(0,0,0,0.2)]">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-3xl transition-all duration-700" onClick={closeViewModal} />
-
-          <div className="bg-[#141414] text-white w-full max-w-6xl h-full max-h-[85vh] rounded-[32px] border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col md:flex-row relative animate-scale-up">
+      {/* Product Details Viewer */}
+      <ModalPortal
+        isOpen={!!viewProduct}
+        onClose={closeViewModal}
+        backdropClassName="bg-[#171717]/45 backdrop-blur-sm transition-all duration-500"
+        containerClassName="p-4 md:p-8"
+      >
+        {viewProduct && (
+          <div className="bg-white text-[#171717] w-full max-w-6xl h-full max-h-[85vh] rounded-[32px] border border-[#E4DED6] shadow-[0_40px_100px_rgba(23,23,23,0.22)] overflow-hidden flex flex-col md:flex-row relative animate-scale-up">
             {/* Close Button Pin */}
             <button
               onClick={closeViewModal}
-              className="absolute top-6 right-6 z-[10] w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-neutral-300 flex items-center justify-center transition-all active:scale-95 border border-white/10 backdrop-blur-md"
+              aria-label="Close product details"
+              className="absolute top-6 right-6 z-[10] w-10 h-10 rounded-full bg-[#FAF8F5] hover:bg-[#F1ECE5] text-[#5f5a53] hover:text-[#171717] flex items-center justify-center transition-all active:scale-95 border border-[#E4DED6]"
             >
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
 
             {/* Left Column: Visuals (55%) */}
-            <div className="w-full md:w-[55%] h-full bg-white flex flex-col relative group">
+            <div className="w-full md:w-[55%] h-full bg-[#F4EFE8] border-b md:border-b-0 md:border-r border-[#E4DED6] flex flex-col relative group">
               <div className="flex-1 overflow-hidden flex items-center justify-center p-8">
                 {activeDetailPhoto ? (
                   <img
                     src={getFinalImageUrl(activeDetailPhoto)}
-                    alt="Product"
-                    className="w-full h-full object-contain transition-transform duration-700 hover:scale-105"
+                    alt={viewProduct.name}
+                    className="w-full h-full object-contain rounded-2xl transition-transform duration-700 hover:scale-105"
                   />
                 ) : (
-                  <div className="flex flex-col items-center gap-4 text-neutral-300">
+                  <div className="flex flex-col items-center gap-4 text-[#8a857d]">
                     <span className="material-symbols-outlined text-[64px]">image_not_supported</span>
                     <p className="text-[11px] font-black uppercase tracking-widest">No Visuals Available</p>
                   </div>
@@ -2451,8 +2361,8 @@ export const ProductsPage = () => {
               </div>
 
               {/* Internal Gallery */}
-              <div className="p-8 pt-0 flex justify-center">
-                <div className="bg-black/30 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex gap-2 overflow-x-auto no-scrollbar max-w-full shadow-2xl">
+              <div className="p-6 pt-0 flex justify-center">
+                <div className="bg-white/95 backdrop-blur-md border border-[#E4DED6] p-2 rounded-2xl flex gap-2 overflow-x-auto no-scrollbar max-w-full shadow-sm">
                   {[viewProduct.imageUrl, ...(viewProduct.images || [])]
                     .filter(Boolean)
                     .filter((url, index, self) => self.indexOf(url) === index)
@@ -2460,9 +2370,9 @@ export const ProductsPage = () => {
                       <button
                         key={i}
                         onClick={() => setActiveDetailPhoto(url)}
-                        className={`w-14 h-14 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${activeDetailPhoto === url ? 'border-white scale-105 shadow-lg' : 'border-transparent opacity-40 hover:opacity-100'}`}
+                        className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${activeDetailPhoto === url ? 'border-[#171717] scale-105 shadow-sm' : 'border-transparent opacity-55 hover:opacity-100'}`}
                       >
-                        <img src={getFinalImageUrl(url)} className="w-full h-full object-cover" />
+                        <img src={getFinalImageUrl(url)} alt="" className="w-full h-full object-cover" />
                       </button>
                     ))}
                 </div>
@@ -2470,81 +2380,75 @@ export const ProductsPage = () => {
             </div>
 
             {/* Right Column: Information (45%) */}
-            <div className="w-full md:w-[45%] h-full bg-[#141414] p-10 overflow-y-auto no-scrollbar flex flex-col">
+            <div className="w-full md:w-[45%] h-full bg-white p-8 md:p-10 overflow-y-auto custom-scrollbar flex flex-col">
               {/* Header Info */}
-              <div className="mb-10">
+              <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
                   {viewProduct.stock === 0 ? (
-                    <span className="px-3 py-1 bg-red-500/15 text-red-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-red-500/25">Draft / Out of Stock</span>
+                    <span className="px-3 py-1 bg-red-50 text-red-700 text-[9px] font-black uppercase tracking-widest rounded-full border border-red-200">Draft / Out of Stock</span>
                   ) : viewProduct.stock <= 5 ? (
-                    <span className="px-3 py-1 bg-amber-500/15 text-amber-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-amber-500/25">Low Stock Alert</span>
+                    <span className="px-3 py-1 bg-amber-50 text-amber-800 text-[9px] font-black uppercase tracking-widest rounded-full border border-amber-200">Low Stock Alert</span>
                   ) : (
-                    <span className="px-3 py-1 bg-emerald-500/15 text-emerald-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-emerald-500/25">Inventory Active</span>
+                    <span className="px-3 py-1 bg-emerald-50 text-emerald-800 text-[9px] font-black uppercase tracking-widest rounded-full border border-emerald-200">Inventory Active</span>
                   )}
                 </div>
 
-                <h2 className="text-[32px] md:text-[42px] font-headline font-black text-white leading-tight mb-2 tracking-tight">{viewProduct.name}</h2>
-                <div className="flex items-center gap-3 text-neutral-400">
-                  <span className="text-[11px] font-black tracking-widest uppercase bg-white/[0.06] px-2.5 py-1 rounded-md border border-white/10">SKU: {viewProduct.sku}</span>
-                  <div className="w-1 h-1 rounded-full bg-white/20" />
-                  <span className="text-[12px] font-medium text-neutral-300">{categories.find(c => c.id === viewProduct.categoryId)?.name || 'General Category'}</span>
+                <h2 className="text-[28px] md:text-[34px] font-headline font-black text-[#171717] leading-tight mb-2.5 tracking-tight">{viewProduct.name}</h2>
+                <div className="flex flex-wrap items-center gap-3 text-[#5f5a53]">
+                  <span className="text-[11px] font-mono font-bold tracking-widest uppercase bg-[#FAF8F5] px-2.5 py-1 rounded-md border border-[#E4DED6] text-[#171717]">SKU: {viewProduct.sku}</span>
+                  <div className="w-1 h-1 rounded-full bg-[#D6CDBF]" />
+                  <span className="text-[12px] font-semibold text-[#5f5a53]">{categories.find(c => c.id === viewProduct.categoryId)?.name || 'General Category'}</span>
                 </div>
               </div>
 
               {/* Finance Grid */}
-              <div className="grid grid-cols-2 gap-4 mb-10">
-                <div className="bg-white/[0.03] border border-white/[0.06] p-6 rounded-[24px] hover:bg-white/[0.08] transition-colors group">
-                  <p className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em] mb-2">RETAIL PRICE</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-[24px] font-headline font-black text-white">{formatPrice(viewProduct.price)}</span>
-                    <span className="text-[12px] text-neutral-500 font-medium tracking-widest">USD</span>
-                  </div>
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="bg-[#FAF8F5] border border-[#E4DED6] p-5 rounded-[22px]">
+                  <p className="text-[10px] font-black text-[#77736E] uppercase tracking-[0.18em] mb-1.5">Retail Price</p>
+                  <span className="text-[22px] font-headline font-black text-[#171717]">{formatPrice(viewProduct.price)}</span>
                 </div>
-                <div className="bg-white/[0.03] border border-white/[0.06] p-6 rounded-[24px] hover:bg-white/[0.08] transition-colors group">
-                  <p className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em] mb-2">PROFIT MARGIN</p>
-                  <div className="flex items-baseline gap-1">
+                <div className="bg-[#FAF8F5] border border-[#E4DED6] p-5 rounded-[22px]">
+                  <p className="text-[10px] font-black text-[#77736E] uppercase tracking-[0.18em] mb-1.5">Profit Margin</p>
+                  <div className="flex items-baseline gap-1.5">
                     {(() => {
                       const margin = viewProduct.price > 0 ? Math.round(((viewProduct.price - viewProduct.costPrice) / viewProduct.price) * 100) : 0;
                       return (
-                        <span className={`text-[24px] font-headline font-black ${margin >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <span className={`text-[22px] font-headline font-black ${margin >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
                           {margin}%
                         </span>
                       );
                     })()}
-                    <span className="text-[12px] text-neutral-500 font-medium tracking-widest">NET</span>
+                    <span className="text-[11px] text-[#77736E] font-bold tracking-widest uppercase">Net</span>
                   </div>
                 </div>
               </div>
 
               {/* Variant Specs */}
-              <div className="mb-10 flex-1">
-                <div className="flex items-center justify-between mb-6 border-b border-white/[0.06] pb-4">
-                  <h3 className="text-[13px] font-black text-white uppercase tracking-[0.2em]">Variant Inventory</h3>
-                  <span className="text-[11px] font-bold text-neutral-500">{viewProduct.variants?.length || 0} SELECTIONS</span>
+              <div className="mb-8 flex-1">
+                <div className="flex items-center justify-between mb-4 border-b border-[#EFEAE2] pb-3">
+                  <h3 className="text-[12px] font-black text-[#171717] uppercase tracking-[0.18em]">Variant Inventory</h3>
+                  <span className="text-[10px] font-bold text-[#77736E] bg-[#FAF8F5] border border-[#E4DED6] px-2.5 py-0.5 rounded-full">{viewProduct.variants?.length || 0} Selections</span>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {viewProduct.variants && viewProduct.variants.length > 0 ? (
                     viewProduct.variants.map((v, idx) => {
-                      // Helper to resolve color name from hex (handles strings and arrays)
-                      const resolveColorName = (val) => {
+                      const resolveHexColorName = (val) => {
                         if (!val) return val;
-                        if (Array.isArray(val)) return val.map(v => resolveColorName(v)).filter(v => v && !String(v).startsWith('#')).join(', ');
+                        if (Array.isArray(val)) return val.map(item => resolveHexColorName(item)).filter(item => item && !String(item).startsWith('#')).join(', ');
                         if (typeof val !== 'string' || !val.startsWith('#')) return val;
                         const found = synapticPalette.find(p => p.hex.toLowerCase() === val.toLowerCase());
                         return found ? found.name : val;
                       };
 
-                      // Extract attributes properly, flattening arrays and filtering hex codes
                       const attrDisplay = v.attributes
                         ? Object.entries(v.attributes)
-                          .map(([key, value]) => resolveColorName(value))
+                          .map(([, value]) => resolveHexColorName(value))
                           .filter(val => val && (typeof val !== 'string' || !val.startsWith('#')))
                           .filter(Boolean)
                           .join(' / ')
                         : `${v.size || ''} / ${v.color || ''}`.replace(/^ \/ | \/ $/, '');
 
-                      // Find all actual color codes for the multi-tone swatch
                       const allAttrValues = Object.values(v.attributes || {}).flat();
                       const swatchColors = allAttrValues.filter(val => typeof val === 'string' && val.startsWith('#'));
                       if (v.colorCode) swatchColors.unshift(v.colorCode);
@@ -2552,85 +2456,91 @@ export const ProductsPage = () => {
                       const uniqueSwatches = [...new Set(swatchColors)];
 
                       return (
-                        <div key={idx} className="flex items-center justify-between bg-white/[0.03] border border-white/[0.06] p-4 rounded-[18px] hover:border-white/20 transition-all">
-                          <div className="flex items-center gap-4">
+                        <div key={idx} className="flex items-center justify-between bg-[#FAF8F5] border border-[#E4DED6] p-4 rounded-[18px] hover:border-[#C9A77A] transition-all">
+                          <div className="flex items-center gap-3.5">
                             <div className="flex -space-x-1">
                               {uniqueSwatches.length > 0 ? (
                                 uniqueSwatches.map((color, cIdx) => (
                                   <div
                                     key={cIdx}
-                                    className="w-3 h-3 rounded-full shadow-sm border border-white ring-1 ring-white/10"
+                                    className="w-3.5 h-3.5 rounded-full shadow-2xs border border-white ring-1 ring-[#D6CDBF]"
                                     style={{ backgroundColor: color, zIndex: uniqueSwatches.length - cIdx }}
                                   />
                                 ))
                               ) : (
-                                <div className="w-3 h-3 rounded-full bg-white/10 border border-white ring-1 ring-white/10" />
+                                <div className="w-3.5 h-3.5 rounded-full bg-[#EFEAE2] border border-[#D6CDBF]" />
                               )}
                             </div>
                             <div>
-                              <p className="text-[11px] font-black text-neutral-100 uppercase tracking-wider">
+                              <p className="text-[11px] font-black text-[#171717] uppercase tracking-wider">
                                 {attrDisplay || 'Standard Variant'}
                               </p>
-                              <p className="text-[10px] text-neutral-400 font-medium">QTY: {v.stock} UNITS</p>
+                              <p className="text-[10px] text-[#77736E] font-semibold">QTY: {v.stock} UNITS</p>
                             </div>
                           </div>
-                          <p className="text-[13px] font-black text-white">
+                          <p className="text-[13px] font-black text-[#171717]">
                             {v.priceAdj > 0 ? `+${formatPrice(v.priceAdj)}` : formatPrice(viewProduct.price + (v.priceAdj || 0))}
                           </p>
                         </div>
                       );
                     })
                   ) : (
-                    <div className="bg-white/[0.03] rounded-[20px] p-8 text-center border border-dashed border-white/10">
-                      <p className="text-neutral-500 text-[11px] font-black uppercase tracking-widest">No Variants Configured</p>
+                    <div className="bg-[#FAF8F5] rounded-[18px] p-6 text-center border border-dashed border-[#D6CDBF]">
+                      <p className="text-[#77736E] text-[11px] font-bold uppercase tracking-widest">No Variants Configured</p>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Description */}
-              <div className="mb-10">
-                <h3 className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em] mb-4">Description</h3>
-                <p className="text-neutral-300 text-[14px] leading-relaxed font-medium">
+              <div className="mb-8">
+                <h3 className="text-[10px] font-black text-[#77736E] uppercase tracking-[0.18em] mb-3">Description</h3>
+                <p className="text-[#3d3a36] text-[14px] leading-relaxed font-medium">
                   {viewProduct.description || 'No description provided for this collection item.'}
                 </p>
               </div>
 
               {/* Footer Meta */}
-              <div className="pt-10 border-t border-white/[0.06] flex items-center justify-between mt-auto">
-                <div className="space-y-1">
-                  <p className="text-[9px] font-black text-neutral-500 uppercase tracking-widest">ACQUISITION</p>
-                  <p className="text-[11px] text-neutral-300 font-medium">{suppliers.find(s => s.id === viewProduct.supplierId)?.name || 'Direct Procurement'}</p>
+              <div className="pt-6 border-t border-[#EFEAE2] flex items-center justify-between mt-auto gap-4">
+                <div className="space-y-0.5 min-w-0">
+                  <p className="text-[9px] font-black text-[#8a857d] uppercase tracking-widest">Acquisition</p>
+                  <p className="text-[12px] text-[#171717] font-bold truncate">{suppliers.find(s => s.id === viewProduct.supplierId)?.name || 'Direct Procurement'}</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-2.5 shrink-0">
                   <button
                     onClick={() => {
                       navigate(`/admin/products/${viewProduct.id}/print`);
                     }}
-                    className="h-12 px-6 rounded-2xl bg-white hover:bg-neutral-200 flex items-center justify-center gap-2 transition-all text-black shadow-lg active:scale-95"
+                    className="h-11 px-5 rounded-2xl bg-[#171717] hover:bg-[#292929] flex items-center justify-center gap-2 transition-all text-white shadow-sm active:scale-95"
                     title="Print Barcode Tags"
                   >
-                    <span className="material-symbols-outlined text-[20px]">barcode_scanner</span>
-                    <span className="text-[11px] font-black uppercase tracking-widest hidden sm:block">Print Tags</span>
+                    <span className="material-symbols-outlined text-[18px]">barcode_scanner</span>
+                    <span className="text-[11px] font-bold uppercase tracking-widest hidden sm:block">Print Tags</span>
                   </button>
                   <button
                     onClick={() => {
                       closeViewModal();
                       openEditModal(viewProduct);
                     }}
-                    className="w-12 h-12 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] flex items-center justify-center transition-all border border-white/10 text-neutral-200 shadow-sm"
+                    className="w-11 h-11 rounded-2xl bg-white hover:bg-[#F1ECE5] flex items-center justify-center transition-all border border-[#E4DED6] text-[#171717]"
+                    title="Edit Product"
                   >
-                    <span className="material-symbols-outlined text-[20px]">edit</span>
+                    <span className="material-symbols-outlined text-[19px]">edit</span>
                   </button>
-                  <button onClick={() => { closeViewModal(); setDeleteTarget(viewProduct); }} className="w-12 h-12 rounded-2xl bg-red-500/15 hover:bg-red-500/25 flex items-center justify-center transition-all border border-red-500/25 text-red-400 shadow-sm">
-                    <span className="material-symbols-outlined text-[20px]">delete</span>
+                  <button
+                    onClick={() => { closeViewModal(); setDeleteTarget(viewProduct); }}
+                    className="w-11 h-11 rounded-2xl bg-red-50 hover:bg-red-100 flex items-center justify-center transition-all border border-red-200 text-red-600"
+                    title="Delete Product"
+                  >
+                    <span className="material-symbols-outlined text-[19px]">delete</span>
                   </button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </ModalPortal>
+
       {/* Send Replacement Product Modal */}
       <Modal
         isOpen={isSendProductModalOpen}
@@ -2643,53 +2553,51 @@ export const ProductsPage = () => {
       >
         <div className="space-y-4">
           {parseNotesMeta(selectedRequestForSend?.notes)?.originalItemPrice && (
-            <div className="mx-0.5 p-3 bg-indigo-600 rounded-2xl flex items-center justify-between shadow-lg shadow-indigo-500/20">
-              <div className="flex items-center gap-3 text-white">
-                <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+            <div className="p-4 bg-[#F4EFE8] border border-[#C9A77A]/40 rounded-2xl flex items-center justify-between">
+              <div className="flex items-center gap-3 text-[#171717]">
+                <span className="material-symbols-outlined text-[20px] text-[#9A7B4A]">account_balance_wallet</span>
                 <p className="text-[11px] font-black uppercase tracking-widest leading-none">Available Exchange Credit</p>
               </div>
-              <p className="text-[16px] font-black text-white">
+              <p className="text-[16px] font-black text-[#171717]">
                 {parseNotesMeta(selectedRequestForSend.notes).originalItemPrice} LKR
               </p>
             </div>
           )}
 
-          <div className="space-y-6">
+          <div className="space-y-5">
             {!selectedProductForVariant ? (
               <>
                 <div className="relative group">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 text-[20px] group-focus-within:text-indigo-400 transition-colors">search</span>
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#77736E] text-[20px] group-focus-within:text-[#171717] transition-colors">search</span>
                   <input
                     type="text"
                     placeholder="Search products by name or SKU..."
                     value={productSearchTerm}
                     onChange={(e) => setProductSearchTerm(e.target.value)}
-                    className="w-full bg-white/[0.03] border border-white/10 focus:border-indigo-600 rounded-2xl py-3 pl-12 pr-4 text-[13px] font-bold outline-none transition-all"
+                    className="w-full bg-[#FAF8F5] focus:bg-white text-[#171717] placeholder:text-[#9d978f] border border-[#E4DED6] focus:border-[#C9A77A] focus:ring-4 focus:ring-[#C9A77A]/15 rounded-2xl py-3 pl-12 pr-4 text-[13px] font-bold outline-none transition-all"
                   />
                 </div>
 
-                <div className="max-h-[400px] overflow-y-auto pr-2 space-y-2 custom-scrollbar">
+                <div className="max-h-[400px] overflow-y-auto pr-1 space-y-2 custom-scrollbar">
                   {allProducts
                     .filter(p => p.name.toLowerCase().includes(productSearchTerm.toLowerCase()) || p.sku?.toLowerCase().includes(productSearchTerm.toLowerCase()))
                     .map((product) => {
                       const meta = parseNotesMeta(selectedRequestForSend?.notes);
-                      // If no variants, check base price. If variants, we check in sub-view.
                       const isBaseOverpriced = !product.variants?.length && meta?.originalItemPrice && product.price > meta.originalItemPrice;
 
                       return (
-                        <div key={product.id} className={`flex items-center justify-between p-3 rounded-2xl transition-all border group ${isBaseOverpriced ? 'bg-red-500/10 border-red-500/20 opacity-80' : 'bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.08]'
-                          }`}>
+                        <div key={product.id} className={`flex items-center justify-between p-3 rounded-2xl transition-all border group ${isBaseOverpriced ? 'bg-red-50 border-red-200 opacity-85' : 'bg-[#FAF8F5] border-[#E4DED6] hover:bg-white hover:border-[#C9A77A]'}`}>
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-xl bg-[#141414] border border-white/10 overflow-hidden shrink-0">
+                            <div className="w-12 h-12 rounded-xl bg-white border border-[#E4DED6] overflow-hidden shrink-0">
                               <img src={getFinalImageUrl(product.imageUrl)} className="w-full h-full object-cover" alt="" />
                             </div>
                             <div>
                               <div className="flex items-center gap-2">
-                                <h4 className="text-[13px] font-black text-neutral-100 leading-tight">{product.name}</h4>
-                                {isBaseOverpriced && <span className="text-[8px] font-black text-red-400 uppercase tracking-tighter px-1.5 py-0.5 bg-red-500/10 rounded border border-red-500/20">Exceeds Credit</span>}
+                                <h4 className="text-[13px] font-bold text-[#171717] leading-tight">{product.name}</h4>
+                                {isBaseOverpriced && <span className="text-[9px] font-black text-red-700 uppercase tracking-tighter px-1.5 py-0.5 bg-red-100 rounded border border-red-200">Exceeds Credit</span>}
                               </div>
-                              <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest mt-0.5">
-                                SKU: {product.sku} | STOCK: {product.stock} | <span className={isBaseOverpriced ? 'text-red-400' : 'text-indigo-400'}>{product.price} LKR</span>
+                              <p className="text-[10px] text-[#77736E] font-bold uppercase tracking-widest mt-0.5">
+                                SKU: {product.sku} | STOCK: {product.stock} | <span className={isBaseOverpriced ? 'text-red-600' : 'text-[#8A6D3F]'}>{product.price} LKR</span>
                               </p>
                             </div>
                           </div>
@@ -2702,8 +2610,7 @@ export const ProductsPage = () => {
                               }
                             }}
                             disabled={submittingReplacement || isBaseOverpriced}
-                            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all disabled:opacity-50 ${isBaseOverpriced ? 'bg-white/10 text-neutral-500 cursor-not-allowed' : 'bg-white text-black hover:bg-neutral-200'
-                              }`}
+                            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all disabled:opacity-50 ${isBaseOverpriced ? 'bg-[#F1ECE5] text-[#8a857d] cursor-not-allowed' : 'bg-[#171717] text-white hover:bg-[#292929]'}`}
                           >
                             {isBaseOverpriced ? "Unavailable" : (product.variants?.length > 0 ? "Select Variant" : "Select")}
                           </button>
@@ -2716,63 +2623,60 @@ export const ProductsPage = () => {
               <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
                 <button
                   onClick={() => setSelectedProductForVariant(null)}
-                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-colors mb-2"
+                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#77736E] hover:text-[#171717] transition-colors mb-2"
                 >
                   <span className="material-symbols-outlined text-[16px]">arrow_back</span>
                   Back to Product List
                 </button>
 
-                <div className="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/[0.06] mb-6">
+                <div className="flex items-center justify-between p-4 bg-[#FAF8F5] rounded-2xl border border-[#E4DED6] mb-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-xl bg-[#141414] border border-white/10 overflow-hidden shrink-0">
+                    <div className="w-16 h-16 rounded-xl bg-white border border-[#E4DED6] overflow-hidden shrink-0">
                       <img src={getFinalImageUrl(selectedProductForVariant.imageUrl)} className="w-full h-full object-cover" alt="" />
                     </div>
                     <div>
-                      <h4 className="text-[16px] font-black text-white">{selectedProductForVariant.name}</h4>
-                      <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Select the specific item variant to send</p>
+                      <h4 className="text-[16px] font-headline font-bold text-[#171717]">{selectedProductForVariant.name}</h4>
+                      <p className="text-[10px] text-[#77736E] font-bold uppercase tracking-widest">Select the specific item variant to send</p>
                     </div>
                   </div>
                   {parseNotesMeta(selectedRequestForSend?.notes)?.originalItemPrice && (
                     <div className="text-right">
-                      <p className="text-[9px] font-black uppercase text-neutral-500 tracking-widest">Original Credit</p>
-                      <p className="text-[14px] font-black text-indigo-400 leading-none mt-0.5">
+                      <p className="text-[9px] font-black uppercase text-[#77736E] tracking-widest">Original Credit</p>
+                      <p className="text-[14px] font-black text-[#8A6D3F] leading-none mt-0.5">
                         {parseNotesMeta(selectedRequestForSend.notes).originalItemPrice} LKR
                       </p>
                     </div>
                   )}
                 </div>
 
-                <div className="space-y-2 overflow-y-auto max-h-[350px] pr-2 custom-scrollbar">
+                <div className="space-y-2 overflow-y-auto max-h-[350px] pr-1 custom-scrollbar">
                   {selectedProductForVariant.variants.map((v, idx) => {
                     const meta = parseNotesMeta(selectedRequestForSend?.notes);
                     const isOverpriced = meta?.originalItemPrice && v.price > meta.originalItemPrice;
 
                     return (
-                      <div key={idx} className={`flex items-center justify-between p-4 border rounded-2xl transition-all shadow-sm group ${isOverpriced ? 'bg-red-500/10 border-red-500/20 opacity-80' : 'bg-[#141414] border-white/[0.06] hover:border-indigo-600'
-                        }`}>
+                      <div key={idx} className={`flex items-center justify-between p-4 border rounded-2xl transition-all shadow-2xs group ${isOverpriced ? 'bg-red-50 border-red-200 opacity-85' : 'bg-white border-[#E4DED6] hover:border-[#C9A77A]'}`}>
                         <div className="flex flex-col gap-2">
                           <div className="flex flex-wrap gap-2">
                             {Object.entries(v.attributes || {}).map(([key, val]) => (
-                              <span key={key} className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg border transition-colors ${isOverpriced ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-white/[0.06] text-neutral-300 border-white/10 group-hover:border-indigo-500/20 group-hover:bg-indigo-500/10 group-hover:text-indigo-400'
-                                }`}>
+                              <span key={key} className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg border transition-colors ${isOverpriced ? 'bg-red-100 text-red-700 border-red-200' : 'bg-[#FAF8F5] text-[#171717] border-[#E4DED6]'}`}>
                                 {key}: {val}
                               </span>
                             ))}
                           </div>
                           <div className="flex items-center gap-4">
-                            <p className={`text-[10px] font-black uppercase tracking-widest ${v.stock > 0 ? 'text-neutral-500' : 'text-red-400'}`}>
+                            <p className={`text-[10px] font-black uppercase tracking-widest ${v.stock > 0 ? 'text-[#77736E]' : 'text-red-600'}`}>
                               {v.stock > 0 ? `Stock: ${v.stock} Units` : 'Out of Stock'}
                             </p>
-                            <p className={`text-[11px] font-black tracking-widest ${isOverpriced ? 'text-red-400' : 'text-indigo-400'}`}>
-                              {v.price} LKR {isOverpriced && <span className="text-[9px] font-black text-red-400 uppercase ml-1">(Price Exceeded)</span>}
+                            <p className={`text-[11px] font-black tracking-widest ${isOverpriced ? 'text-red-600' : 'text-[#8A6D3F]'}`}>
+                              {v.price} LKR {isOverpriced && <span className="text-[9px] font-black text-red-600 uppercase ml-1">(Price Exceeded)</span>}
                             </p>
                           </div>
                         </div>
                         <button
                           onClick={() => handleSendProduct(selectedProductForVariant, v)}
                           disabled={submittingReplacement || v.stock <= 0 || isOverpriced}
-                          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 ${isOverpriced ? 'bg-white/[0.06] text-neutral-500 cursor-not-allowed' : 'bg-white text-black hover:bg-neutral-200'
-                            }`}
+                          className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 ${isOverpriced ? 'bg-[#F1ECE5] text-[#8a857d] cursor-not-allowed' : 'bg-[#171717] text-white hover:bg-[#292929]'}`}
                         >
                           {isOverpriced ? 'Unavailable' : 'Confirm Replacement'}
                         </button>
@@ -2783,7 +2687,7 @@ export const ProductsPage = () => {
               </div>
             )}
 
-            <div className="pt-4 border-t border-white/[0.06] flex justify-end">
+            <div className="pt-4 border-t border-[#EFEAE2] flex justify-end">
               <Button
                 variant="secondary"
                 onClick={() => {

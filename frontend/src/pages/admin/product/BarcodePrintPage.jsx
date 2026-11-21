@@ -146,7 +146,7 @@ export const BarcodePrintPage = () => {
           nav, aside, header, .print-hidden, [role="navigation"], [role="banner"] { 
             display: none !important; 
           }
-          .min-h-screen { min-h: 0 !important; }
+          .min-h-screen { min-height: 0 !important; }
           .bg-neutral-50/50 { background: white !important; }
           .pb-20 { padding-bottom: 0 !important; }
           .max-w-[210mm] { 

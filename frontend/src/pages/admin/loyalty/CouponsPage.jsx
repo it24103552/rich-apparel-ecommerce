@@ -639,7 +639,7 @@ export const CouponsPage = () => {
                       className="w-full bg-[#FAF8F5] focus:bg-white text-[#171717] placeholder:text-[#8a857d] border border-[#E4DED6] rounded-[14px] pl-11 pr-4 py-3 text-[13px] font-semibold focus:ring-2 focus:ring-[#C9A77A]/20 focus:border-[#C9A77A] outline-none transition-all"
                     />
                     {productsList.length > 0 && productsSearch && (
-                      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E4DED6] rounded-xl shadow-xl z-50 max-h-[300px] overflow-y-auto w-full p-2">
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E4DED6] rounded-xl shadow-xl z-40 max-h-[300px] overflow-y-auto w-full p-2">
                         {productsList.map(p => (
                           <button type="button" onClick={() => addProduct(p)} key={p.id} className="w-full text-left px-3 py-2 hover:bg-[#FAF8F5] rounded-lg flex items-center justify-between group gap-3 border-b border-[#EFEAE2] last:border-0">
                             <div className="flex items-center gap-3">
@@ -723,7 +723,7 @@ export const CouponsPage = () => {
                       className="w-full bg-[#FAF8F5] focus:bg-white text-[#171717] placeholder:text-[#8a857d] border border-[#E4DED6] rounded-[14px] pl-11 pr-4 py-3 text-[13px] font-semibold focus:ring-2 focus:ring-[#C9A77A]/20 focus:border-[#C9A77A] outline-none transition-all"
                     />
                     {usersList.length > 0 && usersSearch && (
-                      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E4DED6] rounded-xl shadow-xl z-50 max-h-[300px] overflow-y-auto w-full p-2">
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E4DED6] rounded-xl shadow-xl z-40 max-h-[300px] overflow-y-auto w-full p-2">
                         {usersList.map(u => (
                           <button type="button" onClick={() => addUser(u)} key={u.id} className="w-full text-left px-3 py-2 hover:bg-[#FAF8F5] rounded-lg flex items-center justify-between group gap-3 border-b border-[#EFEAE2] last:border-0">
                             <div className="flex items-center gap-3">
