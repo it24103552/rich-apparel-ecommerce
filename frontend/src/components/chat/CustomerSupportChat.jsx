@@ -218,17 +218,10 @@ export const CustomerSupportChat = () => {
     openSupport();
   }, [openSupport]);
 
-  const closeChat = useCallback(
-    (discardDraft = false) => {
-      setSendError("");
-      if (discardDraft) {
-        setDraft("");
-        clearAttachment();
-      }
-      closeSupport();
-    },
-    [clearAttachment, closeSupport]
-  );
+  const closeChat = useCallback(() => {
+    setSendError("");
+    closeSupport();
+  }, [closeSupport]);
 
   /* ───────────── UI behaviours ───────────── */
   useEffect(() => {
@@ -302,7 +295,7 @@ export const CustomerSupportChat = () => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Escape") closeChat(false);
+    if (e.key === "Escape") closeChat();
   };
 
   if (hidden) return null;
@@ -347,20 +340,11 @@ export const CustomerSupportChat = () => {
               <button
                 type="button"
                 className="rich-support-icon-btn"
-                onClick={() => closeChat(false)}
+                onClick={closeChat}
                 aria-label="Minimize Customer Support"
                 title="Minimize"
               >
                 <Minus size={15} aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="rich-support-icon-btn"
-                onClick={() => closeChat(true)}
-                aria-label="Close Customer Support"
-                title="Close"
-              >
-                <X size={15} aria-hidden="true" />
               </button>
             </div>
           </header>
@@ -377,7 +361,7 @@ export const CustomerSupportChat = () => {
                 type="button"
                 className="rich-support-signin"
                 onClick={() => {
-                  closeChat(false);
+                  closeChat();
                   navigate("/login");
                 }}
               >

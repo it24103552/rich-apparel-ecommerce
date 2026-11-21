@@ -25,19 +25,10 @@ import { useFloatingWidgets } from "../../hooks/useFloatingWidgets";
 import { PULSE_MINIMIZED_STORAGE_KEY } from "../../context/floatingWidgetState";
 import "./CustomerPulse.css";
 
-const DISMISSED_STORAGE_KEY = "rich_apparel_pulse_dismissed";
 const MINIMIZED_STORAGE_KEY = PULSE_MINIMIZED_STORAGE_KEY;
 const ROTATION_INTERVAL_MS = 7000;
 const NEW_ARRIVAL_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 const LOW_STOCK_THRESHOLD = 5;
-
-const readStorageFlag = (key) => {
-  try {
-    return window.localStorage.getItem(key) === "true";
-  } catch {
-    return false;
-  }
-};
 
 const writeStorageFlag = (key, value) => {
   try {
@@ -111,9 +102,7 @@ export const CustomerPulse = () => {
   const { isAuthenticated, user } = useAuth();
   const { isCartOpen, items: cartItems } = useCart();
 
-  const [dismissed, setDismissed] = useState(() =>
-    readStorageFlag(DISMISSED_STORAGE_KEY)
-  );
+  const [dismissed, setDismissed] = useState(false);
   // Expanded only while it is the active floating widget (shared with Support Chat).
   const { activeFloatingWidget, setActiveFloatingWidget } = useFloatingWidgets();
   const minimized = activeFloatingWidget !== "pulse";
@@ -525,7 +514,6 @@ export const CustomerPulse = () => {
 
   const handleDismiss = useCallback(() => {
     setDismissed(true);
-    writeStorageFlag(DISMISSED_STORAGE_KEY, true);
   }, []);
 
   const handleActionClick = useCallback(
