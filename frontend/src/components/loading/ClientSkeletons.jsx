@@ -7,57 +7,78 @@
 export const OrdersGridSkeleton = () => (
   <div aria-busy="true" aria-label="Loading orders">
     {/* Summary Stats Strip */}
-    <div className="grid grid-cols-3 gap-3 sm:gap-5 mb-10">
+    <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="bg-white rounded-2xl border border-neutral-100/80 px-4 sm:px-6 py-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
+          className="bg-white rounded-2xl border border-[#e9e1d6] px-4 sm:px-5 py-4 shadow-[0_2px_10px_rgba(32,25,18,0.03)] flex items-center justify-between"
         >
-          <div className="skeleton-box h-2.5 w-20 rounded mb-2.5" />
-          <div className="skeleton-box h-7 w-12 rounded-md" />
+          <div>
+            <div className="skeleton-box h-2.5 w-20 rounded mb-2.5" />
+            <div className="skeleton-box h-7 w-12 rounded-md" />
+          </div>
+          <div className="hidden sm:block skeleton-box w-10 h-10 rounded-xl" />
         </div>
       ))}
     </div>
 
     {/* Section Label */}
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center justify-between mb-4">
       <div className="skeleton-box h-3 w-28 rounded" />
       <div className="skeleton-box h-2.5 w-24 rounded" />
     </div>
 
-    {/* 4-column Order Cards Grid matching MyOrdersPage card geometry */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-      {[0, 1, 2, 3].map((i) => (
+    {/* Wide Order History Card Skeletons */}
+    <div className="space-y-5">
+      {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden flex flex-col"
+          className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden"
         >
-          {/* Image area with badge placeholders */}
-          <div className="relative aspect-[4/5] w-full bg-neutral-50 border-b border-neutral-100/80">
-            <div className="skeleton-box w-full h-full" />
-            <div className="absolute top-3 left-3 h-5 w-16 rounded-md bg-white/90 border border-neutral-200/70" />
-            <div className="absolute top-3 right-3 h-5 w-20 rounded-md bg-white/90 border border-neutral-200/70" />
+          {/* Card Header Bar */}
+          <div className="px-5 sm:px-6 py-4 bg-[#faf7f2] border-b border-[#efe8de] flex items-center justify-between">
+            <div className="skeleton-box h-4 w-28 rounded" />
+            <div className="flex items-center gap-3">
+              <div className="skeleton-box h-3.5 w-24 rounded" />
+              <div className="skeleton-box h-6 w-24 rounded-full" />
+            </div>
           </div>
 
-          {/* Card body */}
-          <div className="p-4 sm:p-5 flex flex-col flex-1">
-            <div className="skeleton-box h-3.5 w-3/4 rounded mb-2.5" />
-            <div className="skeleton-box h-6 w-1/2 rounded mb-4" />
-
-            <div className="pt-3 border-t border-neutral-100 space-y-2.5 mb-4">
-              <div className="flex items-center justify-between">
-                <div className="skeleton-box h-2.5 w-14 rounded" />
-                <div className="skeleton-box h-2.5 w-16 rounded" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="skeleton-box h-2.5 w-14 rounded" />
-                <div className="skeleton-box h-2.5 w-20 rounded" />
+          {/* Product Summary Row */}
+          <div className="px-5 sm:px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-5">
+            <div className="skeleton-box w-[96px] h-[112px] sm:w-[124px] sm:h-[136px] rounded-xl shrink-0" />
+            <div className="flex-1 space-y-3">
+              <div className="skeleton-box h-5 w-2/3 rounded" />
+              <div className="skeleton-box h-3.5 w-1/3 rounded" />
+              <div className="pt-3 border-t border-[#f2ece3] flex items-center gap-5">
+                <div className="skeleton-box h-3 w-16 rounded" />
+                <div className="skeleton-box h-3 w-28 rounded" />
               </div>
             </div>
+            <div className="sm:pl-6 sm:border-l sm:border-[#f0e9df] space-y-2 sm:text-right">
+              <div className="skeleton-box h-2.5 w-20 rounded sm:ml-auto" />
+              <div className="skeleton-box h-6 w-28 rounded sm:ml-auto" />
+            </div>
+          </div>
 
-            <div className="mt-auto pt-3 border-t border-neutral-100 flex items-center gap-2.5">
-              <div className="skeleton-box flex-1 h-10 rounded-xl" />
-              <div className="skeleton-box flex-1 h-10 rounded-xl" />
+          {/* Delivery Progress Bar */}
+          <div className="px-5 sm:px-6 py-4 bg-[#fcfaf7] border-t border-[#f0e9df]">
+            <div className="grid grid-cols-4 gap-3">
+              {[0, 1, 2, 3].map((step) => (
+                <div key={step} className="flex items-center gap-2">
+                  <div className="skeleton-box w-5 h-5 rounded-full shrink-0" />
+                  <div className="skeleton-box h-3 w-16 rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Actions Footer */}
+          <div className="px-5 sm:px-6 py-3.5 bg-white border-t border-[#efe8de] flex items-center justify-between">
+            <div className="skeleton-box h-3 w-44 rounded" />
+            <div className="flex items-center gap-2.5">
+              <div className="skeleton-box h-10 w-32 rounded-xl" />
+              <div className="skeleton-box h-10 w-24 rounded-xl" />
             </div>
           </div>
         </div>
