@@ -251,25 +251,24 @@ export const ProductGridSkeleton = ({ count = 8 }) => (
 );
 
 export const NewArrivalsSkeleton = () => (
-  <div className="flex flex-col lg:flex-row gap-6" aria-busy="true" aria-label="Loading new arrivals">
-    <div className="w-full lg:w-[38%] shrink-0">
-      <div className="skeleton-box rounded-3xl h-[400px] lg:h-full min-h-[600px] w-full" />
-    </div>
-    <div className="flex-1">
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 content-start">
-        {[0, 1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden flex flex-col"
-          >
-            <div className="skeleton-box aspect-[4/5] w-full" />
-            <div className="p-4 space-y-2">
-              <div className="skeleton-box h-3 w-2/3 rounded" />
-              <div className="skeleton-box h-4 w-1/2 rounded" />
-            </div>
-          </div>
-        ))}
+  <div
+    className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5"
+    aria-busy="true"
+    aria-label="Loading new arrivals"
+  >
+    {[0, 1, 2, 3, 4].map((i) => (
+      <div
+        key={i}
+        className="bg-[#fcfaf7] rounded-[16px] border border-[#ebe4da] shadow-[0_2px_10px_rgba(32,25,18,0.035)] overflow-hidden flex flex-col p-2"
+      >
+        <div className="skeleton-box rounded-[11px] aspect-square w-full" />
+        <div className="pt-2.5 px-1 pb-0.5 space-y-2">
+          <div className="skeleton-box h-3.5 w-4/5 rounded" />
+          <div className="skeleton-box h-3 w-1/3 rounded" />
+          <div className="skeleton-box h-4 w-1/2 rounded" />
+          <div className="skeleton-box h-8 w-full rounded-[10px] mt-1.5" />
+        </div>
       </div>
-    </div>
+    ))}
   </div>
 );

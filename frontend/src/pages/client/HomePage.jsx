@@ -15,13 +15,19 @@ import {
   ShoppingCart,
   X,
   Heart,
-  Eye
+  Eye,
+  RotateCcw,
+  Leaf,
+  MapPin,
+  Phone,
+  Quote
 } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { productsService } from "../../services";
+import { productsService, reviewsService } from "../../services";
 import { formatPrice } from "../../utils/formatters";
+import { resolveImageUrl } from "../../utils/imageHelpers";
 import { NewArrivalsSkeleton } from "../../components/loading/ClientSkeletons";
 import { EmptyState } from "../../components/common/EmptyState";
 import { useCart } from "../../hooks/useCart";
@@ -29,108 +35,114 @@ import { useCart } from "../../hooks/useCart";
 
 import { ProductCard } from "../../components/common/ProductCard";
 
-const CategoryProductRow = ({ title, subtitle, products, linkPath, accent, isEven }) => {
+const CategoryProductRow = ({ title, subtitle, products, linkPath, isEven }) => {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const checkScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 10);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+    setCanScrollLeft(el.scrollLeft > 8);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
   };
 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     checkScroll();
-    el.addEventListener('scroll', checkScroll);
-    window.addEventListener('resize', checkScroll);
+    el.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener("resize", checkScroll);
     return () => {
-      el.removeEventListener('scroll', checkScroll);
-      window.removeEventListener('resize', checkScroll);
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
     };
   }, [products]);
 
   const scroll = (direction) => {
     const el = scrollRef.current;
     if (!el) return;
-    const cardWidth = el.querySelector('.category-card')?.offsetWidth || 300;
-    const scrollAmount = cardWidth + 20; // card width + gap
-    el.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    const cardWidth = el.querySelector(".category-card")?.offsetWidth || 260;
+    const scrollAmount = cardWidth + 20;
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
   };
 
   return (
-    <section className={`py-20 ${isEven ? 'bg-white' : 'bg-[#f7f7f7]'} overflow-hidden`}>
-      <div className="max-w-full mx-auto px-[10%]">
+    <section
+      className={`py-12 md:py-14 border-t border-[#f0e9df] ${
+        isEven ? "bg-[#faf7f2]" : "bg-white"
+      }`}
+    >
+      <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-6"
-        >
-          <div className="flex items-start gap-4">
-            <div className="w-1 h-10 bg-black rounded-full mt-1" />
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-black uppercase tracking-tight mb-1">{title}</h2>
-              <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-neutral-400">{subtitle}</span>
-            </div>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-7 gap-5">
+          <div>
+            <h2 className="text-[24px] sm:text-[30px] lg:text-[36px] font-extrabold text-[#151413] uppercase tracking-[-0.025em] leading-none">
+              {title}
+            </h2>
+            <p className="text-[14px] sm:text-[15px] font-medium text-[#6c6257] mt-2">
+              {subtitle}
+            </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Arrow Buttons */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Previous / Next Arrow Buttons */}
             <button
-              onClick={() => scroll('left')}
+              type="button"
+              onClick={() => scroll("left")}
               disabled={!canScrollLeft}
-              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-300 cursor-pointer ${canScrollLeft
-                  ? 'border-black text-black hover:bg-black hover:text-white shadow-sm'
-                  : 'border-neutral-200 text-neutral-300 cursor-not-allowed'
-                }`}
+              aria-label={`Previous ${title}`}
+              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
+                canScrollLeft
+                  ? "border-[#dcd2c5] bg-white text-[#161514] hover:bg-[#161514] hover:border-[#161514] hover:text-white cursor-pointer"
+                  : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
+              }`}
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={19} />
             </button>
             <button
-              onClick={() => scroll('right')}
+              type="button"
+              onClick={() => scroll("right")}
               disabled={!canScrollRight}
-              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-300 cursor-pointer ${canScrollRight
-                  ? 'border-black text-black hover:bg-black hover:text-white shadow-sm'
-                  : 'border-neutral-200 text-neutral-300 cursor-not-allowed'
-                }`}
+              aria-label={`Next ${title}`}
+              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
+                canScrollRight
+                  ? "border-[#161514] bg-[#161514] text-white hover:bg-[#2d2926] cursor-pointer"
+                  : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
+              }`}
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={19} />
             </button>
 
-            {/* See All Button */}
+            {/* View All Button */}
             <Link
               to={linkPath || "/"}
-              className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.25em] bg-black text-white hover:bg-neutral-800 rounded-full px-7 py-3 transition-all duration-300 shadow-[0_8px_24px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.25)] hover:-translate-y-1 group/btn cursor-pointer"
+              className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-[0.015em] bg-[#161514] text-white hover:bg-[#2c2926] rounded-full px-7 py-3 transition-all duration-200 group/btn cursor-pointer"
             >
-              SEE ALL <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+              <span>View All</span>
+              <ArrowRight
+                size={15}
+                className="group-hover/btn:translate-x-0.5 transition-transform"
+              />
             </Link>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Horizontal Scroll Container */}
+        {/* Horizontal Product Row */}
         <div className="relative">
-          {/* Left gradient fade */}
-          {canScrollLeft && (
-            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" style={isEven ? {} : { background: 'linear-gradient(to right, #f7f7f7, transparent)' }} />
-          )}
-          {/* Right gradient fade */}
-          {canScrollRight && (
-            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" style={isEven ? {} : { background: 'linear-gradient(to left, #f7f7f7, transparent)' }} />
-          )}
-
           <div
             ref={scrollRef}
-            className="flex gap-5 overflow-x-auto no-scrollbar scroll-smooth pb-2"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            className="flex gap-4 sm:gap-5 overflow-x-auto no-scrollbar scroll-smooth pb-2"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {products.map((product) => (
-              <div key={product.id} className="category-card flex-shrink-0 w-[260px] md:w-[280px]">
+              <div
+                key={product.id}
+                className="category-card shrink-0 w-[72vw] sm:w-[236px] md:w-[244px] lg:w-[calc((100%-60px)/4)] xl:w-[calc((100%-80px)/5)]"
+              >
                 <ProductCard product={product} />
               </div>
             ))}
@@ -145,14 +157,186 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('Women');
-  const [currentHero, setCurrentHero] = useState(0);
+  const [activeTab, setActiveTab] = useState("All");
+  const newArrivalsScrollRef = useRef(null);
+  const [canScrollNewLeft, setCanScrollNewLeft] = useState(false);
+  const [canScrollNewRight, setCanScrollNewRight] = useState(false);
+  const [heroPaused, setHeroPaused] = useState(false);
   const { addToCart } = useCart();
 
-  const heroBanners = [
-    { id: 1, image: "/assets/img/hero1.jpg", title: "New Arrivals", sub: "Explore the latest in fashion" },
-    { id: 2, image: "/assets/img/hero2.jpg", title: "Summer Sale", sub: "Up to 50% off sitewide" },
-    { id: 3, image: "/assets/img/hero3.png", title: "Modern Style", sub: "Designed for the bold" }
+  const heroSlides = [
+    {
+      id: "slide-1",
+      eyebrow: "SPRING 2026 COLLECTION",
+      headlineLines: ["NOT JUST", "FASHION", "IT'S ATTITUDE"],
+      subtitle: "Elevated everyday apparel for men and women.",
+      primaryCta: { label: "Shop Collection", targetId: "shop-section" },
+      secondaryCta: { label: "New Arrivals", targetId: "new-arrivals" },
+      mobileImage: "/assets/img/index girl img 1.png",
+      models: [
+        {
+          src: "/assets/img/index men img2.png",
+          alt: "Men's street essentials model",
+          className: "h-[90%] lg:h-[94%]",
+          style: { zIndex: 1, right: "39%" },
+          parallax: "left",
+          delay: 0.25,
+        },
+        {
+          src: "/assets/img/index girl img 1.png",
+          alt: "Women's signature tee model",
+          className: "h-[90%] lg:h-[95%]",
+          style: { zIndex: 3, right: "20%" },
+          parallax: "center",
+          delay: 0.15,
+        },
+        {
+          src: "/assets/img/index men img1.png",
+          alt: "Men's graphic tee model",
+          className: "h-[82%] lg:h-[86%]",
+          style: { zIndex: 2, right: "4%" },
+          parallax: "right",
+          delay: 0.35,
+        },
+      ],
+    },
+    {
+      id: "slide-2",
+      eyebrow: "WOMEN'S SIGNATURE EDIT",
+      headlineLines: ["REAL BEAUTY", "REAL ATTITUDE"],
+      subtitle: "Timeless silhouettes crafted for effortless everyday confidence.",
+      primaryCta: { label: "Shop Collection", targetId: "shop-section" },
+      secondaryCta: { label: "New Arrivals", targetId: "new-arrivals" },
+      mobileImage: "/assets/img/cover 2 girl img 2.png",
+      models: [
+        {
+          src: "/assets/img/cover 2 girl img 1.png",
+          alt: "Women's black essential tee model",
+          className: "h-[85%] lg:h-[90%]",
+          style: { zIndex: 1, right: "44%" },
+          parallax: "left",
+          delay: 0.18,
+        },
+        {
+          src: "/assets/img/cover 2 girl img 2.png",
+          alt: "Women's white relaxed tee model",
+          className: "h-[93%] lg:h-[97%]",
+          style: { zIndex: 3, right: "20%" },
+          parallax: "center",
+          delay: 0.08,
+        },
+        {
+          src: "/assets/img/cover 2 girl img 3.png",
+          alt: "Women's maroon floral tee model",
+          className: "h-[84%] lg:h-[88%]",
+          style: { zIndex: 2, right: "4%" },
+          parallax: "right",
+          delay: 0.22,
+        },
+      ],
+    },
+    {
+      id: "slide-3",
+      eyebrow: "MODERN MENSWEAR EDIT",
+      headlineLines: ["LESS NOISE", "MORE CLASS"],
+      subtitle: "Refined casual essentials built for modern everyday comfort.",
+      primaryCta: { label: "Shop Collection", targetId: "shop-section" },
+      secondaryCta: { label: "New Arrivals", targetId: "new-arrivals" },
+      mobileImage: "/assets/img/cover 3 img 1.png",
+      models: [
+        {
+          src: "/assets/img/cover 3 img 2.png",
+          alt: "Men's black casual tee model",
+          className: "h-[88%] lg:h-[93%]",
+          style: { zIndex: 1, right: "40%" },
+          parallax: "left",
+          delay: 0.3,
+        },
+        {
+          src: "/assets/img/cover 3 img 1.png",
+          alt: "Men's white oversized tee model",
+          className: "h-[94%] lg:h-[98%]",
+          style: { zIndex: 3, right: "19%" },
+          parallax: "center",
+          delay: 0.15,
+        },
+        {
+          src: "/assets/img/cover 3 img 3.png",
+          alt: "Men's charcoal graphic tee model",
+          className: "h-[86%] lg:h-[91%]",
+          style: { zIndex: 2, right: "4%" },
+          parallax: "right",
+          delay: 0.35,
+        },
+      ],
+    },
+  ];
+
+  const visualCategories = [
+    {
+      name: "T-Shirts",
+      icon: (
+        <svg viewBox="0 0 32 32" fill="none" className="w-9 h-9 sm:w-10 sm:h-10" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M11 6.5L6.5 8.5L3.5 13.5L7.5 15.8L9.5 13V26H22.5V13L24.5 15.8L28.5 13.5L25.5 8.5L21 6.5" />
+          <path d="M11 6.5C12.2 8.7 13.9 9.8 16 9.8C18.1 9.8 19.8 8.7 21 6.5" />
+        </svg>
+      ),
+    },
+    {
+      name: "Pants",
+      icon: (
+        <svg viewBox="0 0 32 32" fill="none" className="w-9 h-9 sm:w-10 sm:h-10" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M10 5.5H22L23.5 26.5H18L16 14.5L14 26.5H8.5L10 5.5Z" />
+          <path d="M10 9.5H22" />
+          <path d="M16 5.5V11" />
+        </svg>
+      ),
+    },
+    {
+      name: "Hoodies",
+      icon: (
+        <svg viewBox="0 0 32 32" fill="none" className="w-9 h-9 sm:w-10 sm:h-10" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M11 9L6.5 11.5L4.5 21.5L8.2 22.5L10 15.5V26H22V15.5L23.8 22.5L27.5 21.5L25.5 11.5L21 9" />
+          <path d="M11 9C11 5.8 13.2 4.5 16 4.5C18.8 4.5 21 5.8 21 9C19.6 10.6 17.9 11.3 16 11.3C14.1 11.3 12.4 10.6 11 9Z" />
+          <path d="M14.2 11.3V14.8" />
+          <path d="M17.8 11.3V14.8" />
+          <path d="M12.5 21.5H19.5V24.5H12.5V21.5Z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Shorts",
+      icon: (
+        <svg viewBox="0 0 32 32" fill="none" className="w-9 h-9 sm:w-10 sm:h-10" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8.5 7.5H23.5L25.5 23.5H18.2L16 17.5L13.8 23.5H6.5L8.5 7.5Z" />
+          <path d="M8.5 11.5H23.5" />
+          <path d="M16 7.5V13" />
+        </svg>
+      ),
+    },
+    {
+      name: "Activewear",
+      icon: (
+        <svg viewBox="0 0 32 32" fill="none" className="w-9 h-9 sm:w-10 sm:h-10" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M11.5 6.5L6.5 9.5L4.5 20.5L8.5 21.5L10 14.5V26H22V14.5L23.5 21.5L27.5 20.5L25.5 9.5L20.5 6.5" />
+          <path d="M11.5 6.5H20.5" />
+          <path d="M16 6.5V26" />
+          <path d="M12.5 13H14" />
+          <path d="M18 13H19.5" />
+        </svg>
+      ),
+    },
+    {
+      name: "Accessories",
+      icon: (
+        <svg viewBox="0 0 32 32" fill="none" className="w-9 h-9 sm:w-10 sm:h-10" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6.5 19.5C6.5 13.7 10.6 9.5 16 9.5C21.4 9.5 25.5 13.7 25.5 19.5" />
+          <path d="M5 19.5H26.5C27.6 19.5 28.5 20.4 28.5 21.5C28.5 22.3 27.8 23 27 23H7.5C6.1 23 5 21.9 5 20.5V19.5Z" />
+          <path d="M16 9.5V19.5" />
+          <circle cx="16" cy="8.2" r="1.1" />
+        </svg>
+      ),
+    },
   ];
 
   const brandLogos = [
@@ -172,6 +356,46 @@ export const HomePage = () => {
     { name: "NEGOMBO", address: "No. 15, Greens Road, Negombo", phone: "031 222 2222" }
   ];
 
+  const [testimonials, setTestimonials] = useState([]);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    const email = newsletterEmail.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    setNewsletterSubscribed(true);
+    setNewsletterEmail("");
+    toast.success("Thank you for staying in the loop with Rich Apparel!");
+  };
+
+  const benefits = [
+    {
+      title: "Quick Delivery",
+      description: "Islandwide within 3-5 days",
+      Icon: Truck,
+    },
+    {
+      title: "Secure Payment",
+      description: "100% Protected transfers",
+      Icon: CreditCard,
+    },
+    {
+      title: "Authentic Gear",
+      description: "No 1. In Sri Lanka",
+      Icon: ShieldCheck,
+    },
+    {
+      title: "24/7 Support",
+      description: "We're here to help anytime",
+      Icon: Headphones,
+    },
+  ];
+
   useEffect(() => {
     // Fetch a larger set (100) to ensure plenty of items for each tab
     productsService.getAll(0, 100)
@@ -183,20 +407,62 @@ export const HomePage = () => {
       .catch((err) => console.error("Filter Error:", err))
       .finally(() => setLoading(false));
 
-    const interval = setInterval(() => {
-      setCurrentHero(prev => (prev + 1) % heroBanners.length);
-    }, 1000);
-    return () => clearInterval(interval);
+    // Read-only fetch of existing public product reviews for testimonial showcase
+    reviewsService.getAll(0, 20)
+      .then((res) => {
+        const rawReviews = res.data?.data?.reviews || res.data?.reviews || [];
+        const valid = (Array.isArray(rawReviews) ? rawReviews : []).filter(
+          (r) =>
+            r &&
+            !r.isDeleted &&
+            Number(r.rating) >= 4 &&
+            typeof r.comment === "string" &&
+            r.comment.trim().length > 0
+        );
+        setTestimonials(valid);
+      })
+      .catch(() => {
+        setTestimonials([]);
+      });
   }, []);
 
-  // Hero slide carousel — 10 second rotation
+  const currentTestimonial =
+    testimonials.length > 0 ? testimonials[activeTestimonial % testimonials.length] : null;
+
+  const formatTestimonialQuote = (text, maxLength = 155) => {
+    const clean = String(text || "").trim().replace(/\s+/g, " ");
+    if (clean.length <= maxLength) return clean;
+    const sliced = clean.slice(0, maxLength);
+    const lastSpace = sliced.lastIndexOf(" ");
+    return `${lastSpace > 60 ? sliced.slice(0, lastSpace) : sliced}...`;
+  };
+
+  const getTestimonialThumb = (review) => {
+    if (!review) return null;
+    const imgPath =
+      review.product?.images?.[0] || review.product?.imageUrl || review.imageUrl;
+    return imgPath ? resolveImageUrl(imgPath, null) : null;
+  };
+
+  // Hero slide carousel — 5 second automatic rotation
   const [heroSlide, setHeroSlide] = useState(0);
   useEffect(() => {
+    if (heroPaused) return;
     const slideInterval = setInterval(() => {
-      setHeroSlide(prev => (prev + 1) % 3);
+      setHeroSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(slideInterval);
-  }, []);
+  }, [heroPaused, heroSlides.length]);
+
+  const handleNextSlide = () => {
+    setHeroSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const handlePrevSlide = () => {
+    setHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
+  const activeHeroSlide = heroSlides[heroSlide] || heroSlides[0];
 
   const handleViewProduct = (product) => {
     navigate(`/product/${product.id}`);
@@ -216,9 +482,10 @@ export const HomePage = () => {
   // Filter products by collection/category name or variant attribute
   const filteredNewArrivals = React.useMemo(() => {
     if (!products || products.length === 0) return [];
+    const tab = activeTab.toLowerCase();
+    if (tab === "all") return products;
 
     return products.filter(product => {
-      const tab = activeTab.toLowerCase();
       const prodCategoryStr = String(product.gender || (product.category && product.category.name) || product.category || '').toLowerCase();
 
       const matchesTab = (str) => {
@@ -257,491 +524,457 @@ export const HomePage = () => {
     });
   }, [products, activeTab]);
 
+  const checkNewArrivalsScroll = () => {
+    const el = newArrivalsScrollRef.current;
+    if (!el) return;
+    setCanScrollNewLeft(el.scrollLeft > 8);
+    setCanScrollNewRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
+  };
+
+  useEffect(() => {
+    const el = newArrivalsScrollRef.current;
+    if (!el) return;
+    el.scrollTo({ left: 0, behavior: "auto" });
+    checkNewArrivalsScroll();
+    el.addEventListener("scroll", checkNewArrivalsScroll, { passive: true });
+    window.addEventListener("resize", checkNewArrivalsScroll);
+    return () => {
+      el.removeEventListener("scroll", checkNewArrivalsScroll);
+      window.removeEventListener("resize", checkNewArrivalsScroll);
+    };
+  }, [filteredNewArrivals, loading]);
+
+  const scrollNewArrivals = (direction) => {
+    const el = newArrivalsScrollRef.current;
+    if (!el) return;
+    const cardWidth = el.querySelector(".new-arrival-card")?.offsetWidth || 260;
+    const scrollAmount = cardWidth + 20;
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
   return (
-    <div className="bg-white min-h-screen" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-      {/* Hero Section — Auto-rotating carousel */}
-      <section ref={heroRef} className="relative min-h-[100vh] bg-[#111] overflow-hidden flex flex-col justify-center">
-        {/* Dark Background Image (halftone/texture) */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/assets/img/main hero bg.png"
-            alt="Hero Background"
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        <AnimatePresence mode="wait">
-          {/* === SLIDE 1: Men === */}
-          {heroSlide === 0 && (
-            <motion.div
-              key="slide-1"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8 }}
-              className="absolute inset-0"
-            >
-              {/* Ghosted left-side figure */}
-              <div className="absolute inset-0 z-[1] hidden md:block pointer-events-none">
-                <motion.img
-                  src="/assets/img/leftside img 1.png"
-                  alt=""
-                  className="absolute bottom-0 left-[0] h-[100%] w-auto object-contain"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.8 }}
-                  transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}
-                />
-              </div>
-
-              {/* Model Cutout Images */}
-              <div className="absolute inset-0 z-[5] hidden md:block overflow-hidden">
-                <motion.img
-                  src="/assets/img/index men img2.png"
-                  alt="Model"
-                  className="absolute bottom-0 h-[83%] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
-                  style={{ zIndex: 1, right: '35%', x: modelLeftX }}
-                  initial={{ y: '100%', opacity: 0, scale: 0.9 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                />
-                <motion.img
-                  src="/assets/img/index girl img 1.png"
-                  alt="Model"
-                  className="absolute bottom-0 h-[78%] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
-                  style={{ zIndex: 2, right: '22%', y: modelCenterY }}
-                  initial={{ y: '100%', opacity: 0, scale: 0.9 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                />
-                <motion.img
-                  src="/assets/img/index men img1.png"
-                  alt="Model"
-                  className="absolute bottom-0 h-[70%] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
-                  style={{ zIndex: 3, right: '10%', x: modelRightX }}
-                  initial={{ y: '100%', opacity: 0, scale: 0.9 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                />
-              </div>
-
-              {/* Hero Text */}
-              <div className="relative z-10 w-full max-w-full mx-auto px-[10%] mt-24 h-full flex items-center">
-                <div className="max-w-2xl text-left">
-                  <h1 className="text-white flex flex-col items-start drop-shadow-2xl">
-                    <motion.span
-                      className="text-3xl md:text-5xl font-medium mb-1 text-white/90 pl-[4px]"
-                      style={{ letterSpacing: '-0.02em' }}
-                      initial={{ x: -80, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                    >NOT JUST</motion.span>
-                    <motion.span
-                      className="text-7xl md:text-9xl font-bold uppercase leading-[0.85] mb-2 drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                      style={{ letterSpacing: '0em' }}
-                      initial={{ x: -120, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    >FASHION</motion.span>
-                    <motion.span
-                      className="text-6xl md:text-[5.5rem] font-semibold uppercase leading-[0.9] mb-12 drop-shadow-[0_0_30px_rgba(255,255,255,0.2)] pl-[3px]"
-                      style={{ letterSpacing: '-0.02em' }}
-                      initial={{ x: -120, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.9, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    >IT'S ATTITUDE</motion.span>
-                  </h1>
-
-                  <motion.button
-                    onClick={() => document.getElementById('shop-section')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="group relative px-14 py-4 rounded-full font-bold uppercase tracking-[0.25em] text-sm text-white overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] border border-white/30 backdrop-blur-md bg-white/10 cursor-pointer"
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <span className="relative z-10 flex items-center gap-3">SHOP NOW <span className="group-hover:translate-x-1 transition-transform"><ArrowRight size={16} /></span></span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* === SLIDE 2: Girls === */}
-          {heroSlide === 1 && (
-            <motion.div
-              key="slide-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8 }}
-              className="absolute inset-0"
-            >
-              <div className="absolute inset-0 z-[1] hidden md:block pointer-events-none">
-                <motion.img
-                  src="/assets/img/leftside img 2.png"
-                  alt=""
-                  className="absolute bottom-0 left-[0] h-[100%] w-auto object-contain"
-                  initial={{ opacity: 60 }}
-                  animate={{ opacity: 70 }}
-                  transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}
-                />
-              </div>
-
-              {/* Girl Model Cutout Images */}
-              <div className="absolute inset-0 z-[5] hidden md:block overflow-hidden">
-                {/* Girl 1 (black t-shirt) — behind-left, partially covered by white girl */}
-                <motion.img
-                  src="/assets/img/cover 2 girl img 1.png"
-                  alt="Model"
-                  className="absolute bottom-0 h-[75%] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
-                  style={{ zIndex: 1, right: '45%', x: modelLeftX }}
-                  initial={{ y: '100%', opacity: 0, scale: 0.9 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                />
-                {/* Girl 2 (white t-shirt) — center-FRONT, tallest, in front of both */}
-                <motion.img
-                  src="/assets/img/cover 2 girl img 2.png"
-                  alt="Model"
-                  className="absolute bottom-0 h-[82%] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
-                  style={{ zIndex: 3, right: '20%', y: modelCenterY }}
-                  initial={{ y: '100%', opacity: 0, scale: 0.9 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                />
-                {/* Girl 3 (maroon t-shirt) — behind-right */}
-                <motion.img
-                  src="/assets/img/cover 2 girl img 3.png"
-                  alt="Model"
-                  className="absolute bottom-0 h-[73%] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
-                  style={{ zIndex: 2, right: '10%', x: modelRightX }}
-                  initial={{ y: '100%', opacity: 0, scale: 0.9 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                />
-              </div>
-
-              {/* Hero Text — Slide 2 */}
-              <div className="relative z-10 w-full max-w-full mx-auto px-[10%] mt-24 h-full flex items-center">
-                <div className="max-w-2xl text-left">
-                  <h1 className="text-white flex flex-col items-start drop-shadow-2xl">
-                    <motion.span
-                      className="text-5xl md:text-8xl font-medium uppercase leading-[0.85] mb-2 drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                      initial={{ x: -120, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                    >REAL BEAUTY</motion.span>
-                    <motion.span
-                      className="text-6xl md:text-[5.5rem] font-bold uppercase leading-[0.9] mb-12 drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                      style={{ letterSpacing: '-0.02em' }}
-                      initial={{ x: -120, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    >REAL ATTITUDE</motion.span>
-                  </h1>
-
-                  <motion.button
-                    onClick={() => document.getElementById('shop-section')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="group relative px-14 py-4 rounded-full font-bold uppercase tracking-[0.25em] text-sm text-white overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] border border-white/30 backdrop-blur-md bg-white/10 cursor-pointer"
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <span className="relative z-10 flex items-center gap-3">SHOP NOW <span className="group-hover:translate-x-1 transition-transform"><ArrowRight size={16} /></span></span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-          {/* === SLIDE 3: Men Casual === */}
-          {heroSlide === 2 && (
-            <motion.div
-              key="slide-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8 }}
-              className="absolute inset-0"
-            >
-              {/* Ghosted left-side figure */}
-              <div className="absolute inset-0 z-[1] hidden md:block pointer-events-none">
-                <motion.img
-                  src="/assets/img/leftside img 3.png"
-                  alt=""
-                  className="absolute bottom-0 left-[0] h-[100%] w-auto object-contain"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.8 }}
-                  transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}
-                />
-              </div>
-
-              {/* Casual Men Model Cutout Images */}
-              <div className="absolute inset-0 z-[5] hidden md:block overflow-hidden">
-                {/* Man 1 (black t-shirt) — behind-left */}
-                <motion.img
-                  src="/assets/img/cover 3 img 1.png"
-                  alt="Model"
-                  className="absolute bottom-[-5%] h-[90%] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
-                  style={{ zIndex: 3, right: '19%', y: modelCenterY }}
-                  initial={{ y: '100%', opacity: 0, scale: 0.9 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                />
-                {/* Man 2 (white t-shirt) — center-FRONT, tallest & largest */}
-                <motion.img
-                  src="/assets/img/cover 3 img 2.png"
-                  alt="Model"
-                  className="absolute bottom-[-5%] h-[80%] w-auto object-contain drop-shadow-[0_15px_40px_rgba(0,0,0,0.9)]"
-                  style={{ zIndex: 1, right: '35%', x: modelLeftX }}
-                  initial={{ y: '100%', opacity: 0, scale: 0.9 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                />
-                {/* Man 3 (grey t-shirt) — behind-right */}
-                <motion.img
-                  src="/assets/img/cover 3 img 3.png"
-                  alt="Model"
-                  className="absolute bottom-[-5%] h-[80%] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
-                  style={{ zIndex: 2, right: '10%', x: modelRightX }}
-                  initial={{ y: '100%', opacity: 0, scale: 0.9 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                />
-              </div>
-
-              {/* Hero Text — Slide 3 */}
-              <div className="relative z-10 w-full max-w-full mx-auto px-[10%] mt-24 h-full flex items-center">
-                <div className="max-w-2xl text-left">
-                  <h1 className="text-white flex flex-col items-start drop-shadow-2xl">
-                    <motion.span
-                      className="text-5xl md:text-8xl font-medium uppercase leading-[0.85] mb-2 drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                      initial={{ x: -120, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                    >LESS NOISE</motion.span>
-                    <motion.span
-                      className="text-6xl md:text-[5.5rem] font-bold uppercase leading-[0.9] mb-12 drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                      style={{ letterSpacing: '-0.02em' }}
-                      initial={{ x: -120, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    >MORE CLASS</motion.span>
-                  </h1>
-
-                  <motion.button
-                    onClick={() => document.getElementById('shop-section')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="group relative px-14 py-4 rounded-full font-bold uppercase tracking-[0.25em] text-sm text-white overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] border border-white/30 backdrop-blur-md bg-white/10 cursor-pointer"
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <span className="relative z-10 flex items-center gap-3">SHOP NOW <span className="group-hover:translate-x-1 transition-transform"><ArrowRight size={16} /></span></span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
-
-
-      {/* ══════════════════════════════════════════════════ */}
-      {/* Category Grid Section — Premium White/Black       */}
-      {/* ══════════════════════════════════════════════════ */}
-      <section id="shop-section" className="py-24 bg-white">
-        <div className="max-w-full mx-auto px-[10%]">
-          {/* Category Grid Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center mb-16"
-          >
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-neutral-400 block mb-3">Curated Collections</span>
-            <h2 className="text-5xl font-bold text-black uppercase tracking-tighter mb-4">Shop By Category</h2>
-            <div className="w-16 h-[3px] bg-black mx-auto" />
-          </motion.div>
-
-          <motion.div
-            variants={{
-              hidden: { opacity: 0 },
-              show: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.2
-                }
-              }
+    <div className="bg-white min-h-screen overflow-x-clip" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+      {/* Hero Section — Editorial Auto-Rotating Carousel */}
+      <section
+        ref={heroRef}
+        onMouseEnter={() => setHeroPaused(true)}
+        onMouseLeave={() => setHeroPaused(false)}
+        className="relative pt-[102px] md:pt-[110px] overflow-hidden bg-gradient-to-br from-[#f5eee6] via-[#ece2d6] to-[#dfd1c0]"
+      >
+        {/* Editorial Abstract Background Shapes */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+          {/* Soft warm radial highlight behind left typography */}
+          <div
+            className="absolute -top-24 -left-24 w-[620px] h-[620px] rounded-full opacity-75"
+            style={{
+              background: "radial-gradient(circle, rgba(255,252,247,0.92) 0%, rgba(245,238,230,0) 70%)",
             }}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 h-full md:h-[620px]"
+          />
+
+          {/* Large warm taupe organic wave sweeping behind models */}
+          <svg
+            viewBox="0 0 1440 680"
+            preserveAspectRatio="none"
+            className="absolute inset-0 w-full h-full"
           >
-            {/* Women Large Banner */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
-              }}
-              className="relative group overflow-hidden rounded-3xl h-[420px] md:h-full cursor-pointer"
-            >
-              <img src="/assets/img/split image 2.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1200ms] ease-out" alt="Women" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent group-hover:from-black/95 transition-all duration-500 flex flex-col justify-end p-10 text-white">
-                <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/60 mb-3">Exclusive</span>
-                <h3 className="text-4xl font-bold uppercase tracking-tighter mb-5 leading-none">WOMEN'S<br />COLLECTION</h3>
-                <Link
-                  to="/category/women"
-                  className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] border border-white/30 bg-white/10 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-full px-6 py-3 w-fit hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300 cursor-pointer"
-                >
-                  SHOP NOW <ArrowRight size={14} />
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* Men Banner */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
-              }}
-              className="relative group overflow-hidden rounded-3xl h-[420px] md:h-full cursor-pointer"
-            >
-              <img src="/assets/img/split image .png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1200ms] ease-out" alt="Men" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent group-hover:from-black/95 transition-all duration-500 flex flex-col justify-end p-10 text-white">
-                <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/60 mb-3">Premium</span>
-                <h3 className="text-4xl font-bold uppercase tracking-tighter mb-5 leading-none">MEN'S<br />WEAR</h3>
-                <Link
-                  to="/category/men"
-                  className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] border border-white/30 bg-white/10 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-full px-6 py-3 w-fit hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300 cursor-pointer"
-                >
-                  EXPLORE <ArrowRight size={14} />
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* Sporty Banner */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
-              }}
-              className="relative group overflow-hidden rounded-3xl h-[420px] md:h-full cursor-pointer md:col-span-2 lg:col-span-1"
-            >
-              <img src="/assets/img/split image 3.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1200ms] ease-out" alt="Sporty" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent group-hover:from-black/95 transition-all duration-500 flex flex-col justify-end p-10 text-white">
-                <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/60 mb-3">Trendy</span>
-                <h3 className="text-4xl font-bold uppercase tracking-tighter mb-5 leading-none">SPORTY<br />WEAR</h3>
-                <Link
-                  to="/category/sporty"
-                  className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] border border-white/30 bg-white/10 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-full px-6 py-3 w-fit hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300 cursor-pointer"
-                >
-                  VIEW ALL <ArrowRight size={14} />
-                </Link>
-              </div>
-            </motion.div>
-          </motion.div>
+            <path
+              d="M500,680 C550,390 660,165 840,0 L1440,0 L1440,680 Z"
+              fill="#b59d84"
+              fillOpacity="0.32"
+            />
+            <path
+              d="M615,680 C665,425 755,195 940,0 L1440,0 L1440,680 Z"
+              fill="#6e5742"
+              fillOpacity="0.28"
+            />
+            <path
+              d="M445,680 C505,495 600,320 755,165 C685,330 635,495 600,680 Z"
+              fill="#faf5ee"
+              fillOpacity="0.58"
+            />
+          </svg>
         </div>
-      </section>
 
-      {/* ══════════════════════════════════════════════════ */}
-      {/* New Arrivals — Split Layout: Image + 3x2 Grid    */}
-      {/* ══════════════════════════════════════════════════ */}
-      <section id="new-arrivals" className="py-24 bg-[#ebebeb]">
-        <div className="max-w-full mx-auto px-[10%]">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-8"
-          >
-            <div className="flex items-start gap-4">
-              <div className="w-1.5 h-12 bg-black rounded-full mt-1" />
-              <div>
-                <h2 className="text-5xl font-bold text-black uppercase tracking-tighter mb-1">New Arrivals</h2>
-                <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-neutral-400">Latest drops from our collection</span>
-              </div>
-            </div>
-
-            <div className="flex bg-white p-1 rounded-full shadow-[0_2px_20px_rgba(0,0,0,0.06)] border border-neutral-100/80 w-fit">
-              {['Women', 'Men', 'Sporty'].map((tab, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-7 py-2.5 rounded-full text-[11px] font-bold tracking-[0.15em] uppercase transition-all duration-300 cursor-pointer ${activeTab === tab ? 'bg-black text-white shadow-lg' : 'text-neutral-400 hover:text-black'}`}
+        {/* Hero Carousel Stage */}
+        <div className="relative z-10 max-w-[1380px] mx-auto px-4 sm:px-8 md:px-10 lg:px-12 xl:px-16 min-h-[500px] md:min-h-[540px] lg:min-h-[580px] xl:min-h-[610px] flex flex-col justify-between">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeHeroSlide.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.32, ease: "easeInOut" }}
+              className="relative flex-1 flex flex-col md:flex-row items-stretch"
+            >
+              {/* Left Editorial Typography & CTAs */}
+              <div className="relative z-20 w-full md:w-[50%] lg:w-[49%] py-8 sm:py-10 lg:py-12 flex flex-col justify-center">
+                <motion.span
+                  initial={{ y: 12, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.04 }}
+                  className="inline-block text-[12px] sm:text-[13px] font-semibold uppercase tracking-[0.3em] text-[#75624e] mb-3.5"
                 >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          </motion.div>
+                  {activeHeroSlide.eyebrow}
+                </motion.span>
 
-          {/* Split Layout: Left Image + Right Product Grid */}
-          {loading ? (
-            <NewArrivalsSkeleton />
-          ) : filteredNewArrivals.length === 0 ? (
-            <EmptyState title={`No ${activeTab} products found`} description="Check back later for exciting new drops in this category." />
-          ) : (
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* Left Side — Promotional Image */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="w-full lg:w-[38%] shrink-0"
-              >
-                <div className="relative group overflow-hidden rounded-3xl h-[400px] lg:h-full min-h-[600px] cursor-pointer bg-neutral-100">
-                  <img
-                    src="/assets/img/split image .png"
-                    alt="New Arrivals Promo"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1200ms] ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-10">
-                    <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/60 mb-2">Spring 2026</span>
-                    <h3 className="text-3xl font-bold uppercase tracking-tighter text-white mb-4 leading-none">Fresh<br />Season<br />Essentials</h3>
-                    <button className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] border border-white/30 bg-white/10 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-full px-6 py-3 w-fit text-white hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300 cursor-pointer">
-                      Shop Collection <ArrowRight size={14} />
+                <h1
+                  className={`text-[#151311] font-extrabold uppercase tracking-[-0.03em] leading-[0.94] ${
+                    activeHeroSlide.headlineLines.length > 2
+                      ? "text-[2.35rem] sm:text-[3.1rem] md:text-[3.25rem] lg:text-[3.85rem] xl:text-[4.4rem]"
+                      : "text-[2.45rem] sm:text-[3.25rem] md:text-[3.4rem] lg:text-[4rem] xl:text-[4.55rem]"
+                  }`}
+                >
+                  {activeHeroSlide.headlineLines.map((line, idx) => (
+                    <motion.span
+                      key={line}
+                      className="block"
+                      initial={{ x: -24, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{
+                        duration: 0.45,
+                        delay: 0.08 + idx * 0.07,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                    >
+                      {line}
+                    </motion.span>
+                  ))}
+                </h1>
+
+                <motion.p
+                  initial={{ y: 12, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.45, delay: 0.22 }}
+                  className="text-[15px] sm:text-[16.5px] lg:text-[17.5px] text-[#453d35] font-medium max-w-lg mt-4 mb-6 leading-relaxed"
+                >
+                  {activeHeroSlide.subtitle}
+                </motion.p>
+
+                {/* Premium CTA Buttons */}
+                <motion.div
+                  initial={{ y: 14, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.45, delay: 0.28 }}
+                  className="flex flex-wrap items-center gap-3.5"
+                >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      document
+                        .getElementById(activeHeroSlide.primaryCta.targetId)
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    className="group inline-flex items-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-full bg-[#161514] hover:bg-[#2b2825] text-white text-[13.5px] sm:text-[14px] font-semibold tracking-[0.02em] shadow-[0_12px_28px_rgba(22,21,20,0.2)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                  >
+                    <span>{activeHeroSlide.primaryCta.label}</span>
+                    <ArrowRight
+                      size={16}
+                      className="group-hover:translate-x-1 transition-transform duration-300"
+                    />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      document
+                        .getElementById(activeHeroSlide.secondaryCta.targetId)
+                        ?.scrollIntoView({ behavior: "smooth" })
+                    }
+                    className="inline-flex items-center gap-2 px-8 py-3.5 sm:py-4 rounded-full bg-white/60 hover:bg-white text-[#171513] border border-[#c7b8a5] hover:border-[#171513] text-[13.5px] sm:text-[14px] font-semibold tracking-[0.02em] backdrop-blur-sm hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                  >
+                    {activeHeroSlide.secondaryCta.label}
+                  </button>
+                </motion.div>
+
+                {/* Small Editorial Benefit Indicators */}
+                <motion.div
+                  initial={{ y: 14, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 0.55 }}
+                  className="flex flex-wrap items-center gap-x-7 gap-y-2.5 mt-6 sm:mt-7 text-[12.5px] sm:text-[13px] font-medium text-[#52493f]"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <Leaf className="w-4 h-4 text-[#7c664e]" strokeWidth={1.8} />
+                    <span>Premium Fabrics</span>
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-[#7c664e]" strokeWidth={1.8} />
+                    <span>Secure Payments</span>
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <RotateCcw className="w-4 h-4 text-[#7c664e]" strokeWidth={1.8} />
+                    <span>Easy Returns</span>
+                  </span>
+                </motion.div>
+
+                {/* Carousel Indicators + Slide Navigation */}
+                <div className="flex items-center gap-5 mt-7 pt-1">
+                  <div className="flex items-center gap-3" role="tablist" aria-label="Hero Slides">
+                    {heroSlides.map((slide, index) => {
+                      const isActive = index === heroSlide;
+                      return (
+                        <button
+                          key={slide.id}
+                          type="button"
+                          role="tab"
+                          aria-selected={isActive}
+                          aria-label={`Go to slide ${index + 1}`}
+                          onClick={() => setHeroSlide(index)}
+                          className="group flex items-center gap-2 cursor-pointer focus:outline-none"
+                        >
+                          <span
+                            className={`text-[12.5px] tracking-[0.08em] transition-colors ${
+                              isActive
+                                ? "font-extrabold text-[#161514]"
+                                : "font-semibold text-[#9a8c7c] group-hover:text-[#161514]"
+                            }`}
+                          >
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span
+                            className={`h-[2px] rounded-full transition-all duration-500 ${
+                              isActive
+                                ? "w-10 bg-[#161514]"
+                                : "w-3.5 bg-[#c7b9a8] group-hover:bg-[#7c6d5c]"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Prev / Next Controls */}
+                  <div className="flex items-center gap-2 ml-1">
+                    <button
+                      type="button"
+                      onClick={handlePrevSlide}
+                      aria-label="Previous hero slide"
+                      className="w-8.5 h-8.5 rounded-full border border-[#cbbaa6] bg-white/65 hover:bg-[#161514] hover:border-[#161514] text-[#2b2621] hover:text-white flex items-center justify-center transition-all duration-200 cursor-pointer"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNextSlide}
+                      aria-label="Next hero slide"
+                      className="w-8.5 h-8.5 rounded-full border border-[#cbbaa6] bg-white/65 hover:bg-[#161514] hover:border-[#161514] text-[#2b2621] hover:text-white flex items-center justify-center transition-all duration-200 cursor-pointer"
+                    >
+                      <ChevronRight size={16} />
                     </button>
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
-              <div className="flex-1">
-                <motion.div
-                  key={activeTab}
-                  variants={{
-                    hidden: { opacity: 0 },
-                    show: {
-                      opacity: 1,
-                      transition: {
-                        staggerChildren: 0.1
-                      }
-                    }
-                  }}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
-                  className="grid grid-cols-2 sm:grid-cols-3 gap-5 content-start"
-                >
-                  {filteredNewArrivals.slice(0, 6).map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </motion.div>
+              {/* Right Model Cutout Composition — Desktop & Tablet */}
+              <div className="hidden md:block relative md:w-[52%] lg:w-[54%] min-h-[520px] lg:min-h-[580px] xl:min-h-[610px] pointer-events-none">
+                {activeHeroSlide.models.map((model, idx) => {
+                  const motionStyle = {
+                    ...model.style,
+                    ...(model.parallax === "left" ? { x: modelLeftX } : {}),
+                    ...(model.parallax === "right" ? { x: modelRightX } : {}),
+                    ...(model.parallax === "center" ? { y: modelCenterY } : {}),
+                  };
+                  return (
+                    <motion.img
+                      key={`${activeHeroSlide.id}-model-${idx}`}
+                      src={model.src}
+                      alt={model.alt}
+                      className={`absolute bottom-0 w-auto max-w-none object-contain drop-shadow-[0_18px_28px_rgba(45,32,20,0.22)] ${model.className}`}
+                      style={motionStyle}
+                      initial={{ y: 42, opacity: 0, scale: 0.96 }}
+                      animate={{ y: 0, opacity: 1, scale: 1 }}
+                      transition={{
+                        duration: 0.85,
+                        delay: model.delay,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                    />
+                  );
+                })}
+              </div>
+
+              {/* Compact Model Preview — Mobile */}
+              <div className="md:hidden relative w-full h-[320px] sm:h-[370px] flex items-end justify-center overflow-hidden mt-2 pointer-events-none">
+                <div
+                  className="absolute bottom-0 w-[280px] h-[280px] rounded-full bg-[#9b8269]/20 blur-xl"
+                  aria-hidden="true"
+                />
+                <motion.img
+                  key={`${activeHeroSlide.id}-mobile-model`}
+                  src={activeHeroSlide.mobileImage}
+                  alt={activeHeroSlide.eyebrow}
+                  className="relative z-10 h-[98%] w-auto object-contain drop-shadow-[0_14px_24px_rgba(45,32,20,0.2)]"
+                  initial={{ y: 24, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════ */}
+      {/* Shop By Category Row — UI Only                    */}
+      {/* ══════════════════════════════════════════════════ */}
+      <section id="shop-section" className="py-6 md:py-8 bg-white scroll-mt-24">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+          <div className="bg-[#faf6f0] border border-[#efe7dc] rounded-[24px] px-5 sm:px-8 lg:px-10 py-6 sm:py-7 flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-9 shadow-[0_4px_22px_rgba(45,35,25,0.035)]">
+            {/* Left Heading */}
+            <div className="shrink-0 lg:min-w-[165px] flex items-center justify-between lg:block">
+              <div>
+                <span className="block text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.26em] text-[#6d6256] leading-tight">
+                  Shop By
+                </span>
+                <h2 className="text-[24px] sm:text-[28px] lg:text-[30px] font-extrabold uppercase tracking-[-0.02em] text-[#171513] leading-tight mt-0.5">
+                  Category
+                </h2>
+                <div className="w-10 h-[3px] bg-[#b89f80] rounded-full mt-2.5" />
               </div>
             </div>
-          )}
 
-          {/* View All Products CTA */}
-          <div className="text-center mt-16">
-            <Link to="/products" className="group inline-flex items-center gap-3 px-12 py-4 bg-black text-white rounded-full text-[11px] font-bold uppercase tracking-[0.25em] shadow-[0_8px_30px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_50px_rgba(0,0,0,0.25)] hover:-translate-y-1 transition-all duration-500">
-              View All Products <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+            <div className="hidden lg:block w-px h-16 bg-[#e5dccf] shrink-0" aria-hidden="true" />
+
+            {/* Visual Category Items (UI Only) */}
+            <div
+              role="list"
+              aria-label="Shop by Category"
+              className="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-5"
+            >
+              {visualCategories.map((category) => (
+                <div
+                  key={category.name}
+                  role="listitem"
+                  className="group bg-[#f2eae0]/95 hover:bg-[#eadecf] border border-[#e7dcd0] hover:border-[#d3c1ab] rounded-[18px] py-5 sm:py-6 px-4 min-h-[106px] sm:min-h-[118px] flex flex-col items-center justify-center gap-2.5 text-[#1e1b18] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(45,35,25,0.07)] select-none cursor-default"
+                >
+                  <div className="text-[#1f1c18] group-hover:scale-105 transition-transform duration-300">
+                    {category.icon}
+                  </div>
+                  <span className="text-[13.5px] sm:text-[14.5px] font-semibold tracking-[-0.01em] text-[#221e1a] text-center">
+                    {category.name}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════ */}
+      {/* New Arrivals — Editorial Product Row              */}
+      {/* ══════════════════════════════════════════════════ */}
+      <section id="new-arrivals" className="py-10 md:py-14 bg-white scroll-mt-24">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+          {/* Section Header */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 mb-7">
+            <div>
+              <h2 className="text-[26px] sm:text-[32px] lg:text-[38px] font-extrabold text-[#151413] uppercase tracking-[-0.025em] leading-none">
+                New Arrivals
+              </h2>
+              <p className="text-[14px] sm:text-[15px] font-medium text-[#6c6257] mt-2">
+                The latest styles, just dropped.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Filter Tabs */}
+              <div
+                role="tablist"
+                aria-label="Filter New Arrivals"
+                className="inline-flex items-center bg-[#f6f1ea] border border-[#ebe3d8] p-1 rounded-full"
+              >
+                {["All", "Women", "Men", "Sporty"].map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeTab === tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-4 sm:px-5 py-2 rounded-full text-[11.5px] font-bold tracking-[0.06em] uppercase transition-all duration-200 cursor-pointer ${
+                      activeTab === tab
+                        ? "bg-[#161514] text-white shadow-xs"
+                        : "text-[#6f655a] hover:text-[#161514]"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {/* Previous / Next Carousel Arrows + View All */}
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => scrollNewArrivals("left")}
+                  disabled={!canScrollNewLeft}
+                  aria-label="Previous new arrivals"
+                  className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
+                    canScrollNewLeft
+                      ? "border-[#dcd2c5] bg-white text-[#161514] hover:bg-[#161514] hover:border-[#161514] hover:text-white cursor-pointer"
+                      : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
+                  }`}
+                >
+                  <ChevronLeft size={19} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollNewArrivals("right")}
+                  disabled={!canScrollNewRight}
+                  aria-label="Next new arrivals"
+                  className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
+                    canScrollNewRight
+                      ? "border-[#161514] bg-[#161514] text-white hover:bg-[#2d2926] cursor-pointer"
+                      : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
+                  }`}
+                >
+                  <ChevronRight size={19} />
+                </button>
+
+                <Link
+                  to={
+                    activeTab === "All"
+                      ? "/category/all"
+                      : `/category/${activeTab.toLowerCase()}`
+                  }
+                  className="inline-flex items-center gap-2 px-7 py-3 bg-[#161514] hover:bg-[#2c2926] text-white rounded-full text-[13px] font-semibold tracking-[0.015em] transition-all duration-200 group/view"
+                >
+                  <span>View All</span>
+                  <ArrowRight
+                    size={15}
+                    className="group-hover/view:translate-x-0.5 transition-transform"
+                  />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Product Row */}
+          {loading ? (
+            <NewArrivalsSkeleton />
+          ) : filteredNewArrivals.length === 0 ? (
+            <EmptyState
+              title={`No ${activeTab === "All" ? "" : `${activeTab} `}products found`}
+              description="Check back later for exciting new drops in this collection."
+            />
+          ) : (
+            <div
+              ref={newArrivalsScrollRef}
+              className="flex gap-4 sm:gap-5 overflow-x-auto no-scrollbar scroll-smooth pb-2"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {filteredNewArrivals.map((product) => (
+                <div
+                  key={product.id}
+                  className="new-arrival-card shrink-0 w-[72vw] sm:w-[236px] md:w-[244px] lg:w-[calc((100%-60px)/4)] xl:w-[calc((100%-80px)/5)]"
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -840,137 +1073,417 @@ export const HomePage = () => {
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {/* Feature Icon Bar â€” Premium White Background       */}
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-      <section className="bg-white py-20 border-y border-neutral-100 overflow-hidden">
-        <motion.div
-          variants={{
-            hidden: { opacity: 0 },
-            show: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.15
-              }
-            }
-          }}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="max-w-full mx-auto px-[10%] grid grid-cols-2 lg:grid-cols-4 gap-12"
-        >
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, scale: 0.8 },
-              show: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "backOut" } }
-            }}
-            className="flex flex-col items-center text-center group cursor-default"
-          >
-            <div className="w-16 h-16 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center mb-5 group-hover:bg-black group-hover:border-black group-hover:text-white transition-all duration-500 shadow-sm text-black">
-              <Truck size={24} />
+      {/* Promotional Two-Panel Banners */}
+      <section className="py-12 md:py-14 bg-white border-t border-[#f0e9df]">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* LEFT PANEL — Seasonal Sale Promo */}
+            <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#ece1d4] via-[#e3d4c2] to-[#d5c1aa] min-h-[320px] sm:min-h-[360px] lg:min-h-[385px] flex items-center border border-[#e3d6c6] group">
+              <div
+                className="absolute -left-16 -top-16 w-80 h-80 rounded-full bg-white/35 blur-2xl pointer-events-none"
+                aria-hidden="true"
+              />
+
+              <img
+                src="/assets/img/cover 2 girl img 1.png"
+                alt="Selected collections highlight"
+                className="absolute bottom-0 right-1 sm:right-5 h-[97%] w-auto object-contain object-bottom pointer-events-none select-none drop-shadow-[0_16px_28px_rgba(38,28,18,0.2)] group-hover:scale-[1.02] transition-transform duration-500"
+              />
+
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-[#eae0d3] via-[#eae0d3]/92 to-transparent sm:via-[#eae0d3]/35 pointer-events-none"
+                aria-hidden="true"
+              />
+
+              <div className="relative z-10 p-7 sm:p-11 max-w-[66%] sm:max-w-[60%]">
+                <span className="block text-[13px] sm:text-[14px] font-semibold uppercase tracking-[0.24em] text-[#5e5144]">
+                  Up To
+                </span>
+                <h2 className="text-[2.5rem] sm:text-[3.25rem] lg:text-[3.75rem] font-extrabold uppercase tracking-[-0.03em] leading-[0.95] text-[#151413] mt-1.5 sm:whitespace-nowrap">
+                  50% OFF
+                </h2>
+                <p className="text-[14.5px] sm:text-[16px] font-medium text-[#3b342d] mt-3 mb-8">
+                  On Selected Collections
+                </p>
+                <Link
+                  to="/category/all"
+                  className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#161514] hover:bg-[#2c2926] text-white text-[13.5px] font-semibold tracking-[0.02em] shadow-[0_10px_24px_rgba(22,21,20,0.18)] hover:-translate-y-0.5 transition-all duration-200 group/cta"
+                >
+                  <span>Shop the Sale</span>
+                  <ArrowRight
+                    size={15}
+                    className="group-hover/cta:translate-x-0.5 transition-transform"
+                  />
+                </Link>
+              </div>
             </div>
-            <h4 className="text-[12px] font-bold uppercase tracking-[0.2em] mb-1.5 text-black">Quick Delivery</h4>
-            <p className="text-[11px] text-neutral-400 font-medium">Islandwide within 3-5 days</p>
-          </motion.div>
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, scale: 0.8 },
-              show: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "backOut", delay: 0.1 } }
-            }}
-            className="flex flex-col items-center text-center group cursor-default"
-          >
-            <div className="w-16 h-16 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center mb-5 group-hover:bg-black group-hover:border-black group-hover:text-white transition-all duration-500 shadow-sm text-black">
-              <CreditCard size={24} />
+
+            {/* RIGHT PANEL — Sporty Collection Promo */}
+            <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#e2dfd9] via-[#d3cfc8] to-[#bdb8b0] min-h-[320px] sm:min-h-[360px] lg:min-h-[385px] flex items-center border border-[#d9d4cc] group">
+              <svg
+                viewBox="0 0 600 320"
+                preserveAspectRatio="none"
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                aria-hidden="true"
+              >
+                <polygon points="340,0 430,0 290,320 200,320" fill="#ffffff" fillOpacity="0.22" />
+                <polygon points="520,0 565,0 445,320 400,320" fill="#161514" fillOpacity="0.1" />
+                <polygon points="575,0 600,0 490,320 465,320" fill="#161514" fillOpacity="0.14" />
+              </svg>
+
+              <div className="absolute inset-y-0 right-0 w-[58%] sm:w-[56%] pointer-events-none overflow-hidden">
+                <img
+                  src="/assets/img/split image 3.png"
+                  alt="Sporty Collection"
+                  className="w-full h-full object-cover object-[center_12%] group-hover:scale-[1.03] transition-transform duration-500"
+                />
+                <div
+                  className="absolute inset-0 bg-gradient-to-r from-[#d4d0c9] via-[#d4d0c9]/40 to-transparent"
+                  aria-hidden="true"
+                />
+              </div>
+
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-[#dcd8d1] via-[#dcd8d1]/88 to-transparent sm:via-[#dcd8d1]/42 pointer-events-none"
+                aria-hidden="true"
+              />
+
+              <div className="relative z-10 p-7 sm:p-11 max-w-[70%] sm:max-w-[62%]">
+                <span className="block text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.26em] text-[#4e4942]">
+                  Sporty Collection
+                </span>
+                <h2 className="text-[1.95rem] sm:text-[2.45rem] lg:text-[2.75rem] font-extrabold uppercase tracking-[-0.03em] leading-[0.98] text-[#151413] mt-2.5 mb-8">
+                  <span className="block sm:whitespace-nowrap">Move Better.</span>
+                  <span className="block sm:whitespace-nowrap">Live Bolder.</span>
+                </h2>
+                <Link
+                  to="/category/sporty"
+                  className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#161514] hover:bg-[#2c2926] text-white text-[13.5px] font-semibold tracking-[0.02em] shadow-[0_10px_24px_rgba(22,21,20,0.18)] hover:-translate-y-0.5 transition-all duration-200 group/cta"
+                >
+                  <span>Shop Sports</span>
+                  <ArrowRight
+                    size={15}
+                    className="group-hover/cta:translate-x-0.5 transition-transform"
+                  />
+                </Link>
+              </div>
             </div>
-            <h4 className="text-[12px] font-bold uppercase tracking-[0.2em] mb-1.5 text-black">Secure Payment</h4>
-            <p className="text-[11px] text-neutral-400 font-medium">100% Protected transfers</p>
-          </motion.div>
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, scale: 0.8 },
-              show: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "backOut", delay: 0.2 } }
-            }}
-            className="flex flex-col items-center text-center group cursor-default"
-          >
-            <div className="w-16 h-16 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center mb-5 group-hover:bg-black group-hover:border-black group-hover:text-white transition-all duration-500 shadow-sm text-black">
-              <ShieldCheck size={24} />
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits & Customer Testimonials */}
+      <section className="py-12 md:py-14 bg-white border-t border-[#f0e9df]">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+            {/* LEFT — Why Choose Rich Apparel (4 Premium Benefit Cards) */}
+            <div className="lg:col-span-6 flex flex-col">
+              <div className="mb-6">
+                <h2 className="text-[22px] sm:text-[25px] lg:text-[26px] font-extrabold uppercase tracking-[-0.02em] text-[#151413]">
+                  Why Choose Rich Apparel?
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 flex-1">
+                {benefits.map((benefit) => {
+                  const Icon = benefit.Icon;
+                  return (
+                    <div
+                      key={benefit.title}
+                      className="bg-[#f8f4ee] border border-[#ece4d9] hover:border-[#d5c6b3] rounded-2xl px-4 py-6 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(32,25,18,0.065)] group"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-white border border-[#e7ddd0] flex items-center justify-center text-[#1a1816] mb-4 group-hover:bg-[#161514] group-hover:border-[#161514] group-hover:text-white transition-colors duration-200">
+                        <Icon size={23} strokeWidth={1.6} />
+                      </div>
+                      <h3 className="text-[13.5px] font-bold text-[#181614] leading-snug mb-1.5">
+                        {benefit.title}
+                      </h3>
+                      <p className="text-[12px] font-medium text-[#70655a] leading-snug">
+                        {benefit.description}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <h4 className="text-[12px] font-bold uppercase tracking-[0.2em] mb-1.5 text-black">Authentic Gear</h4>
-            <p className="text-[11px] text-neutral-400 font-medium">No 1. In Sri Lanka</p>
-          </motion.div>
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, scale: 0.8 },
-              show: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "backOut", delay: 0.3 } }
-            }}
-            className="flex flex-col items-center text-center group cursor-default"
-          >
-            <div className="w-16 h-16 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center mb-5 group-hover:bg-black group-hover:border-black group-hover:text-white transition-all duration-500 shadow-sm text-black">
-              <Headphones size={24} />
+
+            {/* RIGHT — What Our Customers Say (Existing Review Data) */}
+            <div className="lg:col-span-6 flex flex-col">
+              <div className="flex items-center justify-between gap-4 mb-6">
+                <h2 className="text-[22px] sm:text-[25px] lg:text-[26px] font-extrabold uppercase tracking-[-0.02em] text-[#151413]">
+                  What Our Customers Say
+                </h2>
+                {testimonials.length > 1 && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setActiveTestimonial(
+                          (prev) => (prev - 1 + testimonials.length) % testimonials.length
+                        )
+                      }
+                      aria-label="Previous testimonial"
+                      className="w-9 h-9 rounded-full border border-[#dfd6ca] bg-white hover:bg-[#161514] hover:border-[#161514] text-[#1a1816] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setActiveTestimonial((prev) => (prev + 1) % testimonials.length)
+                      }
+                      aria-label="Next testimonial"
+                      className="w-9 h-9 rounded-full border border-[#dfd6ca] bg-white hover:bg-[#161514] hover:border-[#161514] text-[#1a1816] hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1 bg-[#f8f4ee] border border-[#ece4d9] rounded-2xl p-6 sm:p-7 flex flex-col justify-between">
+                {currentTestimonial ? (
+                  <>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                      {getTestimonialThumb(currentTestimonial) ? (
+                        <div className="w-[72px] h-[72px] rounded-full overflow-hidden border-2 border-white shadow-sm bg-[#ede5db] shrink-0">
+                          <img
+                            src={getTestimonialThumb(currentTestimonial)}
+                            alt={currentTestimonial.product?.name?.trim() || "Reviewed item"}
+                            className="w-full h-full object-cover object-top"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-[72px] h-[72px] rounded-full bg-[#161514] text-white flex items-center justify-center text-xl font-bold shrink-0">
+                          {(currentTestimonial.user?.name || "R").charAt(0).toUpperCase()}
+                        </div>
+                      )}
+
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[14.5px] sm:text-[15.5px] font-medium text-[#24201c] leading-relaxed">
+                          &ldquo;{formatTestimonialQuote(currentTestimonial.comment)}&rdquo;
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 pt-4 border-t border-[#e8dfd3] flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 text-[13px] min-w-0">
+                        <span className="font-bold text-[#171513]">
+                          — {currentTestimonial.user?.name?.trim() || "Verified Customer"}
+                        </span>
+                        {currentTestimonial.product?.id && currentTestimonial.product?.name && (
+                          <>
+                            <span className="text-[#b5a99b]">·</span>
+                            <Link
+                              to={`/product/${currentTestimonial.product.id}`}
+                              className="text-[#6d6256] hover:text-[#161514] underline-offset-2 hover:underline truncate"
+                            >
+                              {currentTestimonial.product.name.trim()}
+                            </Link>
+                          </>
+                        )}
+                      </div>
+
+                      <div
+                        className="flex items-center gap-0.5 shrink-0"
+                        aria-label={`Rated ${currentTestimonial.rating} out of 5`}
+                      >
+                        {Array.from({ length: 5 }).map((_, idx) => (
+                          <Star
+                            key={idx}
+                            size={15}
+                            className={
+                              idx < Math.round(Number(currentTestimonial.rating) || 0)
+                                ? "fill-[#e4a63a] text-[#e4a63a]"
+                                : "text-[#d5cabd]"
+                            }
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {testimonials.length > 1 && (
+                      <div className="flex items-center justify-center gap-1.5 mt-3.5">
+                        {testimonials.map((t, idx) => (
+                          <button
+                            key={t.id}
+                            type="button"
+                            onClick={() => setActiveTestimonial(idx)}
+                            aria-label={`View testimonial ${idx + 1}`}
+                            className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                              idx === activeTestimonial % testimonials.length
+                                ? "w-5 bg-[#161514]"
+                                : "w-1.5 bg-[#cfc4b6] hover:bg-[#9b8d7d]"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex items-start gap-4 my-auto">
+                    <div className="w-12 h-12 rounded-xl bg-white border border-[#e7ddd0] flex items-center justify-center text-[#8c7356] shrink-0">
+                      <Quote size={20} strokeWidth={1.6} />
+                    </div>
+                    <div>
+                      <p className="text-[14px] font-medium text-[#24201c] leading-relaxed">
+                        Crafted for everyday comfort and lasting fit — verified customer feedback
+                        appears directly from our shoppers across Sri Lanka.
+                      </p>
+                      <span className="inline-block text-[11.5px] font-semibold text-[#756a5e] mt-2">
+                        — Rich Apparel Quality Promise
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-            <h4 className="text-[12px] font-bold uppercase tracking-[0.2em] mb-1.5 text-black">24/7 Support</h4>
-            <p className="text-[11px] text-neutral-400 font-medium">We're here to help anytime</p>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </section>
 
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {/* Branches Network â€” Premium White/Black            */}
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-      <section className="pt-24 pb-28 md:pt-28 md:pb-32 bg-[#f6f4f0] border-t border-neutral-200/60 overflow-hidden">
-        <div className="max-w-full mx-auto px-[6%] lg:px-[10%]">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center mb-16"
-          >
-            <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#8a7965] block mb-3">Nationwide Presence</span>
-            <h2 className="text-4xl md:text-5xl font-bold text-black uppercase tracking-tighter mb-4">Visit Our Outlets</h2>
-            <div className="w-14 h-[2px] bg-black mx-auto mb-5" />
-            <p className="max-w-lg mx-auto text-neutral-600 font-medium text-[13px] leading-relaxed">Find your nearest Rich Apparel branch and experience fashion excellence first-hand across the island.</p>
-          </motion.div>
+      <section className="py-14 md:py-16 bg-[#faf6f0] border-t border-[#ece4d9]">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-9">
+            <div>
+              <span className="block text-[11px] font-bold uppercase tracking-[0.26em] text-[#8a7660] mb-2">
+                Nationwide Presence
+              </span>
+              <h2 className="text-[26px] sm:text-[32px] lg:text-[36px] font-extrabold text-[#151413] uppercase tracking-[-0.025em] leading-none">
+                Visit Our Outlets
+              </h2>
+            </div>
+            <p className="max-w-md text-[#6b6055] font-medium text-[14px] leading-relaxed">
+              Find your nearest Rich Apparel branch and experience fashion excellence first-hand
+              across the island.
+            </p>
+          </div>
 
-          <motion.div
-            variants={{
-              hidden: { opacity: 0 },
-              show: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.1
-                }
-              }
-            }}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5"
-          >
-            {branches.map(branch => (
-              <motion.div
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5">
+            {branches.map((branch) => (
+              <div
                 key={branch.name}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-                }}
-                className="p-6 sm:p-7 bg-white rounded-2xl border border-[#ebe6dd] hover:border-[#d5cab8] shadow-[0_2px_14px_rgba(0,0,0,0.03)] hover:shadow-[0_14px_34px_rgba(0,0,0,0.07)] transition-all duration-300 group flex flex-col justify-between h-full"
+                className="p-6 bg-white rounded-[18px] border border-[#e9e1d6] hover:border-[#d2c3af] shadow-[0_2px_12px_rgba(32,25,18,0.03)] hover:shadow-[0_12px_28px_rgba(32,25,18,0.07)] transition-all duration-300 hover:-translate-y-0.5 group flex flex-col justify-between h-full"
               >
                 <div>
-                  <div className="w-11 h-11 bg-black rounded-xl flex items-center justify-center text-white mb-5 group-hover:bg-[#1f1f1f] transition-colors duration-300 shadow-sm">
-                    <Truck size={19} strokeWidth={1.75} />
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-[#f5efe6] border border-[#e8ddd0] group-hover:bg-[#161514] group-hover:border-[#161514] flex items-center justify-center text-[#1a1816] group-hover:text-white transition-colors duration-200">
+                      <MapPin size={18} strokeWidth={1.75} />
+                    </div>
+                    <span className="text-[9.5px] font-bold uppercase tracking-[0.18em] text-[#9b8a76]">
+                      Branch
+                    </span>
                   </div>
-                  <div className="w-6 h-[2px] bg-[#d8c4a6] mb-3" />
-                  <h4 className="text-lg font-bold uppercase tracking-tight mb-2 text-black">{branch.name}</h4>
-                  <p className="text-xs text-neutral-600 font-medium leading-relaxed mb-6">{branch.address}</p>
+
+                  <h3 className="text-[16px] font-extrabold uppercase tracking-[-0.01em] text-[#161514] mb-2">
+                    {branch.name}
+                  </h3>
+                  <p className="text-[12.5px] text-[#5e544a] font-medium leading-relaxed mb-5">
+                    {branch.address}
+                  </p>
                 </div>
 
-                <div className="pt-4 border-t border-neutral-100 mt-auto">
-                  <span className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[#9b8a74] mb-1">Outlet Phone</span>
-                  <a href={`tel:${branch.phone}`} className="inline-block text-[13px] font-bold text-black border-b border-neutral-300 hover:border-[#7c6950] hover:text-[#7c6950] transition-colors pb-0.5">
-                    {branch.phone}
+                <div className="pt-3.5 border-t border-[#f1ebe2] mt-auto">
+                  <span className="block text-[9.5px] font-bold uppercase tracking-[0.18em] text-[#9a8b79] mb-1">
+                    Outlet Phone
+                  </span>
+                  <a
+                    href={`tel:${branch.phone}`}
+                    className="inline-flex items-center gap-1.5 text-[13px] font-bold text-[#161514] hover:text-[#7c6449] transition-colors"
+                  >
+                    <Phone size={13} strokeWidth={2} className="text-[#8d765c]" />
+                    <span>{branch.phone}</span>
                   </a>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter Section — Stay In The Loop */}
+      <section className="py-10 md:py-12 bg-white border-t border-[#f0e9df]">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+          <div className="relative overflow-hidden rounded-[22px] bg-gradient-to-r from-[#f0e6da] via-[#e9dccb] to-[#e0cfba] border border-[#e3d5c3] px-6 sm:px-10 lg:px-12 py-8 sm:py-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            {/* Minimalist Editorial Coat-Hanger Line-Art Accent */}
+            <svg
+              viewBox="0 0 220 120"
+              fill="none"
+              className="hidden lg:block absolute right-4 bottom-0 h-[112px] w-auto text-[#5e4d3b]/20 pointer-events-none select-none"
+              aria-hidden="true"
+            >
+              <path
+                d="M110 34C110 25 117 19 124 19C131 19 136 24 136 30C136 36 130 39 124 43L124 49"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+              />
+              <path
+                d="M124 49L42 92C36 95 38 103 45 103H203C210 103 212 95 206 92L124 49Z"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M68 22C68 15 73 10 79 10C84 10 88 14 88 19C88 23 84 26 79 29V34"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                opacity="0.5"
+              />
+              <path
+                d="M79 34L14 68C9 70 11 77 17 77H141C147 77 149 70 144 68L79 34Z"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinejoin="round"
+                opacity="0.45"
+              />
+            </svg>
+
+            <div className="relative z-10 max-w-md">
+              <h2 className="text-[22px] sm:text-[26px] font-extrabold uppercase tracking-[-0.025em] text-[#151413] leading-tight">
+                Stay In The Loop
+              </h2>
+              <p className="text-[13px] sm:text-[14px] font-medium text-[#5a4f43] mt-1.5">
+                Get exclusive offers, new arrivals and more.
+              </p>
+            </div>
+
+            <form
+              onSubmit={handleNewsletterSubmit}
+              noValidate
+              className="relative z-10 w-full lg:w-auto lg:min-w-[450px] xl:min-w-[500px]"
+            >
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-white/95 p-1.5 rounded-2xl sm:rounded-full border border-[#e3d7c8] shadow-[0_6px_24px_rgba(32,25,18,0.06)]">
+                <input
+                  type="email"
+                  value={newsletterEmail}
+                  onChange={(e) => {
+                    setNewsletterEmail(e.target.value);
+                    if (newsletterSubscribed) setNewsletterSubscribed(false);
+                  }}
+                  placeholder="Enter your email address"
+                  aria-label="Email address for newsletter"
+                  className="flex-1 min-w-0 bg-transparent px-4 py-2.5 text-[13px] font-medium text-[#181614] placeholder-[#8f8579] outline-none"
+                />
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl sm:rounded-full bg-[#161514] hover:bg-[#2b2825] text-white text-[12.5px] font-semibold tracking-[0.02em] transition-all duration-200 cursor-pointer shrink-0"
+                >
+                  <span>Subscribe</span>
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+              {newsletterSubscribed && (
+                <p className="text-[11.5px] font-semibold text-[#4b5d44] mt-2 pl-4">
+                  Thank you — you&rsquo;re on our list for upcoming drops and offers.
+                </p>
+              )}
+            </form>
+          </div>
         </div>
       </section>
     </div>

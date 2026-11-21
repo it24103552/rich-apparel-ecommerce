@@ -1,114 +1,291 @@
-import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Youtube,
+  Mail,
+  Phone,
+  MapPin,
+  ArrowRight,
+} from "lucide-react";
+import toast from "react-hot-toast";
 
 export const ClientFooter = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [footerEmail, setFooterEmail] = useState("");
+
+  const handleHelpSupport = () => {
+    const supportBtn = document.querySelector(
+      '[aria-label*="Support" i], [aria-label*="Chat" i], [title*="Support" i]'
+    );
+    if (supportBtn && typeof supportBtn.click === "function") {
+      supportBtn.click();
+      return;
+    }
+    toast("Contact us at richapparel@contact.com or 011300400.");
+  };
+
+  const handleNewArrivalsClick = (e) => {
+    if (location.pathname === "/") {
+      e.preventDefault();
+      document.getElementById("new-arrivals")?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      e.preventDefault();
+      navigate("/#new-arrivals");
+    }
+  };
+
+  const handleShippingInfoClick = () => {
+    if (location.pathname === "/") {
+      const heading = Array.from(document.querySelectorAll("section h2")).find((h) =>
+        h.textContent?.toLowerCase().includes("why choose rich apparel")
+      );
+      heading?.closest("section")?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/");
+    }
+  };
+
+  const handleFooterNewsletterSubmit = (e) => {
+    e.preventDefault();
+    const email = footerEmail.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    setFooterEmail("");
+    toast.success("Thank you for staying in the loop with Rich Apparel!");
+  };
+
   return (
-    <footer className="bg-[#121212] text-white pt-16 pb-10 border-t border-[#242424] font-montserrat">
-      <div className="max-w-[1400px] mx-auto px-[5%] lg:px-[6%]">
+    <footer
+      className="bg-[#141312] text-white pt-16 pb-10 border-t border-[#252320]"
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
+      <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 mb-14">
-          {/* Brand & Info */}
-          <div className="lg:col-span-4 space-y-5">
-            <div>
-              <h3 className="text-2xl font-black tracking-[0.04em] uppercase text-white">RICH APPAREL</h3>
-              <div className="w-10 h-[2px] bg-[#d8c4a6] mt-3" />
-            </div>
-            <p className="text-[13px] text-neutral-300/90 leading-[1.75] max-w-[310px]">
-              Elevating your style with curated pieces that define modern sophistication.
-              Quiet luxury for the discerning individual.
+          {/* Brand Column */}
+          <div className="lg:col-span-3 space-y-5">
+            <Link to="/" className="inline-flex flex-col items-start group">
+              <span className="font-extrabold text-[24px] tracking-[0.2em] leading-none text-white group-hover:opacity-85 transition-opacity">
+                RICH
+              </span>
+              <span className="font-medium text-[9.5px] tracking-[0.42em] leading-none text-neutral-300 mt-1 pl-[1px]">
+                APPAREL
+              </span>
+            </Link>
+
+            <p className="text-[13px] font-medium text-neutral-300">
+              Wear the Difference.
             </p>
-            <div className="flex items-center gap-3 pt-1">
-              <a
-                href="#"
-                aria-label="Facebook"
-                className="w-10 h-10 rounded-full bg-[#1c1c1c] border border-[#2c2c2c] flex items-center justify-center text-neutral-300 hover:bg-[#d8c4a6] hover:border-[#d8c4a6] hover:text-[#121212] hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <Facebook size={16} strokeWidth={1.75} />
-              </a>
-              <a
-                href="#"
-                aria-label="Instagram"
-                className="w-10 h-10 rounded-full bg-[#1c1c1c] border border-[#2c2c2c] flex items-center justify-center text-neutral-300 hover:bg-[#d8c4a6] hover:border-[#d8c4a6] hover:text-[#121212] hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <Instagram size={16} strokeWidth={1.75} />
-              </a>
-              <a
-                href="#"
-                aria-label="Twitter"
-                className="w-10 h-10 rounded-full bg-[#1c1c1c] border border-[#2c2c2c] flex items-center justify-center text-neutral-300 hover:bg-[#d8c4a6] hover:border-[#d8c4a6] hover:text-[#121212] hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <Twitter size={16} strokeWidth={1.75} />
-              </a>
-              <a
-                href="#"
-                aria-label="YouTube"
-                className="w-10 h-10 rounded-full bg-[#1c1c1c] border border-[#2c2c2c] flex items-center justify-center text-neutral-300 hover:bg-[#d8c4a6] hover:border-[#d8c4a6] hover:text-[#121212] hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <Youtube size={16} strokeWidth={1.75} />
-              </a>
+
+            <div className="space-y-2.5 text-[12.5px] text-neutral-400 pt-1">
+              <div className="flex items-start gap-2.5">
+                <MapPin size={14} strokeWidth={1.75} className="text-[#d8c4a6] shrink-0 mt-0.5" />
+                <span>Colombo 7, New Road, Sri Lanka.</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Phone size={14} strokeWidth={1.75} className="text-[#d8c4a6] shrink-0" />
+                <a href="tel:011300400" className="hover:text-[#e6d7c3] transition-colors">
+                  011300400
+                </a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Mail size={14} strokeWidth={1.75} className="text-[#d8c4a6] shrink-0" />
+                <a
+                  href="mailto:richapparel@contact.com"
+                  className="hover:text-[#e6d7c3] transition-colors break-all"
+                >
+                  richapparel@contact.com
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Customer Service */}
-          <div className="lg:col-span-3">
-            <h4 className="text-xs font-bold uppercase tracking-[0.22em] mb-6 text-white">Client Services</h4>
-            <ul className="space-y-3.5 text-[13px] text-neutral-400 font-medium">
-              <li><a href="#" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">About Our Story</a></li>
-              <li><a href="#" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">Delivery & Logistics</a></li>
-              <li><a href="#" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">Privacy & Terms</a></li>
-              <li><a href="#" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">Returns & Exchanges</a></li>
-              <li><a href="#" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">Sustainable Practices</a></li>
-            </ul>
-          </div>
-
-          {/* Quick Support */}
+          {/* Quick Links */}
           <div className="lg:col-span-2">
-            <h4 className="text-xs font-bold uppercase tracking-[0.22em] mb-6 text-white">Quick Links</h4>
-            <ul className="space-y-3.5 text-[13px] text-neutral-400 font-medium">
-              <li><a href="/login" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">Personal Boutique</a></li>
-              <li><a href="/cart" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">Shopping Bag</a></li>
-              <li><a href="#" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">Saved Items</a></li>
-              <li><a href="#" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">Order Tracking</a></li>
-              <li><a href="#" className="inline-block hover:text-[#e6d7c3] transition-colors duration-200">Concierge Help</a></li>
+            <h4 className="text-[12px] font-bold uppercase tracking-[0.18em] mb-5 text-white">
+              Quick Links
+            </h4>
+            <ul className="space-y-3 text-[13px] text-neutral-400 font-medium">
+              <li>
+                <Link to="/" className="hover:text-[#e6d7c3] transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/category/women" className="hover:text-[#e6d7c3] transition-colors">
+                  Women
+                </Link>
+              </li>
+              <li>
+                <Link to="/category/men" className="hover:text-[#e6d7c3] transition-colors">
+                  Men
+                </Link>
+              </li>
+              <li>
+                <Link to="/category/sporty" className="hover:text-[#e6d7c3] transition-colors">
+                  Sporty
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/#new-arrivals"
+                  onClick={handleNewArrivalsClick}
+                  className="hover:text-[#e6d7c3] transition-colors"
+                >
+                  New Arrival
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Contact Details */}
-          <div className="lg:col-span-3">
-            <h4 className="text-xs font-bold uppercase tracking-[0.22em] mb-6 text-white">Keep In Touch</h4>
-            <div className="space-y-4 text-[13px] text-neutral-300 font-medium">
-              <div className="flex items-start gap-3.5 group">
-                <div className="w-8 h-8 rounded-lg bg-[#1c1c1c] border border-[#2c2c2c] flex items-center justify-center text-[#d8c4a6] shrink-0 group-hover:border-[#d8c4a6]/50 transition-colors mt-0.5">
-                  <MapPin size={15} strokeWidth={1.75} />
-                </div>
-                <span className="leading-relaxed">Colombo 7,<br />New road, Sri Lanka.</span>
-              </div>
-              <div className="flex items-center gap-3.5 group">
-                <div className="w-8 h-8 rounded-lg bg-[#1c1c1c] border border-[#2c2c2c] flex items-center justify-center text-[#d8c4a6] shrink-0 group-hover:border-[#d8c4a6]/50 transition-colors">
-                  <Phone size={15} strokeWidth={1.75} />
-                </div>
-                <a href="tel:011300400" className="hover:text-[#e6d7c3] transition-colors">011300400</a>
-              </div>
-              <div className="flex items-center gap-3.5 group">
-                <div className="w-8 h-8 rounded-lg bg-[#1c1c1c] border border-[#2c2c2c] flex items-center justify-center text-[#d8c4a6] shrink-0 group-hover:border-[#d8c4a6]/50 transition-colors">
-                  <Mail size={15} strokeWidth={1.75} />
-                </div>
-                <a href="mailto:richapparel@contact.com" className="hover:text-[#e6d7c3] transition-colors break-all">richapparel@contact.com</a>
-              </div>
+          {/* Customer Care */}
+          <div className="lg:col-span-2">
+            <h4 className="text-[12px] font-bold uppercase tracking-[0.18em] mb-5 text-white">
+              Customer Care
+            </h4>
+            <ul className="space-y-3 text-[13px] text-neutral-400 font-medium">
+              <li>
+                <button
+                  type="button"
+                  onClick={handleHelpSupport}
+                  className="hover:text-[#e6d7c3] transition-colors cursor-pointer text-left"
+                >
+                  Help &amp; Support
+                </button>
+              </li>
+              <li>
+                <Link to="/orders" className="hover:text-[#e6d7c3] transition-colors">
+                  Returns &amp; Exchanges
+                </Link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={handleShippingInfoClick}
+                  className="hover:text-[#e6d7c3] transition-colors cursor-pointer text-left"
+                >
+                  Shipping Information
+                </button>
+              </li>
+              <li>
+                <Link to="/category/all" className="hover:text-[#e6d7c3] transition-colors">
+                  Size Guide
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="mailto:richapparel@contact.com"
+                  className="hover:text-[#e6d7c3] transition-colors"
+                >
+                  Contact Us
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Connect With Us */}
+          <div className="lg:col-span-2">
+            <h4 className="text-[12px] font-bold uppercase tracking-[0.18em] mb-5 text-white">
+              Connect With Us
+            </h4>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Facebook"
+                className="w-9 h-9 rounded-full bg-[#1f1d1b] border border-[#2f2c28] flex items-center justify-center text-neutral-300 hover:bg-[#d8c4a6] hover:border-[#d8c4a6] hover:text-[#141312] transition-all duration-200"
+              >
+                <Facebook size={15} strokeWidth={1.75} />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+                className="w-9 h-9 rounded-full bg-[#1f1d1b] border border-[#2f2c28] flex items-center justify-center text-neutral-300 hover:bg-[#d8c4a6] hover:border-[#d8c4a6] hover:text-[#141312] transition-all duration-200"
+              >
+                <Instagram size={15} strokeWidth={1.75} />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Twitter"
+                className="w-9 h-9 rounded-full bg-[#1f1d1b] border border-[#2f2c28] flex items-center justify-center text-neutral-300 hover:bg-[#d8c4a6] hover:border-[#d8c4a6] hover:text-[#141312] transition-all duration-200"
+              >
+                <Twitter size={15} strokeWidth={1.75} />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="YouTube"
+                className="w-9 h-9 rounded-full bg-[#1f1d1b] border border-[#2f2c28] flex items-center justify-center text-neutral-300 hover:bg-[#d8c4a6] hover:border-[#d8c4a6] hover:text-[#141312] transition-all duration-200"
+              >
+                <Youtube size={15} strokeWidth={1.75} />
+              </a>
             </div>
+          </div>
+
+          {/* Right Mini Newsletter Input */}
+          <div className="lg:col-span-3">
+            <p className="text-[13px] font-medium text-neutral-200 leading-relaxed mb-4">
+              Be the first to know about new collections and exclusive offers.
+            </p>
+            <form onSubmit={handleFooterNewsletterSubmit} noValidate className="flex items-stretch">
+              <input
+                type="email"
+                value={footerEmail}
+                onChange={(e) => setFooterEmail(e.target.value)}
+                placeholder="Enter your email"
+                aria-label="Footer email subscription"
+                className="flex-1 min-w-0 bg-[#1d1c1a] border border-[#302d28] border-r-0 rounded-l-lg px-3.5 py-2.5 text-[12.5px] text-white placeholder-neutral-500 focus:border-[#d8c4a6] outline-none transition-colors"
+              />
+              <button
+                type="submit"
+                aria-label="Subscribe to newsletter"
+                className="px-4 rounded-r-lg bg-white hover:bg-[#e6d7c3] text-[#141312] flex items-center justify-center transition-colors cursor-pointer shrink-0"
+              >
+                <ArrowRight size={15} />
+              </button>
+            </form>
           </div>
         </div>
 
-        {/* Footer Bottom */}
-        <div className="border-t border-[#242424] pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[11px] text-neutral-400 uppercase font-semibold tracking-[0.18em] text-center md:text-left">
-            &copy; 2026 RICH APPAREL. All rights reserved. Devoloped by ITP Project Group 12.
+        {/* Footer Bottom Bar */}
+        <div className="border-t border-[#24221f] pt-7 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11.5px] text-neutral-400">
+          <p className="text-center sm:text-left">
+            &copy; 2026 Rich Apparel. All rights reserved.
           </p>
 
-          {/* Premium Payment Icons */}
-          <div className="flex items-center gap-3 opacity-40 hover:opacity-80 transition-opacity duration-500">
-            <div className="h-5 w-9 bg-[#1f1f1f] border border-[#2e2e2e] rounded-[3px]"></div>
-            <div className="h-5 w-9 bg-[#1f1f1f] border border-[#2e2e2e] rounded-[3px]"></div>
-            <div className="h-5 w-9 bg-[#1f1f1f] border border-[#2e2e2e] rounded-[3px]"></div>
-            <div className="h-5 w-9 bg-[#1f1f1f] border border-[#2e2e2e] rounded-[3px]"></div>
+          <div className="flex flex-wrap items-center justify-center gap-5">
+            <button
+              type="button"
+              onClick={() => toast("Privacy Policy — Rich Apparel protects your customer data.")}
+              className="hover:text-[#e6d7c3] transition-colors cursor-pointer"
+            >
+              Privacy Policy
+            </button>
+            <button
+              type="button"
+              onClick={() => toast("Terms & Conditions — Standard Rich Apparel storefront terms apply.")}
+              className="hover:text-[#e6d7c3] transition-colors cursor-pointer"
+            >
+              Terms &amp; Conditions
+            </button>
+            <button
+              type="button"
+              onClick={() => toast("Cookies Settings — Essential session cookies are active.")}
+              className="hover:text-[#e6d7c3] transition-colors cursor-pointer"
+            >
+              Cookies Settings
+            </button>
           </div>
         </div>
       </div>
