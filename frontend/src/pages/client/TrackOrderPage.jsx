@@ -36,20 +36,20 @@ const getStepIndex = (status) => {
 };
 
 const STATUS_PILL_STYLES = {
-  pending:   { pill: "bg-amber-50 text-amber-800 border-amber-200/80",       dot: "bg-amber-500" },
-  confirmed: { pill: "bg-sky-50 text-sky-800 border-sky-200/80",             dot: "bg-sky-500" },
-  shipped:   { pill: "bg-indigo-50 text-indigo-800 border-indigo-200/80",    dot: "bg-indigo-500" },
-  delivered: { pill: "bg-emerald-50 text-emerald-800 border-emerald-200/80", dot: "bg-emerald-500" },
-  cancelled: { pill: "bg-red-50 text-red-700 border-red-200/80",             dot: "bg-red-500" },
+  pending:   { pill: "bg-[#fdf6e9] text-[#8a5d19] border-[#ebd6ad]", dot: "bg-[#c88a28]" },
+  confirmed: { pill: "bg-[#eef6fb] text-[#1e5c84] border-[#c4dfef]", dot: "bg-[#2c82b8]" },
+  shipped:   { pill: "bg-[#f1f0fb] text-[#43398c] border-[#d3cef0]", dot: "bg-[#5b4fd1]" },
+  delivered: { pill: "bg-[#edf7f1] text-[#1c6642] border-[#bee2cc]", dot: "bg-[#258a58]" },
+  cancelled: { pill: "bg-[#fdf0f0] text-[#9e2a2b] border-[#f0c7c7]", dot: "bg-[#c93838]" },
 };
 
 /* ───── skeleton ───── */
 const Skeleton = () => (
-  <div className="min-h-screen bg-[#fafafa]" style={{ fontFamily: "'Montserrat', sans-serif" }} aria-busy="true" aria-label="Loading order tracking">
-    <div className="max-w-[1200px] mx-auto px-[5%] lg:px-[6%] pt-8 md:pt-12 pb-20">
+  <div className="min-h-screen bg-[#faf8f5]" style={{ fontFamily: "'Montserrat', sans-serif" }} aria-busy="true" aria-label="Loading order tracking">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 pb-20">
       <div className="skeleton-box h-9 w-36 rounded-full mb-6" />
-      <div className="skeleton-box h-12 w-72 rounded-xl mb-8" />
-      <div className="h-44 bg-white border border-neutral-100 rounded-2xl p-6 mb-6 flex flex-col justify-between">
+      <div className="skeleton-box h-11 w-72 rounded-xl mb-8" />
+      <div className="h-44 bg-white border border-[#e9e1d6] rounded-2xl p-6 mb-6 flex flex-col justify-between shadow-[0_2px_14px_rgba(32,25,18,0.035)]">
         <div className="skeleton-box h-4 w-40 rounded" />
         <div className="grid grid-cols-4 gap-4">
           {[0, 1, 2, 3].map((i) => (
@@ -58,12 +58,12 @@ const Skeleton = () => (
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-7 h-72 bg-white border border-neutral-100 rounded-2xl p-6 space-y-4">
+        <div className="lg:col-span-7 h-72 bg-white border border-[#e9e1d6] rounded-2xl p-6 space-y-4">
           <div className="skeleton-box h-4 w-32 rounded" />
           <div className="skeleton-box h-20 w-full rounded-xl" />
           <div className="skeleton-box h-20 w-full rounded-xl" />
         </div>
-        <div className="lg:col-span-5 h-72 bg-white border border-neutral-100 rounded-2xl p-6 space-y-4">
+        <div className="lg:col-span-5 h-72 bg-white border border-[#e9e1d6] rounded-2xl p-6 space-y-4">
           <div className="skeleton-box h-4 w-32 rounded" />
           <div className="skeleton-box h-4 w-full rounded" />
           <div className="skeleton-box h-4 w-3/4 rounded" />
@@ -109,13 +109,13 @@ export const TrackOrderPage = () => {
 
   if (loading) return <Skeleton />;
   if (!order) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-4">
-      <div className="text-center space-y-4 bg-white border border-neutral-100 rounded-2xl p-8 shadow-xs max-w-md w-full">
-        <p className="text-red-600 font-bold uppercase tracking-widest text-xs">{error || "Order not found"}</p>
+    <div className="min-h-[70vh] flex items-center justify-center bg-[#faf8f5] px-4" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+      <div className="text-center space-y-4 bg-white border border-[#e9e1d6] rounded-[22px] p-9 shadow-[0_6px_24px_rgba(32,25,18,0.045)] max-w-md w-full">
+        <p className="text-[#9e2a2b] font-bold uppercase tracking-[0.16em] text-xs">{error || "Order not found"}</p>
         <div className="flex items-center justify-center gap-3 pt-2">
-          <button onClick={() => navigate("/orders")} className="bg-white border border-neutral-200 text-black px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-widest hover:border-black transition-colors cursor-pointer">Back</button>
+          <button type="button" onClick={() => navigate("/orders")} className="bg-white border border-[#d8cec0] text-[#151413] px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-[0.14em] hover:border-[#161514] transition-colors cursor-pointer">Back</button>
           {error && (
-            <button onClick={() => fetchOrder()} className="bg-black text-white px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-neutral-800 transition-colors cursor-pointer">Retry</button>
+            <button type="button" onClick={() => fetchOrder()} className="bg-[#161514] text-white px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-[0.14em] hover:bg-[#2c2926] transition-colors cursor-pointer">Retry</button>
           )}
         </div>
       </div>
@@ -137,30 +137,31 @@ export const TrackOrderPage = () => {
   const grandTotal = (order.total || 0) + shippingFee;
 
   const statusKey = order.status?.toLowerCase() || "pending";
-  const statusPill = STATUS_PILL_STYLES[statusKey] || { pill: "bg-neutral-50 text-neutral-700 border-neutral-200", dot: "bg-neutral-400" };
+  const statusPill = STATUS_PILL_STYLES[statusKey] || { pill: "bg-[#faf7f2] text-[#5c544b] border-[#e6ddd0]", dot: "bg-[#9a8e80]" };
   const totalItemsCount = order.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   return (
-    <div className="min-h-screen bg-[#fafafa] selection:bg-black selection:text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-      <div className="max-w-[1200px] mx-auto px-[5%] lg:px-[6%] pt-8 md:pt-12 pb-20">
+    <div className="min-h-screen bg-[#faf8f5] selection:bg-[#161514] selection:text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 pb-20">
 
         {/* ──── Back & Breadcrumb Row ──── */}
         <div className="flex items-center justify-between gap-4 mb-6">
           <button
+            type="button"
             onClick={() => navigate(`/orders/${orderId}`)}
-            className="inline-flex items-center gap-2 h-9 px-4 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:border-black hover:text-black text-[10px] font-bold uppercase tracking-[0.18em] transition-all cursor-pointer shadow-2xs"
+            className="inline-flex items-center gap-2 h-9 px-4 rounded-full bg-white border border-[#dfd6ca] text-[#5c544b] hover:border-[#161514] hover:text-[#151413] text-[11px] font-bold uppercase tracking-[0.14em] transition-all cursor-pointer"
           >
             <ArrowLeft size={13} /> Back to Order
           </button>
 
-          <nav className="hidden sm:flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
-            <button onClick={() => navigate("/")} className="hover:text-black transition-colors cursor-pointer">Home</button>
-            <ChevronRight size={10} />
-            <button onClick={() => navigate("/orders")} className="hover:text-black transition-colors cursor-pointer">My Orders</button>
-            <ChevronRight size={10} />
-            <button onClick={() => navigate(`/orders/${orderId}`)} className="hover:text-black transition-colors cursor-pointer">#{orderId.slice(-8).toUpperCase()}</button>
-            <ChevronRight size={10} />
-            <span className="text-black">Track</span>
+          <nav aria-label="Breadcrumb" className="hidden sm:flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8d8276]">
+            <button type="button" onClick={() => navigate("/")} className="hover:text-[#151413] transition-colors cursor-pointer">Home</button>
+            <ChevronRight size={11} className="text-[#b5a99b]" />
+            <button type="button" onClick={() => navigate("/orders")} className="hover:text-[#151413] transition-colors cursor-pointer">My Orders</button>
+            <ChevronRight size={11} className="text-[#b5a99b]" />
+            <button type="button" onClick={() => navigate(`/orders/${orderId}`)} className="hover:text-[#151413] transition-colors cursor-pointer font-mono">#{orderId.slice(-8).toUpperCase()}</button>
+            <ChevronRight size={11} className="text-[#b5a99b]" />
+            <span className="text-[#151413] font-bold">Track</span>
           </nav>
         </div>
 
@@ -168,33 +169,34 @@ export const TrackOrderPage = () => {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-8 border-b border-neutral-200/70"
+          className="flex flex-col md:flex-row md:items-end justify-between gap-5 pb-7 mb-8 border-b border-[#e8e0d5]"
         >
-          <div className="flex items-start gap-4">
-            <div className="w-1.5 h-10 md:h-12 bg-black rounded-full mt-1 shrink-0" />
+          <div className="flex items-start gap-3.5">
+            <div className="w-1 h-9 sm:h-11 bg-[#9a7b56] rounded-full mt-1 shrink-0" />
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter uppercase text-black leading-none mb-2">
+              <h1 className="text-[28px] sm:text-[36px] md:text-[40px] font-extrabold tracking-[-0.03em] uppercase text-[#151413] leading-none mb-2">
                 Track Order
               </h1>
-              <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.22em]">
-                #{orderId.slice(-8).toUpperCase()} • Order Placed {formatDate(order.createdAt).split(",")[0]}
+              <p className="text-[12.5px] font-medium text-[#7a7064]">
+                <span className="font-mono font-bold text-[#151413]">#{orderId.slice(-8).toUpperCase()}</span> • Order Placed {formatDate(order.createdAt).split(",")[0]}
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <span className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] ${statusPill.pill}`}>
+            <span className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.14em] ${statusPill.pill}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${statusPill.dot}`} />
               {order.status}
             </span>
 
             <button
+              type="button"
               onClick={() => fetchOrder(true)}
               disabled={refreshing}
               title="Refresh"
-              className="h-9 px-4 rounded-full bg-white border border-neutral-200 hover:border-black text-neutral-700 hover:text-black inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] transition-all cursor-pointer disabled:opacity-40 shadow-2xs"
+              className="h-9 px-4 rounded-full bg-white border border-[#dfd6ca] hover:border-[#161514] text-[#5c544b] hover:text-[#151413] inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] transition-all cursor-pointer disabled:opacity-40"
             >
-              <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+              <RefreshCw size={12.5} className={refreshing ? "animate-spin" : ""} />
               <span>{refreshing ? "Refreshing" : "Refresh"}</span>
             </button>
           </div>
@@ -205,13 +207,13 @@ export const TrackOrderPage = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white border border-red-200/80 rounded-2xl p-8 text-center mb-8 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
+            className="bg-white border border-[#f0c7c7] rounded-2xl p-8 text-center mb-8 shadow-[0_2px_14px_rgba(32,25,18,0.035)]"
           >
-            <div className="w-12 h-12 rounded-full bg-red-50 border border-red-100 flex items-center justify-center mx-auto mb-3">
-              <Package size={20} className="text-red-500" />
+            <div className="w-12 h-12 rounded-2xl bg-[#fdf0f0] border border-[#f0c7c7] flex items-center justify-center mx-auto mb-3.5">
+              <Package size={20} className="text-[#c93838]" />
             </div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-red-700 mb-1">Order Cancelled</p>
-            <p className="text-xs text-neutral-500 font-medium">This order has been cancelled and is no longer progressing.</p>
+            <p className="text-[13px] font-extrabold uppercase tracking-[0.16em] text-[#9e2a2b] mb-1">Order Cancelled</p>
+            <p className="text-[13px] text-[#6c6257] font-medium">This order has been cancelled and is no longer progressing.</p>
           </motion.div>
         )}
 
@@ -221,147 +223,149 @@ export const TrackOrderPage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
-            className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)] p-6 sm:p-8 md:p-10 mb-8"
+            className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_6px_24px_rgba(32,25,18,0.045)] overflow-hidden mb-7"
           >
             {/* Section Title Row */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-6 mb-8 border-b border-neutral-100">
+            <div className="px-6 sm:px-8 py-4 bg-[#faf7f2] border-b border-[#efe8de] flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-black">Order Progress</h2>
-                <p className="text-[11px] text-neutral-400 font-medium mt-1">
-                  Current Stage: <span className="text-black font-semibold">{STEPS[currentIdx]?.label}</span>
+                <h2 className="text-[12.5px] font-extrabold uppercase tracking-[0.16em] text-[#151413]">Order Progress</h2>
+                <p className="text-[12px] text-[#7a7064] font-medium mt-0.5">
+                  Current Stage: <span className="text-[#151413] font-bold">{STEPS[currentIdx]?.label}</span>
                   {currentIdx < STEPS.length - 1 && (
                     <span> · Next: {STEPS[currentIdx + 1]?.label}</span>
                   )}
                 </p>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-50 border border-neutral-200/80">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-neutral-700">Live Tracking</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#e6ddd0]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#258a58] animate-pulse" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#5c544b]">Live Tracking</span>
               </div>
             </div>
 
-            {/* Desktop / Tablet Horizontal Timeline */}
-            <div className="hidden sm:block relative py-2">
-              {/* Background connecting line */}
-              <div className="absolute left-[12.5%] right-[12.5%] top-8 h-[2px] bg-neutral-200/80 rounded-full" />
-              {/* Active connecting line */}
-              <motion.div
-                className="absolute left-[12.5%] top-8 h-[2px] bg-black rounded-full"
-                initial={{ width: "0%" }}
-                animate={{ width: `${(currentIdx / (STEPS.length - 1)) * 75}%` }}
-                transition={{ duration: 0.9, ease: "easeInOut", delay: 0.15 }}
-              />
+            <div className="p-6 sm:p-8 md:p-9">
+              {/* Desktop / Tablet Horizontal Timeline */}
+              <div className="hidden sm:block relative py-2">
+                {/* Background connecting line */}
+                <div className="absolute left-[12.5%] right-[12.5%] top-8 h-[2px] bg-[#e5ddd0] rounded-full" />
+                {/* Active connecting line */}
+                <motion.div
+                  className="absolute left-[12.5%] top-8 h-[2px] bg-[#161514] rounded-full"
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${(currentIdx / (STEPS.length - 1)) * 75}%` }}
+                  transition={{ duration: 0.85, ease: "easeInOut", delay: 0.12 }}
+                />
 
-              <div className="relative flex items-start justify-between">
-                {STEPS.map((step, i) => {
-                  const isComplete = i <= currentIdx;
-                  const isCurrent = i === currentIdx;
-                  const Icon = step.icon;
+                <div className="relative flex items-start justify-between">
+                  {STEPS.map((step, i) => {
+                    const isComplete = i <= currentIdx;
+                    const isCurrent = i === currentIdx;
+                    const Icon = step.icon;
 
-                  return (
-                    <motion.div
-                      key={step.key}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.12 + i * 0.08 }}
-                      className="relative z-10 flex flex-col items-center flex-1 text-center px-2"
-                    >
-                      <div className="relative">
-                        {isCurrent && (
-                          <motion.div
-                            className="absolute inset-0 rounded-full border-2 border-black/20"
-                            animate={{ scale: [1, 1.38, 1], opacity: [0.45, 0, 0.45] }}
-                            transition={{ duration: 2.2, repeat: Infinity }}
-                          />
-                        )}
-                        <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-400 ${
-                            isCurrent
-                              ? "bg-black text-white shadow-[0_8px_20px_rgba(0,0,0,0.18)] ring-4 ring-black/10"
-                              : isComplete
-                                ? "bg-black text-white"
-                                : "bg-white border-2 border-neutral-200 text-neutral-400"
-                          }`}
-                        >
-                          {isComplete && !isCurrent ? <CheckCircle2 size={18} /> : <Icon size={18} />}
-                        </div>
-                      </div>
-
-                      <p className={`mt-3.5 text-[11px] uppercase tracking-[0.18em] ${
-                        isCurrent
-                          ? "font-bold text-black"
-                          : isComplete
-                            ? "font-bold text-neutral-800"
-                            : "font-semibold text-neutral-400"
-                      }`}>
-                        {step.label}
-                      </p>
-
-                      {isCurrent && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.4 }}
-                          className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-0.5 rounded-full bg-neutral-100 border border-neutral-200/70"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[9px] font-bold text-black uppercase tracking-[0.15em]">Live</span>
-                        </motion.div>
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Mobile Vertical Timeline */}
-            <div className="sm:hidden">
-              {STEPS.map((step, i) => {
-                const isComplete = i <= currentIdx;
-                const isCurrent = i === currentIdx;
-                const isLast = i === STEPS.length - 1;
-                const Icon = step.icon;
-
-                return (
-                  <div key={step.key} className="flex items-stretch gap-4">
-                    <div className="flex flex-col items-center">
-                      <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                          isCurrent
-                            ? "bg-black text-white ring-4 ring-black/10 shadow-md"
-                            : isComplete
-                              ? "bg-black text-white"
-                              : "bg-white border-2 border-neutral-200 text-neutral-400"
-                        }`}
+                    return (
+                      <motion.div
+                        key={step.key}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 + i * 0.07 }}
+                        className="relative z-10 flex flex-col items-center flex-1 text-center px-2"
                       >
-                        {isComplete && !isCurrent ? <CheckCircle2 size={16} /> : <Icon size={16} />}
-                      </div>
-                      {!isLast && (
-                        <div className={`w-[2px] flex-1 min-h-[28px] my-1.5 ${i < currentIdx ? "bg-black" : "bg-neutral-200"}`} />
-                      )}
-                    </div>
+                        <div className="relative">
+                          {isCurrent && (
+                            <motion.div
+                              className="absolute inset-0 rounded-full border-2 border-[#9a7b56]/40"
+                              animate={{ scale: [1, 1.35, 1], opacity: [0.55, 0, 0.55] }}
+                              transition={{ duration: 2.2, repeat: Infinity }}
+                            />
+                          )}
+                          <div
+                            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
+                              isCurrent
+                                ? "bg-[#161514] text-white shadow-[0_8px_20px_rgba(22,21,20,0.18)] ring-4 ring-[#c9a77a]/25"
+                                : isComplete
+                                  ? "bg-[#161514] text-white"
+                                  : "bg-[#faf7f2] border-2 border-[#e3dbd0] text-[#a39482]"
+                            }`}
+                          >
+                            {isComplete && !isCurrent ? <CheckCircle2 size={18} /> : <Icon size={18} />}
+                          </div>
+                        </div>
 
-                    <div className={`flex-1 flex items-center justify-between ${!isLast ? "pb-6" : "pt-1"}`}>
-                      <div>
-                        <p className={`text-xs uppercase tracking-[0.16em] ${
-                          isComplete ? "font-bold text-black" : "font-semibold text-neutral-400"
+                        <p className={`mt-3.5 text-[11.5px] uppercase tracking-[0.14em] ${
+                          isCurrent
+                            ? "font-extrabold text-[#151413]"
+                            : isComplete
+                              ? "font-bold text-[#2c2722]"
+                              : "font-semibold text-[#9a8e80]"
                         }`}>
                           {step.label}
                         </p>
-                        <p className="text-[10px] text-neutral-400 font-medium mt-0.5">
-                          {isCurrent ? "Current stage" : isComplete ? "Completed" : "Upcoming"}
-                        </p>
+
+                        {isCurrent && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.35 }}
+                            className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-0.5 rounded-full bg-[#faf6f0] border border-[#e6ddd0]"
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#258a58] animate-pulse" />
+                            <span className="text-[9.5px] font-bold text-[#151413] uppercase tracking-[0.12em]">Live</span>
+                          </motion.div>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Mobile Vertical Timeline */}
+              <div className="sm:hidden">
+                {STEPS.map((step, i) => {
+                  const isComplete = i <= currentIdx;
+                  const isCurrent = i === currentIdx;
+                  const isLast = i === STEPS.length - 1;
+                  const Icon = step.icon;
+
+                  return (
+                    <div key={step.key} className="flex items-stretch gap-4">
+                      <div className="flex flex-col items-center">
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                            isCurrent
+                              ? "bg-[#161514] text-white ring-4 ring-[#c9a77a]/25 shadow-sm"
+                              : isComplete
+                                ? "bg-[#161514] text-white"
+                                : "bg-[#faf7f2] border-2 border-[#e3dbd0] text-[#a39482]"
+                          }`}
+                        >
+                          {isComplete && !isCurrent ? <CheckCircle2 size={16} /> : <Icon size={16} />}
+                        </div>
+                        {!isLast && (
+                          <div className={`w-[2px] flex-1 min-h-[28px] my-1.5 ${i < currentIdx ? "bg-[#161514]" : "bg-[#e3dbd0]"}`} />
+                        )}
                       </div>
-                      {isCurrent && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-100 border border-neutral-200/80">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[9px] font-bold text-black uppercase tracking-[0.15em]">Live</span>
-                        </span>
-                      )}
+
+                      <div className={`flex-1 flex items-center justify-between ${!isLast ? "pb-6" : "pt-1"}`}>
+                        <div>
+                          <p className={`text-[12px] uppercase tracking-[0.14em] ${
+                            isComplete ? "font-bold text-[#151413]" : "font-semibold text-[#9a8e80]"
+                          }`}>
+                            {step.label}
+                          </p>
+                          <p className="text-[11px] text-[#7a7064] font-medium mt-0.5">
+                            {isCurrent ? "Current stage" : isComplete ? "Completed" : "Upcoming"}
+                          </p>
+                        </div>
+                        {isCurrent && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#faf6f0] border border-[#e6ddd0]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#258a58] animate-pulse" />
+                            <span className="text-[9.5px] font-bold text-[#151413] uppercase tracking-[0.12em]">Live</span>
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </motion.div>
         )}
@@ -370,22 +374,22 @@ export const TrackOrderPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.16 }}
+          transition={{ delay: 0.14 }}
           className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
         >
           {/* Items — 7 cols */}
-          <div className="lg:col-span-7 bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden">
-            <div className="px-6 py-5 border-b border-neutral-100 flex items-center justify-between">
+          <div className="lg:col-span-7 bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden">
+            <div className="px-6 py-4 bg-[#faf7f2] border-b border-[#efe8de] flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <Package size={16} className="text-black" />
-                <h3 className="text-xs font-bold uppercase tracking-[0.22em] text-black">Order Items</h3>
+                <Package size={16} className="text-[#9a7b56]" />
+                <h3 className="text-[12.5px] font-extrabold uppercase tracking-[0.16em] text-[#151413]">Order Items</h3>
               </div>
-              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em]">
+              <span className="text-[11px] font-bold text-[#8d8276] uppercase tracking-[0.14em]">
                 {totalItemsCount} {totalItemsCount === 1 ? "item" : "items"}
               </span>
             </div>
 
-            <div className="divide-y divide-neutral-100 px-6">
+            <div className="divide-y divide-[#f2ece3] px-6">
               {order.items?.map((item) => {
                 const variantEntries = item.variantAttributes
                   ? Object.entries(item.variantAttributes).filter(([k]) => k !== 'id')
@@ -393,47 +397,47 @@ export const TrackOrderPage = () => {
 
                 return (
                   <div key={item.id} className="py-5 flex items-start sm:items-center gap-4 sm:gap-5">
-                    <div className="w-16 h-20 bg-neutral-50 border border-neutral-100 rounded-xl overflow-hidden shrink-0">
+                    <div className="w-16 h-20 bg-[#f1ebe3] border border-[#eae2d7] rounded-xl overflow-hidden shrink-0">
                       {item.product?.images?.[0] || item.product?.imageUrl ? (
                         <img
                           src={getImgUrl(item.product.images?.[0] || item.product.imageUrl)}
                           alt={item.product?.name || "Product"}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-[center_12%]"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-neutral-300">
+                        <div className="w-full h-full flex items-center justify-center text-[#b8ada0]">
                           <Package size={18} />
                         </div>
                       )}
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <p className="text-[13px] sm:text-sm font-bold text-black uppercase tracking-tight leading-snug break-words">
+                      <p className="text-[14px] sm:text-[15px] font-bold text-[#151413] tracking-[-0.01em] leading-snug break-words">
                         {item.product?.name || "Product"}
                       </p>
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-1.5 text-[11px] font-medium text-neutral-500">
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-1.5 text-[11.5px] font-medium text-[#6c6257]">
                         {variantEntries.map(([k, v]) => {
                           const isColor = k.toLowerCase().includes('col');
                           return (
-                            <span key={k} className="inline-flex items-center gap-1.5 uppercase tracking-wide text-[10px]">
-                              <span className="text-neutral-400">{k}:</span>
+                            <span key={k} className="inline-flex items-center gap-1.5 capitalize">
+                              <span className="text-[#8d8276]">{k}:</span>
                               {isColor && (
                                 <span
-                                  className="w-2.5 h-2.5 rounded-full border border-neutral-300 shrink-0"
+                                  className="w-2.5 h-2.5 rounded-full border border-[#d6ccbf] shrink-0"
                                   style={{ backgroundColor: getDisplayColor(String(v)) }}
                                 />
                               )}
-                              <span className="text-neutral-700 font-semibold">{String(v)}</span>
+                              <span className="text-[#2c2722] font-semibold">{String(v)}</span>
                             </span>
                           );
                         })}
-                        <span className="text-[10px] uppercase tracking-wide text-neutral-700 font-semibold">
+                        <span className="text-[#151413] font-bold">
                           ×{item.quantity}
                         </span>
                       </div>
                     </div>
 
-                    <p className="text-sm sm:text-base font-bold text-black whitespace-nowrap shrink-0">
+                    <p className="text-[15px] sm:text-[16px] font-extrabold text-[#151413] whitespace-nowrap shrink-0">
                       {formatPrice(item.price * item.quantity)}
                     </p>
                   </div>
@@ -441,72 +445,72 @@ export const TrackOrderPage = () => {
               })}
             </div>
 
-            <div className="bg-[#fafafa] px-6 py-5 border-t border-neutral-100 space-y-2.5">
+            <div className="bg-[#fcfaf7] px-6 py-5 border-t border-[#f0e9df] space-y-2.5 text-[13px]">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-neutral-500 uppercase tracking-[0.15em]">Subtotal</span>
-                <span className="text-xs font-bold text-neutral-900">{formatPrice(subtotal)}</span>
+                <span className="font-medium text-[#6c6257]">Subtotal</span>
+                <span className="font-bold text-[#151413]">{formatPrice(subtotal)}</span>
               </div>
               {discounts > 0 && (
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-neutral-500 uppercase tracking-[0.15em]">Discounts</span>
-                  <span className="text-xs font-bold text-emerald-700">-{formatPrice(discounts)}</span>
+                  <span className="font-medium text-[#6c6257]">Discounts</span>
+                  <span className="font-bold text-[#1c6642]">-{formatPrice(discounts)}</span>
                 </div>
               )}
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-neutral-500 uppercase tracking-[0.15em]">Delivery Charge</span>
-                <span className="text-xs font-bold text-neutral-900">{formatPrice(shippingFee)}</span>
+                <span className="font-medium text-[#6c6257]">Delivery Charge</span>
+                <span className="font-bold text-[#151413]">{formatPrice(shippingFee)}</span>
               </div>
             </div>
 
-            <div className="px-6 py-5 bg-white flex items-center justify-between border-t border-neutral-200/70">
-              <span className="text-xs font-bold text-black uppercase tracking-[0.2em]">Grand Total</span>
-              <span className="text-xl sm:text-2xl font-bold text-black tracking-tight">{formatPrice(grandTotal)}</span>
+            <div className="px-6 py-5 bg-white flex items-center justify-between border-t border-[#e8e0d5]">
+              <span className="text-[12px] font-extrabold text-[#151413] uppercase tracking-[0.16em]">Grand Total</span>
+              <span className="text-[22px] sm:text-[24px] font-extrabold text-[#151413] tracking-[-0.02em]">{formatPrice(grandTotal)}</span>
             </div>
           </div>
 
           {/* Delivery — 5 cols */}
-          <div className="lg:col-span-5 bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 flex flex-col justify-between">
+          <div className="lg:col-span-5 bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-2 pb-4 mb-5 border-b border-neutral-100">
-                <MapPin size={15} className="text-black" />
-                <h3 className="text-xs font-bold uppercase tracking-[0.22em] text-black">Delivery</h3>
+              <div className="px-6 py-4 bg-[#faf7f2] border-b border-[#efe8de] flex items-center gap-2">
+                <MapPin size={15} className="text-[#9a7b56]" />
+                <h3 className="text-[12.5px] font-extrabold uppercase tracking-[0.16em] text-[#151413]">Delivery</h3>
               </div>
 
-              <div className="space-y-4">
+              <div className="p-6 space-y-4">
                 <div>
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1">Address</p>
-                  <p className="text-[13px] font-semibold text-neutral-900 leading-relaxed break-words">{order.address}</p>
+                  <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1">Address</p>
+                  <p className="text-[13.5px] font-semibold text-[#151413] leading-relaxed break-words">{order.address}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 pt-1">
                   <div>
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1 flex items-center gap-1">
-                      <Phone size={10} /> Contact
+                    <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1 flex items-center gap-1">
+                      <Phone size={11} className="text-[#9a7b56]" /> Contact
                     </p>
-                    <p className="text-[12px] font-semibold text-neutral-900">{order.contactNumber}</p>
+                    <p className="text-[13px] font-semibold text-[#151413]">{order.contactNumber}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1 flex items-center gap-1">
-                      <Truck size={10} /> Method
+                    <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1 flex items-center gap-1">
+                      <Truck size={11} className="text-[#9a7b56]" /> Method
                     </p>
-                    <p className="text-[12px] font-semibold text-neutral-900 capitalize">
+                    <p className="text-[13px] font-semibold text-[#151413] capitalize">
                       {order.deliveryMethod?.replace(/_/g, " ") || "Standard"}
                     </p>
                   </div>
                 </div>
 
                 <div className="pt-1">
-                  <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1 flex items-center gap-1">
-                    <Mail size={10} /> Email
+                  <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1 flex items-center gap-1">
+                    <Mail size={11} className="text-[#9a7b56]" /> Email
                   </p>
-                  <p className="text-[12px] font-semibold text-neutral-900 break-all">{order.contactEmail}</p>
+                  <p className="text-[13px] font-semibold text-[#151413] break-all">{order.contactEmail}</p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center gap-2">
-              <ShieldCheck size={14} className="text-neutral-700 shrink-0" />
-              <p className="text-[10px] font-semibold text-neutral-500 uppercase tracking-[0.15em]">
+            <div className="px-6 py-4 bg-[#fcfaf7] border-t border-[#f0e9df] flex items-center gap-2">
+              <ShieldCheck size={14.5} className="text-[#9a7b56] shrink-0" />
+              <p className="text-[11px] font-semibold text-[#6c6257] uppercase tracking-[0.12em]">
                 Secure tracking · Auto-refreshing
               </p>
             </div>
@@ -517,21 +521,24 @@ export const TrackOrderPage = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.25 }}
-          className="mt-8 pt-6 border-t border-neutral-200/70 flex flex-col sm:flex-row items-center justify-between gap-4"
+          transition={{ delay: 0.2 }}
+          className="mt-8 pt-6 border-t border-[#e8e0d5] flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <button
+            type="button"
             onClick={() => navigate(`/orders/${orderId}`)}
-            className="w-full sm:w-auto h-11 px-6 rounded-full bg-white border border-neutral-200 hover:border-black text-black text-[10px] font-bold uppercase tracking-[0.18em] inline-flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs"
+            className="w-full sm:w-auto h-11 px-6 rounded-full bg-white border border-[#d8cec0] hover:border-[#161514] text-[#151413] text-[11px] font-bold uppercase tracking-[0.14em] inline-flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
-            <ArrowLeft size={13} /> Full Order Details
+            <ArrowLeft size={13.5} /> Full Order Details
           </button>
 
           <button
+            type="button"
             onClick={() => navigate("/orders")}
-            className="w-full sm:w-auto h-11 px-7 rounded-full bg-black text-white hover:bg-neutral-800 text-[10px] font-bold uppercase tracking-[0.18em] inline-flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 transition-all cursor-pointer"
+            className="w-full sm:w-auto h-11 px-7 rounded-full bg-[#161514] hover:bg-[#2c2926] text-white text-[11px] font-bold uppercase tracking-[0.14em] inline-flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(22,21,20,0.14)] hover:-translate-y-0.5 transition-all cursor-pointer"
           >
-            All Orders <ArrowRight size={13} />
+            <span>All Orders</span>
+            <ArrowRight size={13.5} />
           </button>
         </motion.div>
       </div>

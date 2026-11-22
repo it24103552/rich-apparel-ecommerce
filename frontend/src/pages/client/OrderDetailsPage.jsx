@@ -17,18 +17,18 @@ import { getDisplayColor } from "../../utils/colorUtils";
 import { Package, MapPin, Phone, Mail, Truck, CreditCard, Trash2, Star, RotateCcw, ArrowLeft, ArrowRight, ChevronRight, Calendar, Info } from "lucide-react";
 
 const STATUS_PILL_STYLES = {
-  pending:   { pill: "bg-amber-50 text-amber-800 border-amber-200/80",     dot: "bg-amber-500" },
-  confirmed: { pill: "bg-sky-50 text-sky-800 border-sky-200/80",           dot: "bg-sky-500" },
-  shipped:   { pill: "bg-indigo-50 text-indigo-800 border-indigo-200/80",  dot: "bg-indigo-500" },
-  delivered: { pill: "bg-emerald-50 text-emerald-800 border-emerald-200/80", dot: "bg-emerald-500" },
-  cancelled: { pill: "bg-red-50 text-red-700 border-red-200/80",           dot: "bg-red-500" },
+  pending:   { pill: "bg-[#fdf6e9] text-[#8a5d19] border-[#ebd6ad]", dot: "bg-[#c88a28]" },
+  confirmed: { pill: "bg-[#eef6fb] text-[#1e5c84] border-[#c4dfef]", dot: "bg-[#2c82b8]" },
+  shipped:   { pill: "bg-[#f1f0fb] text-[#43398c] border-[#d3cef0]", dot: "bg-[#5b4fd1]" },
+  delivered: { pill: "bg-[#edf7f1] text-[#1c6642] border-[#bee2cc]", dot: "bg-[#258a58]" },
+  cancelled: { pill: "bg-[#fdf0f0] text-[#9e2a2b] border-[#f0c7c7]", dot: "bg-[#c93838]" },
 };
 
 const OrderStatusPill = ({ status }) => {
   const key = status?.toLowerCase() || "pending";
-  const style = STATUS_PILL_STYLES[key] || { pill: "bg-neutral-50 text-neutral-700 border-neutral-200", dot: "bg-neutral-400" };
+  const style = STATUS_PILL_STYLES[key] || { pill: "bg-[#faf7f2] text-[#5c544b] border-[#e6ddd0]", dot: "bg-[#9a8e80]" };
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] ${style.pill}`}>
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.14em] ${style.pill}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
       {status}
     </span>
@@ -46,7 +46,7 @@ const StarRating = ({ rating, size = "sm" }) => {
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((star) => (
-        <Star key={star} className={`${sizeClasses} ${star <= rating ? "fill-black text-black" : "text-neutral-200"}`} />
+        <Star key={star} className={`${sizeClasses} ${star <= rating ? "fill-[#e4a63a] text-[#e4a63a]" : "text-[#d5cabd]"}`} />
       ))}
     </div>
   );
@@ -156,9 +156,12 @@ export const OrderDetailsPage = () => {
 
   if (loading) return <OrderDetailsSkeleton />;
   if (!order) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fafafa] px-4">
-      <div className="text-center bg-white border border-neutral-100 rounded-2xl p-8 shadow-xs max-w-md w-full space-y-4">
-        <p className="text-red-600 font-bold uppercase tracking-widest text-xs">{error || "Order not found"}</p>
+    <div
+      className="min-h-[70vh] flex items-center justify-center bg-[#faf8f5] px-4"
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
+      <div className="text-center bg-white border border-[#e9e1d6] rounded-[22px] p-9 shadow-[0_6px_24px_rgba(32,25,18,0.045)] max-w-md w-full space-y-4">
+        <p className="text-[#9e2a2b] font-bold uppercase tracking-[0.16em] text-xs">{error || "Order not found"}</p>
         <div className="flex items-center justify-center gap-3 pt-1">
           <Button onClick={() => navigate("/orders")} variant="secondary" className="rounded-full px-7 cursor-pointer">Back</Button>
           {error && (
@@ -191,11 +194,11 @@ export const OrderDetailsPage = () => {
 
 
   const getPayBadge = (s) => {
-    if (s === 'paid') return { pill: 'bg-emerald-50 text-emerald-800 border-emerald-200/80', dot: 'bg-emerald-500' };
-    if (s === 'failed') return { pill: 'bg-red-50 text-red-700 border-red-200/80', dot: 'bg-red-500' };
-    if (s === 'refunded') return { pill: 'bg-neutral-100 text-neutral-800 border-neutral-200', dot: 'bg-neutral-500' };
-    if (s === 'refund_pending') return { pill: 'bg-amber-50 text-amber-800 border-amber-200/80', dot: 'bg-amber-500' };
-    return { pill: 'bg-amber-50 text-amber-800 border-amber-200/80', dot: 'bg-amber-500' };
+    if (s === 'paid') return { pill: 'bg-[#edf7f1] text-[#1c6642] border-[#bee2cc]', dot: 'bg-[#258a58]' };
+    if (s === 'failed') return { pill: 'bg-[#fdf0f0] text-[#9e2a2b] border-[#f0c7c7]', dot: 'bg-[#c93838]' };
+    if (s === 'refunded') return { pill: 'bg-[#f4efe8] text-[#5c5145] border-[#e4dcd0]', dot: 'bg-[#8d8276]' };
+    if (s === 'refund_pending') return { pill: 'bg-[#fdf6e9] text-[#8a5d19] border-[#ebd6ad]', dot: 'bg-[#c88a28]' };
+    return { pill: 'bg-[#fdf6e9] text-[#8a5d19] border-[#ebd6ad]', dot: 'bg-[#c88a28]' };
   };
 
   const getImgUrl = (img) => {
@@ -207,24 +210,25 @@ export const OrderDetailsPage = () => {
   const totalUnits = order.items?.reduce((a, i) => a + i.quantity, 0) || 0;
 
   return (
-    <div className="min-h-screen bg-[#fafafa] selection:bg-black selection:text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-      <div className="max-w-[1320px] mx-auto px-[5%] lg:px-[6%] pt-8 md:pt-12 pb-20">
+    <div className="min-h-screen bg-[#faf8f5] selection:bg-[#161514] selection:text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 pb-20">
 
         {/* ──── Back & Breadcrumb Row ──── */}
         <div className="flex items-center justify-between gap-4 mb-6">
           <button
+            type="button"
             onClick={() => navigate("/orders")}
-            className="inline-flex items-center gap-2 h-9 px-4 rounded-full bg-white border border-neutral-200 text-neutral-700 hover:border-black hover:text-black text-[10px] font-bold uppercase tracking-[0.18em] transition-all cursor-pointer shadow-2xs"
+            className="inline-flex items-center gap-2 h-9 px-4 rounded-full bg-white border border-[#dfd6ca] text-[#5c544b] hover:border-[#161514] hover:text-[#151413] text-[11px] font-bold uppercase tracking-[0.14em] transition-all cursor-pointer"
           >
             <ArrowLeft size={13} /> Back to Orders
           </button>
 
-          <nav className="hidden sm:flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
-            <button onClick={() => navigate("/")} className="hover:text-black transition-colors cursor-pointer">Home</button>
-            <ChevronRight size={10} />
-            <button onClick={() => navigate("/orders")} className="hover:text-black transition-colors cursor-pointer">My Orders</button>
-            <ChevronRight size={10} />
-            <span className="text-black">#{orderId.slice(-8).toUpperCase()}</span>
+          <nav aria-label="Breadcrumb" className="hidden sm:flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8d8276]">
+            <button type="button" onClick={() => navigate("/")} className="hover:text-[#151413] transition-colors cursor-pointer">Home</button>
+            <ChevronRight size={11} className="text-[#b5a99b]" />
+            <button type="button" onClick={() => navigate("/orders")} className="hover:text-[#151413] transition-colors cursor-pointer">My Orders</button>
+            <ChevronRight size={11} className="text-[#b5a99b]" />
+            <span className="text-[#151413] font-bold font-mono">#{orderId.slice(-8).toUpperCase()}</span>
           </nav>
         </div>
 
@@ -232,38 +236,40 @@ export const OrderDetailsPage = () => {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 mb-8 border-b border-neutral-200/70"
+          className="flex flex-col md:flex-row md:items-end justify-between gap-5 pb-7 mb-8 border-b border-[#e8e0d5]"
         >
-          <div className="flex items-start gap-4">
-            <div className="w-1.5 h-10 md:h-12 bg-black rounded-full mt-1 shrink-0" />
+          <div className="flex items-start gap-3.5">
+            <div className="w-1 h-9 sm:h-11 bg-[#9a7b56] rounded-full mt-1 shrink-0" />
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter uppercase text-black leading-none mb-2">
+              <h1 className="text-[28px] sm:text-[36px] md:text-[40px] font-extrabold tracking-[-0.03em] uppercase text-[#151413] leading-none mb-2">
                 Order Details
               </h1>
-              <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.22em]">
-                Order #{orderId.slice(-8).toUpperCase()} • Placed {formatDate(order.createdAt).split(",")[0]}
+              <p className="text-[12.5px] font-medium text-[#7a7064]">
+                Order <span className="font-mono font-bold text-[#151413]">#{orderId.slice(-8).toUpperCase()}</span> • Placed {formatDate(order.createdAt).split(",")[0]}
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             {order.method === 'return_replacement' && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-black text-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.15em]">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#161514] text-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em]">
                 <RotateCcw size={10} strokeWidth={2.5} /> Replacement
               </span>
             )}
             <OrderStatusPill status={order.status} />
             <button
+              type="button"
               onClick={() => navigate(`/orders/${orderId}/track`)}
-              className="h-10 px-6 rounded-full bg-black text-white text-[10px] font-bold uppercase tracking-[0.2em] inline-flex items-center gap-2 cursor-pointer shadow-[0_8px_24px_rgba(0,0,0,0.12)] hover:bg-neutral-800 hover:-translate-y-0.5 transition-all duration-300"
+              className="h-10 px-6 rounded-full bg-[#161514] hover:bg-[#2c2926] text-white text-[11px] font-bold uppercase tracking-[0.14em] inline-flex items-center gap-2 cursor-pointer shadow-[0_8px_22px_rgba(22,21,20,0.14)] hover:-translate-y-0.5 transition-all duration-200"
             >
-              Track Order <ArrowRight size={13} />
+              <span>Track Order</span>
+              <ArrowRight size={13.5} />
             </button>
           </div>
         </motion.div>
 
         {error && (
-          <div className="bg-red-50 text-red-700 border border-red-200/80 px-4 py-3 rounded-2xl text-[11px] font-semibold uppercase tracking-wider mb-6">
+          <div className="bg-[#fdf0f0] text-[#9e2a2b] border border-[#f0c7c7] px-4 py-3 rounded-xl text-[12px] font-semibold mb-6">
             {error}
           </div>
         )}
@@ -278,20 +284,20 @@ export const OrderDetailsPage = () => {
             transition={{ delay: 0.05 }}
             className="lg:col-span-7 space-y-6"
           >
-            <div className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden">
+            <div className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden">
               {/* Items Card Header */}
-              <div className="px-6 py-5 flex items-center justify-between border-b border-neutral-100">
+              <div className="px-6 py-4 bg-[#faf7f2] flex items-center justify-between border-b border-[#efe8de]">
                 <div className="flex items-center gap-2.5">
-                  <Package size={16} className="text-black" />
-                  <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-black">Order Items</h2>
+                  <Package size={16} className="text-[#9a7b56]" />
+                  <h2 className="text-[12.5px] font-extrabold uppercase tracking-[0.16em] text-[#151413]">Order Items</h2>
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-400">
+                <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8d8276]">
                   {totalUnits} {totalUnits === 1 ? "unit" : "units"}
                 </span>
               </div>
 
               {/* Items List */}
-              <div className="divide-y divide-neutral-100 px-6">
+              <div className="divide-y divide-[#f2ece3] px-6">
                 {order.items?.map((item) => {
                   const variantEntries = item.variantAttributes
                     ? Object.entries(item.variantAttributes).filter(([k]) => k !== 'id')
@@ -300,15 +306,15 @@ export const OrderDetailsPage = () => {
                   return (
                     <div key={item.id} className="py-5 flex items-start sm:items-center gap-4 sm:gap-5">
                       {/* Thumbnail */}
-                      <div className="w-16 h-20 sm:w-20 sm:h-24 bg-neutral-50 rounded-xl border border-neutral-100 overflow-hidden shrink-0">
+                      <div className="w-16 h-20 sm:w-20 sm:h-24 bg-[#f1ebe3] rounded-xl border border-[#eae2d7] overflow-hidden shrink-0">
                         {item.product?.images?.[0] || item.product?.imageUrl ? (
                           <img
                             src={getImgUrl(item.product.images?.[0] || item.product.imageUrl)}
                             alt={item.product?.name || "Product"}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover object-[center_12%]"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-neutral-300">
+                          <div className="w-full h-full flex items-center justify-center text-[#b8ada0]">
                             <Package size={20} />
                           </div>
                         )}
@@ -316,40 +322,40 @@ export const OrderDetailsPage = () => {
 
                       {/* Product Info */}
                       <div className="flex-1 min-w-0">
-                        <p className="text-[13px] sm:text-sm font-bold text-black uppercase tracking-tight leading-snug break-words">
+                        <p className="text-[14px] sm:text-[15px] font-bold text-[#151413] tracking-[-0.01em] leading-snug break-words">
                           {item.product?.name || "Product"}
                         </p>
 
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2 text-[11px] font-medium text-neutral-500">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2 text-[11.5px] font-medium text-[#6c6257]">
                           {variantEntries.map(([k, v]) => {
                             const isColor = k.toLowerCase().includes('col');
                             return (
                               <span key={k} className="inline-flex items-center gap-1.5 capitalize">
-                                <span className="text-neutral-400">{k}:</span>
+                                <span className="text-[#8d8276]">{k}:</span>
                                 {isColor && (
                                   <span
-                                    className="w-2.5 h-2.5 rounded-full border border-neutral-300 shrink-0"
+                                    className="w-2.5 h-2.5 rounded-full border border-[#d6ccbf] shrink-0"
                                     style={{ backgroundColor: getDisplayColor(String(v)) }}
                                   />
                                 )}
-                                <span className="text-neutral-700 font-semibold">{String(v)}</span>
+                                <span className="text-[#2c2722] font-semibold">{String(v)}</span>
                               </span>
                             );
                           })}
                           <span className="inline-flex items-center gap-1">
-                            <span className="text-neutral-400">Qty:</span>
-                            <span className="text-neutral-800 font-semibold">{item.quantity}</span>
+                            <span className="text-[#8d8276]">Qty:</span>
+                            <span className="text-[#151413] font-bold">{item.quantity}</span>
                           </span>
                         </div>
                       </div>
 
                       {/* Item Price */}
                       <div className="text-right shrink-0">
-                        <p className="text-sm sm:text-base font-bold text-black tracking-tight">
+                        <p className="text-[15px] sm:text-[16px] font-extrabold text-[#151413] tracking-tight">
                           {formatPrice(item.price * item.quantity)}
                         </p>
                         {item.quantity > 1 && (
-                          <p className="text-[10px] text-neutral-400 font-semibold mt-0.5">
+                          <p className="text-[11px] text-[#8d8276] font-medium mt-0.5">
                             {formatPrice(item.price)} / ea
                           </p>
                         )}
@@ -360,90 +366,92 @@ export const OrderDetailsPage = () => {
               </div>
 
               {/* Totals Breakdown */}
-              <div className="bg-[#fafafa] px-6 py-5 border-t border-neutral-100 space-y-2.5">
+              <div className="bg-[#fcfaf7] px-6 py-5 border-t border-[#f0e9df] space-y-2.5 text-[13px]">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-neutral-500 uppercase tracking-[0.15em]">Subtotal</span>
-                  <span className="text-xs font-bold text-neutral-900">{formatPrice(subtotal)}</span>
+                  <span className="font-medium text-[#6c6257]">Subtotal</span>
+                  <span className="font-bold text-[#151413]">{formatPrice(subtotal)}</span>
                 </div>
 
                 {/* Promo Coupon Discount */}
                 {order.orderDiscount?.couponDiscount > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-neutral-500 uppercase tracking-[0.15em]">
+                    <span className="font-medium text-[#6c6257]">
                       Promo ({order.orderDiscount.couponCode})
                     </span>
-                    <span className="text-xs font-bold text-emerald-700">-{formatPrice(order.orderDiscount.couponDiscount)}</span>
+                    <span className="font-bold text-[#1c6642]">-{formatPrice(order.orderDiscount.couponDiscount)}</span>
                   </div>
                 )}
 
                 {/* Loyalty Points Redeemed */}
                 {order.orderDiscount?.pointsValue > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-neutral-500 uppercase tracking-[0.15em]">
+                    <span className="font-medium text-[#6c6257]">
                       Loyalty Redeemed ({order.orderDiscount.pointsUsed} pts)
                     </span>
-                    <span className="text-xs font-bold text-emerald-700">-{formatPrice(order.orderDiscount.pointsValue)}</span>
+                    <span className="font-bold text-[#1c6642]">-{formatPrice(order.orderDiscount.pointsValue)}</span>
                   </div>
                 )}
 
                 {/* Fallback for legacy orders or combined display if no explicit discount object exists */}
                 {!order.orderDiscount && discounts > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-neutral-500 uppercase tracking-[0.15em]">Discounts</span>
-                    <span className="text-xs font-bold text-emerald-700">-{formatPrice(discounts)}</span>
+                    <span className="font-medium text-[#6c6257]">Discounts</span>
+                    <span className="font-bold text-[#1c6642]">-{formatPrice(discounts)}</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-neutral-500 uppercase tracking-[0.15em]">Delivery Charge</span>
-                  <span className="text-xs font-bold text-neutral-900">{formatPrice(shippingFee)}</span>
+                  <span className="font-medium text-[#6c6257]">Delivery Charge</span>
+                  <span className="font-bold text-[#151413]">{formatPrice(shippingFee)}</span>
                 </div>
               </div>
 
               {/* Grand Total */}
-              <div className="px-6 py-5 bg-white flex items-center justify-between border-t border-neutral-200/70">
-                <span className="text-xs font-bold text-black uppercase tracking-[0.2em]">Grand Total</span>
-                <span className="text-xl sm:text-2xl font-bold text-black tracking-tight">{formatPrice(grandTotal)}</span>
+              <div className="px-6 py-5 bg-white flex items-center justify-between border-t border-[#e8e0d5]">
+                <span className="text-[12px] font-extrabold text-[#151413] uppercase tracking-[0.16em]">Grand Total</span>
+                <span className="text-[22px] sm:text-[24px] font-extrabold text-[#151413] tracking-[-0.02em]">{formatPrice(grandTotal)}</span>
               </div>
             </div>
 
-            {/* Post-Delivery Section (Reviews & Returns) on Desktop inside left flow or full width below */}
+            {/* Post-Delivery Section (Reviews & Returns) */}
             {isDelivered && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.25 }}
+                transition={{ delay: 0.2 }}
                 className="grid grid-cols-1 sm:grid-cols-2 gap-5"
               >
                 {/* Reviews */}
-                <div className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6">
-                  <div className="flex items-center gap-2 pb-4 mb-4 border-b border-neutral-100">
-                    <Star size={15} className="text-black" />
-                    <h3 className="text-[11px] font-bold uppercase tracking-[0.22em] text-black">Reviews</h3>
+                <div className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden">
+                  <div className="px-6 py-4 bg-[#faf7f2] border-b border-[#efe8de] flex items-center gap-2">
+                    <Star size={15} className="text-[#9a7b56]" />
+                    <h3 className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-[#151413]">Reviews</h3>
                   </div>
-                  <div className="space-y-3">
+                  <div className="p-5 space-y-3">
                     {order.items?.map((item) => {
                       const review = userReviews[item.productId];
                       return (
-                        <div key={item.productId} className="flex items-center justify-between p-3 bg-[#fafafa] border border-neutral-100 rounded-xl gap-3">
+                        <div key={item.productId} className="flex items-center justify-between p-3.5 bg-[#faf8f5] border border-[#ebe3d8] rounded-xl gap-3">
                           <div className="min-w-0 flex-1">
-                            <p className="text-[11px] font-bold text-black uppercase truncate mb-0.5">{item.product?.name}</p>
-                            {review ? <StarRating rating={review.rating} /> : <p className="text-[10px] text-neutral-400 font-medium">No review yet</p>}
+                            <p className="text-[12px] font-bold text-[#151413] truncate mb-1">{item.product?.name}</p>
+                            {review ? <StarRating rating={review.rating} /> : <p className="text-[11px] text-[#8d8276] font-medium">No review yet</p>}
                           </div>
-                          <div className="flex items-center gap-2 shrink-0">
+                          <div className="flex items-center gap-1.5 shrink-0">
                             <button
+                              type="button"
                               onClick={() => { setSelectedReviewProduct(item); setReviewModalOpen(true); }}
-                              className="text-[10px] font-bold uppercase tracking-[0.15em] text-black border border-neutral-200 bg-white hover:border-black px-3 py-1 rounded-full transition-colors cursor-pointer"
+                              className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#151413] border border-[#d8cec0] bg-white hover:border-[#161514] hover:bg-[#161514] hover:text-white px-3.5 py-1.5 rounded-full transition-colors cursor-pointer"
                             >
                               {review ? "Edit" : "Write"}
                             </button>
                             {review && (
                               <button
+                                type="button"
                                 onClick={() => setDeleteReviewTarget(review)}
-                                className="p-1.5 text-neutral-400 hover:text-red-600 transition-colors cursor-pointer"
+                                className="p-1.5 rounded-lg text-[#9a8e80] hover:text-[#b43232] hover:bg-[#fdf0f0] transition-colors cursor-pointer"
                                 title="Delete Review"
                               >
-                                <Trash2 size={13} />
+                                <Trash2 size={14} />
                               </button>
                             )}
                           </div>
@@ -454,60 +462,64 @@ export const OrderDetailsPage = () => {
                 </div>
 
                 {/* Returns */}
-                <div className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 flex flex-col">
-                  <div className="flex items-center gap-2 pb-4 mb-4 border-b border-neutral-100">
-                    <RotateCcw size={15} className="text-black" />
-                    <h3 className="text-[11px] font-bold uppercase tracking-[0.22em] text-black">Returns</h3>
+                <div className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden flex flex-col">
+                  <div className="px-6 py-4 bg-[#faf7f2] border-b border-[#efe8de] flex items-center gap-2">
+                    <RotateCcw size={15} className="text-[#9a7b56]" />
+                    <h3 className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-[#151413]">Returns</h3>
                   </div>
-                  {order.returns?.length > 0 ? (
-                    <div className="flex items-center justify-between p-3.5 bg-[#fafafa] border border-neutral-100 rounded-xl">
-                      <div>
-                        <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1.5">Return Status</p>
-                        <OrderStatusPill status={order.returns[0].status} />
-                      </div>
-                      {order.returns[0].status === "pending" && (
-                        <button
-                          onClick={() => setShowCancelReturnConfirm(true)}
-                          className="text-[10px] font-bold text-red-600 uppercase tracking-[0.15em] hover:underline cursor-pointer"
-                        >
-                          Cancel
-                        </button>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col justify-between flex-1 gap-4">
-                      <div>
-                        <p className="text-xs text-neutral-500 font-medium leading-relaxed">
-                          Request a return within 7 days of delivery.
-                        </p>
-                        {order.deliveredAt && (
-                          <p className="text-[10px] font-bold text-neutral-800 uppercase tracking-wider mt-2">
-                            Expires: {formatDate(new Date(new Date(order.deliveredAt).getTime() + 7 * 24 * 60 * 60 * 1000))}
-                          </p>
+                  <div className="p-5 flex-1 flex flex-col">
+                    {order.returns?.length > 0 ? (
+                      <div className="flex items-center justify-between p-4 bg-[#faf8f5] border border-[#ebe3d8] rounded-xl">
+                        <div>
+                          <p className="text-[10px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1.5">Return Status</p>
+                          <OrderStatusPill status={order.returns[0].status} />
+                        </div>
+                        {order.returns[0].status === "pending" && (
+                          <button
+                            type="button"
+                            onClick={() => setShowCancelReturnConfirm(true)}
+                            className="text-[11px] font-bold text-[#9e2a2b] uppercase tracking-[0.12em] hover:underline cursor-pointer"
+                          >
+                            Cancel
+                          </button>
                         )}
                       </div>
-                      {(() => {
-                        const deliveredAt = order.deliveredAt ? new Date(order.deliveredAt) : null;
-                        const isWithin7Days = !deliveredAt || (new Date() - deliveredAt) <= 7 * 24 * 60 * 60 * 1000;
+                    ) : (
+                      <div className="flex flex-col justify-between flex-1 gap-4">
+                        <div>
+                          <p className="text-[13px] text-[#6c6257] font-medium leading-relaxed">
+                            Request a return within 7 days of delivery.
+                          </p>
+                          {order.deliveredAt && (
+                            <p className="text-[11px] font-bold text-[#2c2722] uppercase tracking-[0.1em] mt-2">
+                              Expires: {formatDate(new Date(new Date(order.deliveredAt).getTime() + 7 * 24 * 60 * 60 * 1000))}
+                            </p>
+                          )}
+                        </div>
+                        {(() => {
+                          const deliveredAt = order.deliveredAt ? new Date(order.deliveredAt) : null;
+                          const isWithin7Days = !deliveredAt || (new Date() - deliveredAt) <= 7 * 24 * 60 * 60 * 1000;
 
-                        if (!isWithin7Days) return <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest">Window Expired</span>;
+                          if (!isWithin7Days) return <span className="text-[11px] font-bold text-[#9e2a2b] uppercase tracking-[0.14em]">Window Expired</span>;
 
-                        return (
-                          <button
-                            onClick={() => {
-                              const initialItems = {};
-                              order.items?.forEach(item => initialItems[item.id] = 0);
-                              setSelectedReturnItems(initialItems);
-                              setReturnModalOpen(true);
-                            }}
-                            className="w-full h-10 rounded-full bg-white border border-neutral-200 hover:border-black text-black text-[10px] font-bold uppercase tracking-[0.18em] transition-all cursor-pointer"
-                          >
-                            Request Return
-                          </button>
-                        );
-                      })()}
-                    </div>
-                  )}
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const initialItems = {};
+                                order.items?.forEach(item => initialItems[item.id] = 0);
+                                setSelectedReturnItems(initialItems);
+                                setReturnModalOpen(true);
+                              }}
+                              className="w-full h-10 rounded-full bg-white border border-[#d8cec0] hover:border-[#161514] hover:bg-[#faf7f2] text-[#151413] text-[11px] font-bold uppercase tracking-[0.14em] transition-all cursor-pointer"
+                            >
+                              Request Return
+                            </button>
+                          );
+                        })()}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -517,80 +529,81 @@ export const OrderDetailsPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12 }}
+            transition={{ delay: 0.1 }}
             className="lg:col-span-5 space-y-5"
           >
-            {/* Delivery & Summary 2-column sub-grid on medium/wide, stacked on mobile */}
+            {/* Delivery & Summary */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
               {/* Delivery Card */}
-              <div className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6">
-                <div className="flex items-center justify-between pb-4 mb-5 border-b border-neutral-100">
+              <div className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden">
+                <div className="px-6 py-4 bg-[#faf7f2] border-b border-[#efe8de] flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <MapPin size={15} className="text-black" />
-                    <h3 className="text-[11px] font-bold uppercase tracking-[0.22em] text-black">Delivery Information</h3>
+                    <MapPin size={15} className="text-[#9a7b56]" />
+                    <h3 className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-[#151413]">Delivery Information</h3>
                   </div>
                   {isPending && !order.isUpdatedByUser && (
                     <button
+                      type="button"
                       onClick={() => setEditMode(true)}
-                      className="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-600 hover:text-black border border-neutral-200 hover:border-black px-3 py-1 rounded-full transition-all cursor-pointer"
+                      className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-[#5c544b] hover:text-[#151413] bg-white border border-[#d8cec0] hover:border-[#161514] px-3 py-1 rounded-full transition-all cursor-pointer"
                     >
                       Edit
                     </button>
                   )}
                 </div>
 
-                <div className="space-y-4">
+                <div className="p-6 space-y-4">
                   <div>
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1">Delivery Address</p>
-                    <p className="text-[13px] font-semibold text-neutral-900 leading-relaxed break-words">{order.address}</p>
+                    <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1">Delivery Address</p>
+                    <p className="text-[13.5px] font-semibold text-[#151413] leading-relaxed break-words">{order.address}</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 pt-1">
                     <div>
-                      <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1 flex items-center gap-1">
-                        <Phone size={10} /> Contact
+                      <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1 flex items-center gap-1">
+                        <Phone size={11} className="text-[#9a7b56]" /> Contact
                       </p>
-                      <p className="text-[12px] font-semibold text-neutral-900">{order.contactNumber}</p>
+                      <p className="text-[13px] font-semibold text-[#151413]">{order.contactNumber}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1 flex items-center gap-1">
-                        <Truck size={10} /> Method
+                      <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1 flex items-center gap-1">
+                        <Truck size={11} className="text-[#9a7b56]" /> Method
                       </p>
-                      <p className="text-[12px] font-semibold text-neutral-900 capitalize">
+                      <p className="text-[13px] font-semibold text-[#151413] capitalize">
                         {order.deliveryMethod?.replace(/_/g, " ") || "Standard"}
                       </p>
                     </div>
                   </div>
 
                   <div className="pt-1">
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1 flex items-center gap-1">
-                      <Mail size={10} /> Email
+                    <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1 flex items-center gap-1">
+                      <Mail size={11} className="text-[#9a7b56]" /> Email
                     </p>
-                    <p className="text-[12px] font-semibold text-neutral-900 break-all">{order.contactEmail}</p>
+                    <p className="text-[13px] font-semibold text-[#151413] break-all">{order.contactEmail}</p>
                   </div>
                 </div>
               </div>
 
               {/* Order Summary Card */}
-              <div className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6">
-                <div className="flex items-center gap-2 pb-4 mb-5 border-b border-neutral-100">
-                  <Info size={15} className="text-black" />
-                  <h3 className="text-[11px] font-bold uppercase tracking-[0.22em] text-black">Order Summary</h3>
+              <div className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden">
+                <div className="px-6 py-4 bg-[#faf7f2] border-b border-[#efe8de] flex items-center gap-2">
+                  <Info size={15} className="text-[#9a7b56]" />
+                  <h3 className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-[#151413]">Order Summary</h3>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4 items-start">
+                <div className="p-6 grid grid-cols-2 lg:grid-cols-3 gap-4 items-start">
                   <div>
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1.5 flex items-center gap-1">
-                      <Calendar size={10} /> Placed
+                    <p className="text-[10px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1.5 flex items-center gap-1">
+                      <Calendar size={10.5} className="text-[#9a7b56]" /> Placed
                     </p>
-                    <p className="text-[12px] font-bold text-black">{formatDate(order.createdAt).split(",")[0]}</p>
+                    <p className="text-[12.5px] font-bold text-[#151413]">{formatDate(order.createdAt).split(",")[0]}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1.5">Items</p>
-                    <p className="text-[12px] font-bold text-black">{totalUnits} {totalUnits === 1 ? "unit" : "units"}</p>
+                    <p className="text-[10px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1.5">Items</p>
+                    <p className="text-[12.5px] font-bold text-[#151413]">{totalUnits} {totalUnits === 1 ? "unit" : "units"}</p>
                   </div>
-                  <div>
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1.5">Status</p>
+                  <div className="col-span-2 lg:col-span-1">
+                    <p className="text-[10px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1.5">Status</p>
                     <OrderStatusPill status={order.status} />
                   </div>
                 </div>
@@ -598,73 +611,79 @@ export const OrderDetailsPage = () => {
             </div>
 
             {/* Payment Information Card */}
-            <div className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6">
-              <div className="flex items-center gap-2 pb-4 mb-5 border-b border-neutral-100">
-                <CreditCard size={15} className="text-black" />
-                <h3 className="text-[11px] font-bold uppercase tracking-[0.22em] text-black">Payment Information</h3>
+            <div className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden">
+              <div className="px-6 py-4 bg-[#faf7f2] border-b border-[#efe8de] flex items-center gap-2">
+                <CreditCard size={15} className="text-[#9a7b56]" />
+                <h3 className="text-[12px] font-extrabold uppercase tracking-[0.16em] text-[#151413]">Payment Information</h3>
               </div>
 
-              {order.payment ? (
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em] mb-1">Payment Method</p>
-                      <p className="text-[13px] font-semibold text-neutral-900 capitalize">
-                        {order.payment.method?.replace(/_/g, " ")}
-                      </p>
+              <div className="p-6">
+                {order.payment ? (
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em] mb-1">Payment Method</p>
+                        <p className="text-[13.5px] font-semibold text-[#151413] capitalize">
+                          {order.payment.method?.replace(/_/g, " ")}
+                        </p>
+                      </div>
+                      {(() => {
+                        const payBadge = getPayBadge(order.payment.status);
+                        return (
+                          <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.14em] ${payBadge.pill}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${payBadge.dot}`} />
+                            {order.payment.status.replace(/_/g, " ")}
+                          </span>
+                        );
+                      })()}
                     </div>
-                    {(() => {
-                      const payBadge = getPayBadge(order.payment.status);
-                      return (
-                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] ${payBadge.pill}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${payBadge.dot}`} />
-                          {order.payment.status.replace(/_/g, " ")}
-                        </span>
-                      );
-                    })()}
+                    <div className="pt-3.5 border-t border-[#f0e9df] flex items-center justify-between">
+                      <p className="text-[10.5px] font-bold text-[#8d8276] uppercase tracking-[0.14em]">Amount Charged</p>
+                      <p className="text-[19px] font-extrabold text-[#151413] tracking-tight">{formatPrice(order.payment.amount)}</p>
+                    </div>
                   </div>
-                  <div className="pt-3 border-t border-neutral-100 flex items-center justify-between">
-                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.18em]">Amount Charged</p>
-                    <p className="text-lg font-bold text-black tracking-tight">{formatPrice(order.payment.amount)}</p>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[13px] font-medium text-[#6c6257]">Payment is awaiting completion.</span>
+                      <OrderStatusPill status="pending" />
+                    </div>
+                    <Button
+                      onClick={() => navigate(`/payment/${orderId}`)}
+                      className="w-full h-11 rounded-full text-[11.5px] font-bold uppercase tracking-[0.14em] cursor-pointer bg-[#161514] text-white hover:bg-[#2c2926]"
+                    >
+                      Complete Payment
+                    </Button>
                   </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-neutral-500">Payment is awaiting completion.</span>
-                    <OrderStatusPill status="pending" />
-                  </div>
-                  <Button
-                    onClick={() => navigate(`/payment/${orderId}`)}
-                    className="w-full rounded-full py-3 text-[10px] font-bold uppercase tracking-[0.2em] cursor-pointer bg-black text-white hover:bg-neutral-800"
-                  >
-                    COMPLETE PAYMENT
-                  </Button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {/* Actions & Support */}
-            <div className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] p-6 space-y-3">
+            <div className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] p-6 space-y-3">
               <button
+                type="button"
                 onClick={() => navigate(`/orders/${orderId}/track`)}
-                className="w-full h-12 rounded-full bg-black text-white text-[11px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2.5 cursor-pointer shadow-[0_8px_24px_rgba(0,0,0,0.14)] hover:bg-neutral-800 hover:-translate-y-0.5 transition-all duration-300"
+                className="w-full h-12 rounded-full bg-[#161514] hover:bg-[#2c2926] text-white text-[11.5px] font-bold uppercase tracking-[0.14em] flex items-center justify-center gap-2.5 cursor-pointer shadow-[0_8px_22px_rgba(22,21,20,0.14)] hover:-translate-y-0.5 transition-all duration-200"
               >
-                <Truck size={14} /> Track Order <ArrowRight size={13} />
+                <Truck size={15} />
+                <span>Track Order</span>
+                <ArrowRight size={14} />
               </button>
 
               {isPending && (
                 <button
+                  type="button"
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="w-full h-10 rounded-full bg-white border border-neutral-200 text-[10px] font-bold text-neutral-500 uppercase tracking-[0.18em] hover:border-red-300 hover:text-red-600 hover:bg-red-50/40 transition-all cursor-pointer"
+                  className="w-full h-10 rounded-full bg-white border border-[#dfd6ca] text-[11px] font-bold text-[#7a7064] uppercase tracking-[0.14em] hover:border-[#f0c7c7] hover:text-[#9e2a2b] hover:bg-[#fdf0f0] transition-all cursor-pointer"
                 >
                   Cancel Order
                 </button>
               )}
 
-              <div className="pt-4 border-t border-neutral-100 text-center">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 mb-0.5">Need help?</p>
-                <p className="text-[11px] text-neutral-500 font-medium">Available 24/7</p>
+              <div className="pt-4 border-t border-[#f0e9df] text-center">
+                <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#8d8276] mb-0.5">Need help?</p>
+                <p className="text-[12px] text-[#6c6257] font-medium">Customer support available 24/7</p>
               </div>
             </div>
           </motion.div>
@@ -673,42 +692,42 @@ export const OrderDetailsPage = () => {
 
       {/* ──── Modals ──── */}
       <Modal isOpen={editMode} onClose={() => setEditMode(false)} title="Update Delivery" size="lg">
-        <div className="space-y-5 pt-3">
-          <div className="bg-amber-50 border border-amber-100 p-4 rounded-2xl flex items-start gap-3">
-            <Info size={16} className="text-amber-600 mt-0.5 flex-shrink-0" />
-            <p className="text-[11px] font-bold text-amber-900 uppercase tracking-wide leading-relaxed">
+        <div className="space-y-5 pt-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <div className="bg-[#fdf6e9] border border-[#ebd6ad] p-4 rounded-xl flex items-start gap-3">
+            <Info size={16} className="text-[#c88a28] mt-0.5 flex-shrink-0" />
+            <p className="text-[12px] font-semibold text-[#8a5d19] leading-relaxed">
               Note: Delivery details can only be updated once. Please ensure all information is accurate before saving.
             </p>
           </div>
           <div className="w-full">
-            <label className="block text-[12px] font-bold text-black mb-3 ml-1 uppercase tracking-widest">Address</label>
-            <input value={editForm.address} onChange={(e) => setEditForm(f => ({ ...f, address: e.target.value }))} className="w-full px-5 py-4 bg-white border border-neutral-100 rounded-[20px] transition-all outline-none text-[13.5px] font-bold shadow-sm focus:border-black focus:ring-4 focus:ring-black/5" />
+            <label className="block text-[10.5px] font-bold text-[#5c544b] mb-2 ml-0.5 uppercase tracking-[0.16em]">Address</label>
+            <input value={editForm.address} onChange={(e) => setEditForm(f => ({ ...f, address: e.target.value }))} className="w-full h-[50px] px-4 bg-white border border-[#E4DED6] rounded-[14px] transition-all outline-none text-[13.5px] font-semibold text-[#151413] focus:border-[#C9A77A] focus:ring-4 focus:ring-[#C9A77A]/15" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="w-full">
-              <label className="block text-[12px] font-bold text-black mb-3 ml-1 uppercase tracking-widest">Phone</label>
+              <label className="block text-[10.5px] font-bold text-[#5c544b] mb-2 ml-0.5 uppercase tracking-[0.16em]">Phone</label>
               <input
                 value={editForm.contactNumber}
                 onChange={(e) => setEditForm(f => ({ ...f, contactNumber: e.target.value }))}
                 onInput={(e) => e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10)}
-                className="w-full px-5 py-4 bg-white border border-neutral-100 rounded-[20px] transition-all outline-none text-[13.5px] font-bold shadow-sm focus:border-black focus:ring-4 focus:ring-black/5"
+                className="w-full h-[50px] px-4 bg-white border border-[#E4DED6] rounded-[14px] transition-all outline-none text-[13.5px] font-semibold text-[#151413] focus:border-[#C9A77A] focus:ring-4 focus:ring-[#C9A77A]/15"
                 placeholder="0771234567"
               />
             </div>
             <div className="w-full">
-              <label className="block text-[12px] font-bold text-black mb-3 ml-1 uppercase tracking-widest">Email</label>
-              <input type="email" value={editForm.contactEmail} onChange={(e) => setEditForm(f => ({ ...f, contactEmail: e.target.value }))} className="w-full px-5 py-4 bg-white border border-neutral-100 rounded-[20px] transition-all outline-none text-[13.5px] font-bold shadow-sm focus:border-black focus:ring-4 focus:ring-black/5" />
+              <label className="block text-[10.5px] font-bold text-[#5c544b] mb-2 ml-0.5 uppercase tracking-[0.16em]">Email</label>
+              <input type="email" value={editForm.contactEmail} onChange={(e) => setEditForm(f => ({ ...f, contactEmail: e.target.value }))} className="w-full h-[50px] px-4 bg-white border border-[#E4DED6] rounded-[14px] transition-all outline-none text-[13.5px] font-semibold text-[#151413] focus:border-[#C9A77A] focus:ring-4 focus:ring-[#C9A77A]/15" />
             </div>
           </div>
           <div className="w-full">
-            <label className="block text-[13px] font-bold text-neutral-800 mb-2 ml-1">Method</label>
-            <select value={editForm.deliveryMethod} onChange={(e) => setEditForm(f => ({ ...f, deliveryMethod: e.target.value }))} className="w-full pl-5 pr-10 py-3.5 bg-white border border-neutral-200/50 rounded-[18px] outline-none text-[13.5px] font-bold appearance-none cursor-pointer focus:ring-8 focus:ring-black/5">
+            <label className="block text-[10.5px] font-bold text-[#5c544b] mb-2 ml-0.5 uppercase tracking-[0.16em]">Delivery Method</label>
+            <select value={editForm.deliveryMethod} onChange={(e) => setEditForm(f => ({ ...f, deliveryMethod: e.target.value }))} className="w-full h-[50px] px-4 bg-white border border-[#E4DED6] rounded-[14px] outline-none text-[13.5px] font-semibold text-[#151413] cursor-pointer focus:border-[#C9A77A] focus:ring-4 focus:ring-[#C9A77A]/15">
               {DELIVERY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </div>
-          <div className="flex gap-3 justify-end pt-4">
-            <Button type="button" variant="secondary" onClick={() => setEditMode(false)} className="rounded-xl px-6 cursor-pointer">Cancel</Button>
-            <Button type="button" loading={saving} variant="dark" onClick={handleUpdateOrder} className="rounded-xl px-8 cursor-pointer">Save</Button>
+          <div className="flex gap-3 justify-end pt-4 border-t border-[#efe8de]">
+            <Button type="button" variant="secondary" onClick={() => setEditMode(false)} className="rounded-full px-6 cursor-pointer">Cancel</Button>
+            <Button type="button" loading={saving} variant="dark" onClick={handleUpdateOrder} className="rounded-full px-8 cursor-pointer">Save</Button>
           </div>
         </div>
       </Modal>
@@ -722,39 +741,41 @@ export const OrderDetailsPage = () => {
       <ConfirmDialog isOpen={!!deleteReviewTarget} onClose={() => setDeleteReviewTarget(null)} onConfirm={handleDeleteReview} title="Delete Review" message="Remove this review?" loading={deletingReview} isDanger confirmText="Delete Review" />
 
       <Modal isOpen={returnModalOpen} onClose={() => { setReturnModalOpen(false); setReturnReason(""); setReturnImage(null); }} title="Return Request" size="lg">
-        <div className="space-y-4 pt-3">
-          <div className="bg-neutral-50 rounded-2xl p-4 border border-neutral-100">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-3">Select Items to Return</p>
+        <div className="space-y-5 pt-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <div className="bg-[#faf7f2] rounded-2xl p-4 border border-[#ebe3d8]">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#5c544b] mb-3">Select Items to Return</p>
             <div className="space-y-3">
               {order.items?.map((item) => (
-                <div key={item.id} className="flex items-center justify-between bg-white p-3 rounded-xl border border-neutral-100/50 shadow-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-neutral-100 flex-shrink-0">
-                      <img src={getImgUrl(item.product?.images?.[0] || item.product?.imageUrl)} alt="" className="w-full h-full object-cover" />
+                <div key={item.id} className="flex items-center justify-between bg-white p-3.5 rounded-xl border border-[#e6ddd0] gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-11 h-12 rounded-lg overflow-hidden bg-[#f1ebe3] border border-[#e6ddd0] flex-shrink-0">
+                      <img src={getImgUrl(item.product?.images?.[0] || item.product?.imageUrl)} alt="" className="w-full h-full object-cover object-[center_12%]" />
                     </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase text-black truncate max-w-[120px]">{item.product?.name}</p>
+                    <div className="min-w-0">
+                      <p className="text-[12.5px] font-bold text-[#151413] truncate">{item.product?.name}</p>
                       {item.variantAttributes && Object.entries(item.variantAttributes).length > 0 && (
-                        <div className="flex items-center gap-1.5 mt-0.5">
+                        <div className="flex flex-wrap items-center gap-1.5 mt-1">
                           {Object.entries(item.variantAttributes).map(([key, value]) => (
-                            <span key={key} className="text-[8px] font-bold uppercase tracking-wider text-black/50 bg-black/5 px-1.5 py-0.5 rounded">
+                            <span key={key} className="text-[10px] font-semibold uppercase tracking-[0.06em] text-[#5c5145] bg-[#faf7f2] border border-[#e8dfd1] px-1.5 py-0.5 rounded">
                               {key}: {value}
                             </span>
                           ))}
                         </div>
                       )}
-                      <p className="text-[8px] text-neutral-400 font-bold uppercase mt-1">Ordered: {item.quantity}</p>
+                      <p className="text-[10.5px] text-[#8d8276] font-semibold mt-1">Ordered: {item.quantity}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button 
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
                       onClick={() => setSelectedReturnItems(prev => ({ ...prev, [item.id]: Math.max(0, (prev[item.id] || 0) - 1) }))}
-                      className="w-7 h-7 rounded-lg border border-neutral-100 flex items-center justify-center text-neutral-400 hover:text-black hover:border-black transition-all cursor-pointer"
+                      className="w-8 h-8 rounded-full border border-[#d8cec0] flex items-center justify-center text-[#5c544b] hover:text-[#151413] hover:border-[#161514] transition-all cursor-pointer font-bold"
                     >-</button>
-                    <span className="text-[11px] font-black w-4 text-center">{selectedReturnItems[item.id] || 0}</span>
-                    <button 
+                    <span className="text-[12.5px] font-extrabold text-[#151413] w-5 text-center">{selectedReturnItems[item.id] || 0}</span>
+                    <button
+                      type="button"
                       onClick={() => setSelectedReturnItems(prev => ({ ...prev, [item.id]: Math.min(item.quantity, (prev[item.id] || 0) + 1) }))}
-                      className="w-7 h-7 rounded-lg border border-neutral-100 flex items-center justify-center text-neutral-400 hover:text-black hover:border-black transition-all cursor-pointer"
+                      className="w-8 h-8 rounded-full border border-[#d8cec0] flex items-center justify-center text-[#5c544b] hover:text-[#151413] hover:border-[#161514] transition-all cursor-pointer font-bold"
                     >+</button>
                   </div>
                 </div>
@@ -762,22 +783,22 @@ export const OrderDetailsPage = () => {
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1 block">Reason (min 10 chars)</label>
-            <textarea value={returnReason} onChange={(e) => setReturnReason(e.target.value)} className="w-full p-4 bg-neutral-50 border border-neutral-100 rounded-2xl outline-none focus:border-black text-sm box-border" rows="3" placeholder="Why are you returning these items?" />
+            <label className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#5c544b] mb-2 block">Reason (min 10 chars)</label>
+            <textarea value={returnReason} onChange={(e) => setReturnReason(e.target.value)} className="w-full p-4 bg-[#faf8f5] border border-[#e4dcd0] rounded-xl outline-none focus:bg-white focus:border-[#161514] focus:ring-2 focus:ring-[#c9a77a]/20 text-[13.5px] text-[#151413] placeholder:text-[#9a8e80] box-border" rows="3" placeholder="Why are you returning these items?" />
           </div>
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1 block">Photo (optional)</label>
-            <input type="file" onChange={(e) => setReturnImage(e.target.files?.[0] || null)} className="text-xs file:bg-black file:text-white file:border-none file:px-3 file:py-1.5 file:rounded-lg file:cursor-pointer" />
-            {returnImage && <img src={URL.createObjectURL(returnImage)} alt="" className="h-16 w-16 object-cover rounded-xl border mt-2" />}
+            <label className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#5c544b] mb-2 block">Photo (optional)</label>
+            <input type="file" onChange={(e) => setReturnImage(e.target.files?.[0] || null)} className="text-[12px] text-[#5c544b] file:bg-[#161514] file:text-white file:border-none file:px-4 file:py-2 file:rounded-full file:text-[11px] file:font-bold file:uppercase file:tracking-[0.12em] file:mr-3 file:cursor-pointer" />
+            {returnImage && <img src={URL.createObjectURL(returnImage)} alt="" className="h-16 w-16 object-cover rounded-xl border border-[#e6ddd0] mt-2.5" />}
           </div>
-          <div className="flex gap-3 justify-end pt-2">
-            <Button variant="secondary" onClick={() => setReturnModalOpen(false)} className="rounded-xl px-6 cursor-pointer">Cancel</Button>
-            <Button 
-              onClick={handleRequestReturn} 
-              loading={returnSubmitting} 
-              disabled={returnReason.length < 10 || !Object.values(selectedReturnItems).some(q => q > 0)} 
-              variant="dark" 
-              className="rounded-xl px-8 cursor-pointer"
+          <div className="flex gap-3 justify-end pt-3 border-t border-[#efe8de]">
+            <Button variant="secondary" onClick={() => setReturnModalOpen(false)} className="rounded-full px-6 cursor-pointer">Cancel</Button>
+            <Button
+              onClick={handleRequestReturn}
+              loading={returnSubmitting}
+              disabled={returnReason.length < 10 || !Object.values(selectedReturnItems).some(q => q > 0)}
+              variant="dark"
+              className="rounded-full px-8 cursor-pointer"
             >Submit Return</Button>
           </div>
         </div>

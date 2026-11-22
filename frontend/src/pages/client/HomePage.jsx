@@ -1345,7 +1345,7 @@ export const HomePage = () => {
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {/* Branches Network â€” Premium White/Black            */}
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-      <section className="py-14 md:py-16 bg-[#faf6f0] border-t border-[#ece4d9]">
+      <section className="py-14 md:py-16 bg-[#faf6f0] border-t border-[#ece4d9] scroll-mt-24">
         <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-9">
             <div>

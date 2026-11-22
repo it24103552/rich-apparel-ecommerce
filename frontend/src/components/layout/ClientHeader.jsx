@@ -387,6 +387,7 @@ export const ClientHeader = () => {
                 <Link
                   key={link.name}
                   to={link.path}
+                  aria-current={isActive ? "page" : undefined}
                   onClick={(e) => handleNavLinkClick(e, link)}
                   className={`relative py-2 inline-flex items-center gap-1 whitespace-nowrap text-[14px] font-bold tracking-[0.01em] transition-colors group ${
                     isActive ? "text-black" : "text-[#1a1816] hover:text-black"
@@ -617,20 +618,46 @@ export const ClientHeader = () => {
 
               {/* Mobile Links */}
               <div className="divide-y divide-[#f1ece4]">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    to={link.path}
-                    onClick={(e) => {
-                      handleNavLinkClick(e, link);
-                      if (!link.isScroll) setIsMobileMenuOpen(false);
-                    }}
-                    className="flex items-center justify-between py-3 text-[14px] font-semibold text-[#1d1b19] hover:text-[#7c664c] transition-colors"
-                  >
-                    <span>{link.name}</span>
-                    {link.hasChevron && <ChevronDown className="w-4 h-4 text-[#9a8e80] -rotate-90" />}
-                  </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const currentPath = location.pathname.toLowerCase();
+                  const targetPath = link.path.toLowerCase();
+                  const isActive =
+                    !link.isScroll &&
+                    (link.matchPrefix
+                      ? currentPath === targetPath || currentPath.startsWith(`${targetPath}/`)
+                      : currentPath === targetPath);
+
+                  return (
+                    <Link
+                      key={link.name}
+                      to={link.path}
+                      aria-current={isActive ? "page" : undefined}
+                      onClick={(e) => {
+                        handleNavLinkClick(e, link);
+                        if (!link.isScroll) setIsMobileMenuOpen(false);
+                      }}
+                      className={`flex items-center justify-between py-3 text-[14px] transition-colors ${
+                        isActive
+                          ? "font-extrabold text-[#141312]"
+                          : "font-semibold text-[#1d1b19] hover:text-[#7c664c]"
+                      }`}
+                    >
+                      <span className="inline-flex items-center gap-2.5">
+                        {isActive && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#9a7b56]" aria-hidden="true" />
+                        )}
+                        <span>{link.name}</span>
+                      </span>
+                      {link.hasChevron && (
+                        <ChevronDown
+                          className={`w-4 h-4 -rotate-90 ${
+                            isActive ? "text-[#141312]" : "text-[#9a8e80]"
+                          }`}
+                        />
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
 
               {/* Mobile Quick Utility Row */}

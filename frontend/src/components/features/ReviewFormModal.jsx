@@ -59,58 +59,79 @@ export const ReviewFormModal = ({ isOpen, onClose, onSave, productName, existing
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={existingReview ? "Edit Review" : "Write a Review"} size="2xl">
-      <form onSubmit={handleSubmit(onSubmit)} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="animate-fade-in"
+        style={{ fontFamily: "'Montserrat', sans-serif" }}
+      >
+        {productName && (
+          <div className="mb-6 px-4 py-3 rounded-xl bg-[#faf7f2] border border-[#ebe3d8] flex items-center justify-between gap-3">
+            <span className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#8d8276] shrink-0">
+              Item
+            </span>
+            <span className="text-[13px] font-bold text-[#151413] truncate">
+              {productName}
+            </span>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-7 items-start">
           {/* Left Column: Product & Rating */}
-          <div className="space-y-6">
-            <div className="px-1">
-              <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.2em] mb-4">Your Rating</p>
-              <div className="flex gap-2.5">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setRating(star)}
-                    className="focus:outline-none transition-all duration-300 transform hover:scale-125 active:scale-95 group"
-                  >
-                    <Star
-                      className={`h-7 w-7 transition-colors ${
-                        star <= rating
-                          ? "fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]"
-                          : "text-neutral-200 group-hover:text-neutral-300"
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-amber-500 mt-4 leading-none">
-                {rating} out of 5 stars
-              </p>
+          <div className="p-5 rounded-2xl bg-[#faf7f2] border border-[#ebe3d8] space-y-4">
+            <p className="text-[11px] font-bold text-[#5c544b] uppercase tracking-[0.16em]">
+              Your Rating
+            </p>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  type="button"
+                  onClick={() => setRating(star)}
+                  aria-label={`Rate ${star} out of 5`}
+                  className="focus:outline-none transition-transform duration-200 hover:scale-115 active:scale-95 cursor-pointer group"
+                >
+                  <Star
+                    className={`h-7 w-7 transition-colors ${
+                      star <= rating
+                        ? "fill-[#e4a63a] text-[#e4a63a]"
+                        : "text-[#d5cabd] group-hover:text-[#bfa88a]"
+                    }`}
+                  />
+                </button>
+              ))}
             </div>
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-white border border-[#e5dacb] text-[11px] font-bold text-[#8a6d43] tracking-[0.06em]">
+              {rating} out of 5 stars
+            </span>
           </div>
 
           {/* Right Column: Feedback & Photo */}
           <div className="space-y-5">
             <div>
-              <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.2em] mb-3 px-1">Feedback</p>
+              <p className="text-[11px] font-bold text-[#5c544b] uppercase tracking-[0.16em] mb-2.5">
+                Feedback
+              </p>
               <textarea
                 {...register("comment", {
                   required: "Please share your thoughts",
                   minLength: { value: 5, message: "Comment must be at least 5 characters" },
                   maxLength: { value: 1000, message: "Comment must be less than 1000 characters" },
                 })}
-                placeholder="Share your experience..."
-                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-100 rounded-2xl focus:bg-white focus:border-black text-[13px] font-medium outline-none transition-all resize-none shadow-sm"
-                rows="3"
+                placeholder="Share your experience with the fit, fabric, and quality..."
+                className="w-full px-4 py-3.5 bg-[#faf8f5] border border-[#e4dcd0] rounded-xl focus:bg-white focus:border-[#161514] focus:ring-2 focus:ring-[#c9a77a]/20 text-[13.5px] font-medium text-[#151413] placeholder:text-[#9a8e80] outline-none transition-all resize-none"
+                rows="4"
               />
               {errors.comment && (
-                <p className="text-red-500 text-[10px] font-bold uppercase mt-2 tracking-wide px-1">{errors.comment.message}</p>
+                <p className="text-[#b43232] text-[11px] font-semibold mt-1.5">
+                  {errors.comment.message}
+                </p>
               )}
             </div>
 
             <div>
-              <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.2em] mb-3 px-1">Photo (Optional)</p>
+              <p className="text-[11px] font-bold text-[#5c544b] uppercase tracking-[0.16em] mb-2.5">
+                Photo (Optional)
+              </p>
               <div className="max-w-full">
                 <FileUpload
                   accept="image/*"
@@ -124,20 +145,20 @@ export const ReviewFormModal = ({ isOpen, onClose, onSave, productName, existing
         </div>
 
         {/* Action Footer */}
-        <div className="flex gap-3 justify-end mt-8 pt-5 border-t border-neutral-100">
+        <div className="flex flex-wrap gap-3 justify-end mt-7 pt-5 border-t border-[#efe8de]">
           <Button
             type="button"
             variant="secondary"
             onClick={onClose}
             disabled={saving}
-            className="rounded-xl px-6 h-10 text-[10px] font-black uppercase tracking-widest"
+            className="rounded-full px-6 h-11 text-[11.5px] font-bold uppercase tracking-[0.14em]"
           >
             Cancel
           </Button>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             loading={saving}
-            className="rounded-xl px-8 h-10 bg-black text-white hover:bg-neutral-800 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-black/10 transition-all active:scale-95"
+            className="rounded-full px-8 h-11 bg-[#161514] text-white hover:bg-[#2c2926] text-[11.5px] font-bold uppercase tracking-[0.14em] shadow-[0_8px_22px_rgba(22,21,20,0.16)]"
           >
             {existingReview ? "Update Review" : "Post Review"}
           </Button>

@@ -446,7 +446,7 @@ export const OrderHistoryCard = ({
                   e.stopPropagation();
                   onNavigateTrack(order.id);
                 }}
-                className="flex-1 sm:flex-initial h-10 px-5 rounded-xl bg-[#161514] hover:bg-[#2c2926] active:scale-[0.99] text-white text-[11px] font-bold uppercase tracking-[0.14em] inline-flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                className="flex-1 sm:flex-initial h-10 px-5 rounded-full bg-[#161514] hover:bg-[#2c2926] active:scale-[0.99] text-white text-[11px] font-bold uppercase tracking-[0.14em] inline-flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
               >
                 <Truck size={13.5} strokeWidth={2} />
                 <span>Track Order</span>
@@ -457,7 +457,7 @@ export const OrderHistoryCard = ({
                   e.stopPropagation();
                   onNavigateDetails(order.id);
                 }}
-                className="flex-1 sm:flex-initial h-10 px-5 rounded-xl bg-white border border-[#d8cec0] hover:border-[#161514] hover:bg-[#faf7f2] text-[#1a1816] text-[11px] font-bold uppercase tracking-[0.14em] inline-flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer"
+                className="flex-1 sm:flex-initial h-10 px-5 rounded-full bg-white border border-[#d8cec0] hover:border-[#161514] hover:bg-[#faf7f2] text-[#1a1816] text-[11px] font-bold uppercase tracking-[0.14em] inline-flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer"
               >
                 <span>Details</span>
                 <ArrowRight size={13} strokeWidth={2} />
@@ -471,7 +471,7 @@ export const OrderHistoryCard = ({
                   e.stopPropagation();
                   onNavigateTrack(order.id);
                 }}
-                className="h-10 px-4 rounded-xl text-[#7a7064] hover:text-[#151413] hover:bg-[#f5f0e8] text-[11px] font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer"
+                className="h-10 px-4 rounded-full text-[#7a7064] hover:text-[#151413] hover:bg-[#f5f0e8] text-[11px] font-semibold uppercase tracking-[0.12em] inline-flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer"
               >
                 <Truck size={13} strokeWidth={1.85} />
                 <span>Tracking</span>
@@ -482,7 +482,7 @@ export const OrderHistoryCard = ({
                   e.stopPropagation();
                   onNavigateDetails(order.id);
                 }}
-                className="flex-1 sm:flex-initial h-10 px-6 rounded-xl bg-[#161514] hover:bg-[#2c2926] active:scale-[0.99] text-white text-[11px] font-bold uppercase tracking-[0.14em] inline-flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                className="flex-1 sm:flex-initial h-10 px-6 rounded-full bg-[#161514] hover:bg-[#2c2926] active:scale-[0.99] text-white text-[11px] font-bold uppercase tracking-[0.14em] inline-flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
               >
                 <span>View Details</span>
                 <ArrowRight size={13} strokeWidth={2} />

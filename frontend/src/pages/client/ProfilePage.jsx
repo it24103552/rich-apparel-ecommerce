@@ -13,64 +13,70 @@ export const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa] selection:bg-black selection:text-white" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-      <div className="max-w-[1240px] mx-auto px-[5%] lg:px-[6%] pt-8 md:pt-12 pb-20">
+    <div
+      className="min-h-screen bg-[#faf8f5] selection:bg-[#161514] selection:text-white"
+      style={{ fontFamily: "'Montserrat', sans-serif" }}
+    >
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10 pb-20">
 
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2.5 mb-8 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
-          <Link to="/" className="hover:text-black transition-colors">Home</Link>
-          <ChevronRight size={10} />
-          <span className="text-black">My Account</span>
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-2 mb-6 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8d8276]"
+        >
+          <Link to="/" className="hover:text-[#151413] transition-colors">Home</Link>
+          <ChevronRight size={11} className="text-[#b5a99b]" />
+          <span className="text-[#151413] font-bold">My Account</span>
         </nav>
 
         {/* ──── Page Header ──── */}
-        <div className="flex items-start gap-4 pb-8 mb-10 border-b border-neutral-200/70">
-          <div className="w-1.5 h-10 md:h-12 bg-black rounded-full mt-1 shrink-0" />
+        <div className="flex items-start gap-3.5 pb-7 mb-9 border-b border-[#e8e0d5]">
+          <div className="w-1 h-9 sm:h-11 bg-[#9a7b56] rounded-full mt-1 shrink-0" />
           <div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-tighter text-black leading-none mb-2">
+            <h1 className="text-[28px] sm:text-[36px] md:text-[40px] font-extrabold uppercase tracking-[-0.03em] text-[#151413] leading-none mb-2">
               My Account
             </h1>
-            <p className="text-xs sm:text-[13px] font-medium text-neutral-500">
+            <p className="text-[12.5px] sm:text-[13.5px] font-medium text-[#7a7064]">
               Manage your personal information, security and account preferences.
             </p>
           </div>
         </div>
 
         {/* ──── Main Account Layout ──── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
 
           {/* Left: Customer Profile Summary Card */}
-          <aside className="lg:col-span-4 lg:sticky lg:top-28">
-            <div className="bg-white rounded-2xl border border-neutral-100/80 shadow-[0_2px_16px_rgba(0,0,0,0.03)] overflow-hidden">
+          <aside className="lg:col-span-4 lg:sticky lg:top-[124px]">
+            <div className="bg-white rounded-2xl border border-[#e9e1d6] shadow-[0_2px_14px_rgba(32,25,18,0.035)] overflow-hidden">
               {/* Warm Beige Top Summary Band */}
-              <div className="bg-[#f5efe6] border-b border-[#e8dfd1] px-6 py-8 flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-black text-white flex items-center justify-center mb-4 shadow-md">
-                  <User size={26} strokeWidth={2} />
+              <div className="bg-[#faf6f0] border-b border-[#ece3d6] px-6 py-8 flex flex-col items-center text-center">
+                <div className="w-16 h-16 rounded-full bg-[#161514] text-white flex items-center justify-center mb-4 shadow-[0_8px_20px_rgba(22,21,20,0.16)]">
+                  <User size={26} strokeWidth={1.9} />
                 </div>
 
-                <h2 className="text-lg font-bold uppercase tracking-tight text-black leading-snug break-words w-full">
+                <h2 className="text-[18px] font-extrabold uppercase tracking-[-0.01em] text-[#151413] leading-snug break-words w-full">
                   {user?.name}
                 </h2>
                 <p
-                  className="text-xs font-medium text-neutral-600 mt-1.5 break-all w-full"
+                  className="text-[12.5px] font-medium text-[#6c6257] mt-1.5 break-all w-full"
                   title={user?.email}
                 >
                   {user?.email}
                 </p>
 
                 <div className="mt-4">
-                  <span className="inline-flex items-center px-3.5 py-1 rounded-full bg-white border border-[#dfd4c3] text-[10px] font-bold uppercase tracking-[0.18em] text-[#5c4d3c] shadow-2xs">
+                  <span className="inline-flex items-center px-3.5 py-1 rounded-full bg-white border border-[#dfd4c3] text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#7c664e]">
                     {user?.role || "Customer"}
                   </span>
                 </div>
               </div>
 
               {/* Supporting Metadata */}
-              <div className="px-6 py-5 bg-white flex items-center justify-between gap-4">
-                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-400 flex items-center gap-1.5">
-                  <Calendar size={12} className="text-neutral-400" /> Member Since
+              <div className="px-6 py-4 bg-white flex items-center justify-between gap-4">
+                <span className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#8d8276] flex items-center gap-1.5">
+                  <Calendar size={12.5} className="text-[#9a7b56]" /> Member Since
                 </span>
-                <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-black">
+                <span className="text-[11.5px] font-bold uppercase tracking-[0.12em] text-[#151413]">
                   APRIL 2024
                 </span>
               </div>
