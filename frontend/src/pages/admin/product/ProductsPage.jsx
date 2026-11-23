@@ -1,5 +1,6 @@
 import { AdminPageSkeleton } from "../../../components/common/AdminPageSkeleton";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Image as ImageIcon } from "lucide-react";
@@ -46,6 +47,53 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [customColor, setCustomColor] = useState("#162b56");
   const [customName, setCustomName] = useState("");
+  const [popoverStyle, setPopoverStyle] = useState(null);
+  const triggerRef = useRef(null);
+
+  const updatePopoverPosition = useCallback(() => {
+    const el = triggerRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const viewportMargin = 12;
+    const gap = 8;
+    const width = Math.min(280, window.innerWidth - viewportMargin * 2);
+    const left = Math.max(
+      viewportMargin,
+      Math.min(rect.left, window.innerWidth - width - viewportMargin)
+    );
+    const spaceAbove = rect.top - viewportMargin;
+    const spaceBelow = window.innerHeight - rect.bottom - viewportMargin;
+    const openBelow = spaceBelow >= 340 || spaceBelow >= spaceAbove;
+
+    if (openBelow) {
+      setPopoverStyle({
+        position: "fixed",
+        top: rect.bottom + gap,
+        left,
+        width,
+        maxHeight: Math.min(480, Math.max(220, spaceBelow - gap)),
+      });
+    } else {
+      setPopoverStyle({
+        position: "fixed",
+        bottom: window.innerHeight - rect.top + gap,
+        left,
+        width,
+        maxHeight: Math.min(480, Math.max(220, spaceAbove - gap)),
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isPickerOpen) return;
+    updatePopoverPosition();
+    window.addEventListener("scroll", updatePopoverPosition, true);
+    window.addEventListener("resize", updatePopoverPosition);
+    return () => {
+      window.removeEventListener("scroll", updatePopoverPosition, true);
+      window.removeEventListener("resize", updatePopoverPosition);
+    };
+  }, [isPickerOpen, updatePopoverPosition]);
 
   // Ensure value is always an array for multi-tone
   const currentTones = Array.isArray(value) ? value : (value ? [value] : []);
@@ -67,9 +115,13 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
   };
 
   return (
-    <div className="relative">
+    <div ref={triggerRef} className="relative">
       <div
-        onClick={() => setIsPickerOpen(!isPickerOpen)}
+        onClick={() => {
+          const nextOpen = !isPickerOpen;
+          if (nextOpen) updatePopoverPosition();
+          setIsPickerOpen(nextOpen);
+        }}
         className="flex flex-wrap gap-1.5 p-2 bg-[#FAF8F5] border border-[#E4DED6] rounded-[12px] min-h-[42px] min-w-[140px] cursor-pointer hover:border-[#C9A77A] transition-all items-center"
       >
         {currentTones.length === 0 ? (
@@ -97,10 +149,13 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
         )}
       </div>
 
-      {isPickerOpen && (
+      {isPickerOpen && popoverStyle && typeof document !== "undefined" && createPortal(
         <>
-          <div className="fixed inset-0 z-30" onClick={() => setIsPickerOpen(false)} />
-          <div className="absolute bottom-full left-0 mb-2 z-40 bg-white border border-[#E4DED6] shadow-[0_18px_48px_rgba(23,23,23,0.12)] rounded-[18px] pt-4 px-4 pb-3 w-[280px] animate-in slide-in-from-bottom-2 duration-300 origin-bottom-left max-h-[480px] overflow-y-auto custom-scrollbar">
+          <div className="fixed inset-0 z-[55]" onClick={() => setIsPickerOpen(false)} />
+          <div
+            style={popoverStyle}
+            className="z-[56] bg-white border border-[#E4DED6] shadow-[0_18px_48px_rgba(23,23,23,0.12)] rounded-[18px] pt-4 px-4 pb-3 animate-in fade-in duration-200 overflow-y-auto custom-scrollbar"
+          >
             <div className="mb-4">
               <h4 className="text-[11px] font-black text-[#171717] uppercase tracking-[0.2em] mb-2.5">Colour Picker</h4>
               <div className="grid grid-cols-5 gap-2">
@@ -159,7 +214,7 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
                     placeholder="Colour Name"
                     value={customName}
                     onChange={(e) => setCustomName(e.target.value)}
-                    className="flex-1 bg-[#FAF8F5] border border-[#E4DED6] text-[#171717] placeholder:text-[#9d978f] rounded-[10px] px-3.5 h-10 text-[11px] font-bold uppercase tracking-widest outline-none focus:bg-white focus:border-[#C9A77A] transition-all"
+                    className="flex-1 min-w-0 bg-[#FAF8F5] border border-[#E4DED6] text-[#171717] placeholder:text-[#9d978f] rounded-[10px] px-3.5 h-10 text-[11px] font-bold uppercase tracking-widest outline-none focus:bg-white focus:border-[#C9A77A] transition-all"
                   />
                 </div>
                 <button
@@ -172,7 +227,8 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
               </div>
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );
