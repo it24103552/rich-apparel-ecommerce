@@ -72,9 +72,8 @@ const CategoryProductRow = ({ title, subtitle, products, linkPath, isEven }) => 
 
   return (
     <section
-      className={`py-12 md:py-14 border-t border-[#f0e9df] ${
-        isEven ? "bg-[#faf7f2]" : "bg-white"
-      }`}
+      className={`py-12 md:py-14 border-t border-[#f0e9df] ${isEven ? "bg-[#faf7f2]" : "bg-white"
+        }`}
     >
       <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         {/* Section Header */}
@@ -95,11 +94,10 @@ const CategoryProductRow = ({ title, subtitle, products, linkPath, isEven }) => 
               onClick={() => scroll("left")}
               disabled={!canScrollLeft}
               aria-label={`Previous ${title}`}
-              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
-                canScrollLeft
-                  ? "border-[#dcd2c5] bg-white text-[#161514] hover:bg-[#161514] hover:border-[#161514] hover:text-white cursor-pointer"
-                  : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
-              }`}
+              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${canScrollLeft
+                ? "border-[#dcd2c5] bg-white text-[#161514] hover:bg-[#161514] hover:border-[#161514] hover:text-white cursor-pointer"
+                : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
+                }`}
             >
               <ChevronLeft size={19} />
             </button>
@@ -108,11 +106,10 @@ const CategoryProductRow = ({ title, subtitle, products, linkPath, isEven }) => 
               onClick={() => scroll("right")}
               disabled={!canScrollRight}
               aria-label={`Next ${title}`}
-              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
-                canScrollRight
-                  ? "border-[#161514] bg-[#161514] text-white hover:bg-[#2d2926] cursor-pointer"
-                  : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
-              }`}
+              className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${canScrollRight
+                ? "border-[#161514] bg-[#161514] text-white hover:bg-[#2d2926] cursor-pointer"
+                : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
+                }`}
             >
               <ChevronRight size={19} />
             </button>
@@ -178,7 +175,7 @@ export const HomePage = () => {
           src: "/assets/img/index men img2.png",
           alt: "Men's street essentials model",
           className: "h-[90%] lg:h-[94%]",
-          style: { zIndex: 1, right: "39%" },
+          style: { zIndex: 1, right: "50%" },
           parallax: "left",
           delay: 0.25,
         },
@@ -194,7 +191,7 @@ export const HomePage = () => {
           src: "/assets/img/index men img1.png",
           alt: "Men's graphic tee model",
           className: "h-[82%] lg:h-[86%]",
-          style: { zIndex: 2, right: "4%" },
+          style: { zIndex: 2, right: "-10%" },
           parallax: "right",
           delay: 0.35,
         },
@@ -213,7 +210,7 @@ export const HomePage = () => {
           src: "/assets/img/cover 2 girl img 1.png",
           alt: "Women's black essential tee model",
           className: "h-[85%] lg:h-[90%]",
-          style: { zIndex: 1, right: "44%" },
+          style: { zIndex: 1, right: "55%" },
           parallax: "left",
           delay: 0.18,
         },
@@ -221,7 +218,7 @@ export const HomePage = () => {
           src: "/assets/img/cover 2 girl img 2.png",
           alt: "Women's white relaxed tee model",
           className: "h-[93%] lg:h-[97%]",
-          style: { zIndex: 3, right: "20%" },
+          style: { zIndex: 3, right: "5%" },
           parallax: "center",
           delay: 0.08,
         },
@@ -229,7 +226,7 @@ export const HomePage = () => {
           src: "/assets/img/cover 2 girl img 3.png",
           alt: "Women's maroon floral tee model",
           className: "h-[84%] lg:h-[88%]",
-          style: { zIndex: 2, right: "4%" },
+          style: { zIndex: 2, right: "-10%" },
           parallax: "right",
           delay: 0.22,
         },
@@ -248,7 +245,7 @@ export const HomePage = () => {
           src: "/assets/img/cover 3 img 2.png",
           alt: "Men's black casual tee model",
           className: "h-[88%] lg:h-[93%]",
-          style: { zIndex: 1, right: "40%" },
+          style: { zIndex: 1, right: "50%" },
           parallax: "left",
           delay: 0.3,
         },
@@ -256,7 +253,7 @@ export const HomePage = () => {
           src: "/assets/img/cover 3 img 1.png",
           alt: "Men's white oversized tee model",
           className: "h-[94%] lg:h-[98%]",
-          style: { zIndex: 3, right: "19%" },
+          style: { zIndex: 3, right: "15%" },
           parallax: "center",
           delay: 0.15,
         },
@@ -264,7 +261,7 @@ export const HomePage = () => {
           src: "/assets/img/cover 3 img 3.png",
           alt: "Men's charcoal graphic tee model",
           className: "h-[86%] lg:h-[91%]",
-          style: { zIndex: 2, right: "4%" },
+          style: { zIndex: 2, right: "-5%" },
           parallax: "right",
           delay: 0.35,
         },
@@ -621,11 +618,10 @@ export const HomePage = () => {
                 </motion.span>
 
                 <h1
-                  className={`text-[#151311] font-extrabold uppercase tracking-[-0.03em] leading-[0.94] ${
-                    activeHeroSlide.headlineLines.length > 2
-                      ? "text-[2.35rem] sm:text-[3.1rem] md:text-[3.25rem] lg:text-[3.85rem] xl:text-[4.4rem]"
-                      : "text-[2.45rem] sm:text-[3.25rem] md:text-[3.4rem] lg:text-[4rem] xl:text-[4.55rem]"
-                  }`}
+                  className={`text-[#151311] font-extrabold uppercase tracking-[-0.03em] leading-[0.94] ${activeHeroSlide.headlineLines.length > 2
+                    ? "text-[2.35rem] sm:text-[3.1rem] md:text-[3.25rem] lg:text-[3.85rem] xl:text-[4.4rem]"
+                    : "text-[2.45rem] sm:text-[3.25rem] md:text-[3.4rem] lg:text-[4rem] xl:text-[4.55rem]"
+                    }`}
                 >
                   {activeHeroSlide.headlineLines.map((line, idx) => (
                     <motion.span
@@ -726,20 +722,18 @@ export const HomePage = () => {
                           className="group flex items-center gap-2 cursor-pointer focus:outline-none"
                         >
                           <span
-                            className={`text-[12.5px] tracking-[0.08em] transition-colors ${
-                              isActive
-                                ? "font-extrabold text-[#161514]"
-                                : "font-semibold text-[#9a8c7c] group-hover:text-[#161514]"
-                            }`}
+                            className={`text-[12.5px] tracking-[0.08em] transition-colors ${isActive
+                              ? "font-extrabold text-[#161514]"
+                              : "font-semibold text-[#9a8c7c] group-hover:text-[#161514]"
+                              }`}
                           >
                             {String(index + 1).padStart(2, "0")}
                           </span>
                           <span
-                            className={`h-[2px] rounded-full transition-all duration-500 ${
-                              isActive
-                                ? "w-10 bg-[#161514]"
-                                : "w-3.5 bg-[#c7b9a8] group-hover:bg-[#7c6d5c]"
-                            }`}
+                            className={`h-[2px] rounded-full transition-all duration-500 ${isActive
+                              ? "w-10 bg-[#161514]"
+                              : "w-3.5 bg-[#c7b9a8] group-hover:bg-[#7c6d5c]"
+                              }`}
                           />
                         </button>
                       );
@@ -893,11 +887,10 @@ export const HomePage = () => {
                     role="tab"
                     aria-selected={activeTab === tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-4 sm:px-5 py-2 rounded-full text-[11.5px] font-bold tracking-[0.06em] uppercase transition-all duration-200 cursor-pointer ${
-                      activeTab === tab
-                        ? "bg-[#161514] text-white shadow-xs"
-                        : "text-[#6f655a] hover:text-[#161514]"
-                    }`}
+                    className={`px-4 sm:px-5 py-2 rounded-full text-[11.5px] font-bold tracking-[0.06em] uppercase transition-all duration-200 cursor-pointer ${activeTab === tab
+                      ? "bg-[#161514] text-white shadow-xs"
+                      : "text-[#6f655a] hover:text-[#161514]"
+                      }`}
                   >
                     {tab}
                   </button>
@@ -911,11 +904,10 @@ export const HomePage = () => {
                   onClick={() => scrollNewArrivals("left")}
                   disabled={!canScrollNewLeft}
                   aria-label="Previous new arrivals"
-                  className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
-                    canScrollNewLeft
-                      ? "border-[#dcd2c5] bg-white text-[#161514] hover:bg-[#161514] hover:border-[#161514] hover:text-white cursor-pointer"
-                      : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
-                  }`}
+                  className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${canScrollNewLeft
+                    ? "border-[#dcd2c5] bg-white text-[#161514] hover:bg-[#161514] hover:border-[#161514] hover:text-white cursor-pointer"
+                    : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
+                    }`}
                 >
                   <ChevronLeft size={19} />
                 </button>
@@ -924,11 +916,10 @@ export const HomePage = () => {
                   onClick={() => scrollNewArrivals("right")}
                   disabled={!canScrollNewRight}
                   aria-label="Next new arrivals"
-                  className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
-                    canScrollNewRight
-                      ? "border-[#161514] bg-[#161514] text-white hover:bg-[#2d2926] cursor-pointer"
-                      : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
-                  }`}
+                  className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${canScrollNewRight
+                    ? "border-[#161514] bg-[#161514] text-white hover:bg-[#2d2926] cursor-pointer"
+                    : "border-[#e7dfd5] bg-white/70 text-[#c9bfb2] cursor-not-allowed"
+                    }`}
                 >
                   <ChevronRight size={19} />
                 </button>
@@ -1310,11 +1301,10 @@ export const HomePage = () => {
                             type="button"
                             onClick={() => setActiveTestimonial(idx)}
                             aria-label={`View testimonial ${idx + 1}`}
-                            className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                              idx === activeTestimonial % testimonials.length
-                                ? "w-5 bg-[#161514]"
-                                : "w-1.5 bg-[#cfc4b6] hover:bg-[#9b8d7d]"
-                            }`}
+                            className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${idx === activeTestimonial % testimonials.length
+                              ? "w-5 bg-[#161514]"
+                              : "w-1.5 bg-[#cfc4b6] hover:bg-[#9b8d7d]"
+                              }`}
                           />
                         ))}
                       </div>
