@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight, Check } from "lucide-react";
 import { useCart } from "../../hooks/useCart";
 import { Link, useNavigate } from "react-router-dom";
+import { getDisplayColor } from "../../utils/colorUtils";
 
 // Utils (standardized from other components)
 const formatPrice = (price) => {
@@ -18,19 +19,6 @@ const getImageUrl = (imagePath) => {
   if (imagePath.startsWith("http")) return imagePath;
   const cleanPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
   return `http://localhost:5001${cleanPath}`;
-};
-
-const getDisplayColor = (color) => {
-  if (!color || typeof color !== 'string') return '#e5e5e5';
-  const c = color.toLowerCase().trim();
-  if (c.startsWith('#')) return c;
-  const colorMap = {
-    'white': '#ffffff', 'black': '#000000', 'red': '#ff3b30', 'blue': '#007aff',
-    'green': '#34c759', 'yellow': '#ffcc00', 'orange': '#ff9500', 'pink': '#ff2d55',
-    'purple': '#af52de', 'grey': '#8e8e93', 'gray': '#8e8e93', 'navy': '#000080',
-    'beige': '#f5f5dc', 'brown': '#a2845e'
-  };
-  return colorMap[c] || c;
 };
 
 export const CartDrawer = () => {

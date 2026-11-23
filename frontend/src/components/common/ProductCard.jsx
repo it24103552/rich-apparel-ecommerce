@@ -209,6 +209,7 @@ export const ProductCard = ({ product }) => {
                 {colors.slice(0, 4).map((color, idx) => (
                   <span
                     key={idx}
+                    title={String(color)}
                     className="w-2.5 h-2.5 rounded-full border border-[#d6ccbf]"
                     style={{ backgroundColor: getDisplayColor(color) }}
                   />

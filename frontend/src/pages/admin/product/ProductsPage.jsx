@@ -32,7 +32,7 @@ import { Badge } from "../../../components/common/Badge";
 import { Spinner } from "../../../components/common/Spinner";
 import { productRules } from "../../../validations/product.validation";
 import { formatPrice } from "../../../utils/formatters";
-import { getDisplayColor } from "../../../utils/colorUtils";
+import { getDisplayColor, toHexColor, isExplicitColorCode } from "../../../utils/colorUtils";
 import { filterBySearch, filterByField, paginateData } from "../../../utils/tableHelpers";
 import { exportTablePDF } from "../../../utils/pdfExport";
 
@@ -47,6 +47,7 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [customColor, setCustomColor] = useState("#162b56");
   const [customName, setCustomName] = useState("");
+  const [hasPickedCustomColor, setHasPickedCustomColor] = useState(false);
   const [popoverStyle, setPopoverStyle] = useState(null);
   const triggerRef = useRef(null);
 
@@ -98,21 +99,67 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
   // Ensure value is always an array for multi-tone
   const currentTones = Array.isArray(value) ? value : (value ? [value] : []);
 
+  const hasTone = (tone) => {
+    const target = String(tone).trim().toLowerCase();
+    return currentTones.some((t) => String(t).trim().toLowerCase() === target);
+  };
+
   const toggleTone = (tone) => {
-    const isSelected = currentTones.includes(tone);
+    const target = String(tone).trim().toLowerCase();
+    const isSelected = currentTones.some((t) => String(t).trim().toLowerCase() === target);
     const next = isSelected
-      ? currentTones.filter(t => t !== tone)
+      ? currentTones.filter((t) => String(t).trim().toLowerCase() !== target)
       : [...currentTones, tone];
     onChange(next);
   };
 
+  const handleNativeColorChange = (e) => {
+    const picked = e.target.value;
+    if (picked) {
+      setCustomColor(picked.toUpperCase());
+      setHasPickedCustomColor(true);
+    }
+  };
+
+  const handleCustomNameChange = (e) => {
+    const nextName = e.target.value;
+    setCustomName(nextName);
+    const trimmed = nextName.trim();
+    if (!trimmed) return;
+
+    if (isExplicitColorCode(trimmed)) {
+      const hex = toHexColor(trimmed);
+      if (hex) setCustomColor(hex.toUpperCase());
+    } else if (!hasPickedCustomColor) {
+      const namedHex = toHexColor(trimmed);
+      if (namedHex) setCustomColor(namedHex.toUpperCase());
+    }
+  };
+
   const handleApplyCustom = () => {
-    if (!currentTones.includes(customColor)) {
-      syncNewTone(customColor, customName);
-      toggleTone(customColor);
+    const trimmedName = customName.trim();
+    let finalColorValue = customColor.startsWith("#") ? customColor.toUpperCase() : customColor;
+    let displayLabel = trimmedName;
+
+    if (isExplicitColorCode(trimmedName)) {
+      finalColorValue = trimmedName.startsWith("#") ? trimmedName.toUpperCase() : trimmedName;
+      displayLabel = "";
+    } else if (!hasPickedCustomColor && trimmedName) {
+      const namedHex = toHexColor(trimmedName);
+      if (namedHex) {
+        finalColorValue = namedHex.toUpperCase();
+      }
+    }
+
+    if (!hasTone(finalColorValue)) {
+      syncNewTone(finalColorValue, displayLabel);
+      toggleTone(finalColorValue);
     }
     setCustomName("");
+    setHasPickedCustomColor(false);
   };
+
+  const nativePickerHex = toHexColor(customColor) || "#162b56";
 
   return (
     <div ref={triggerRef} className="relative">
@@ -161,7 +208,7 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
               <div className="grid grid-cols-5 gap-2">
                 {options.map(opt => {
                   const colorVal = getDisplayColor(opt);
-                  const isSelected = currentTones.includes(opt);
+                  const isSelected = hasTone(opt);
                   return (
                     <button
                       key={opt}
@@ -181,14 +228,14 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
                 <h4 className="text-[11px] font-black text-[#171717] uppercase tracking-[0.2em] mb-2.5">Recent Colours</h4>
                 <div className="grid grid-cols-5 gap-2">
                   {synapticPalette.slice(-10).map(t => {
-                    const isSelected = currentTones.includes(t.hex);
+                    const isSelected = hasTone(t.hex);
                     return (
                       <button
                         key={t.hex}
                         type="button"
                         onClick={() => toggleTone(t.hex)}
                         className={`w-9 h-9 rounded-[10px] border-2 transition-all duration-300 ${isSelected ? 'border-[#171717] scale-110 shadow-md ring-4 ring-[#C9A77A]/25' : 'border-[#E4DED6] hover:scale-105 hover:border-[#9A7B4A]'}`}
-                        style={{ backgroundColor: t.hex }}
+                        style={{ backgroundColor: getDisplayColor(t.hex) }}
                         title={t.name}
                       />
                     );
@@ -201,11 +248,15 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
               <h4 className="text-[11px] font-black text-[#171717] uppercase tracking-[0.2em] mb-3">New Colour Discovery</h4>
               <div className="space-y-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-[10px] border border-[#E4DED6] p-0.5 bg-[#FAF8F5] shadow-2xs relative overflow-hidden flex-shrink-0 group/picker hover:border-[#C9A77A] transition-all">
+                  <div
+                    className="w-10 h-10 rounded-[10px] border border-[#E4DED6] p-0.5 shadow-2xs relative overflow-hidden flex-shrink-0 group/picker hover:border-[#C9A77A] transition-all"
+                    style={{ backgroundColor: getDisplayColor(customColor) }}
+                  >
                     <input
                       type="color"
-                      value={customColor}
-                      onChange={(e) => setCustomColor(e.target.value)}
+                      value={nativePickerHex}
+                      onInput={handleNativeColorChange}
+                      onChange={handleNativeColorChange}
                       className="absolute inset-0 w-[150%] h-[150%] -translate-x-[15%] -translate-y-[15%] cursor-pointer border-none bg-transparent"
                     />
                   </div>
@@ -213,7 +264,7 @@ const ColorAtelier = ({ value = [], onChange, options = [], synapticPalette = []
                     type="text"
                     placeholder="Colour Name"
                     value={customName}
-                    onChange={(e) => setCustomName(e.target.value)}
+                    onChange={handleCustomNameChange}
                     className="flex-1 min-w-0 bg-[#FAF8F5] border border-[#E4DED6] text-[#171717] placeholder:text-[#9d978f] rounded-[10px] px-3.5 h-10 text-[11px] font-bold uppercase tracking-widest outline-none focus:bg-white focus:border-[#C9A77A] transition-all"
                   />
                 </div>
@@ -718,10 +769,16 @@ export const ProductsPage = () => {
 
   const resolveColorName = (hex) => {
     if (!hex) return "";
+    const str = String(hex).trim();
 
     // Check Synaptic Palette first (manual names)
-    const synapticTone = synapticPalette.find(t => t.hex.toUpperCase() === hex.toUpperCase());
+    const synapticTone = synapticPalette.find(t => t.hex.toUpperCase() === str.toUpperCase());
     if (synapticTone) return synapticTone.name;
+
+    // If it's already a named color (not a hex/rgb/hsl code), show the name directly
+    if (!isExplicitColorCode(str)) {
+      return str;
+    }
 
     const names = {
       "#000000": "Black", "#FFFFFF": "White", "#FF0000": "Red", "#00FF00": "Lime",
@@ -730,16 +787,17 @@ export const ProductsPage = () => {
       "#4B0082": "Indigo", "#EE82EE": "Violet", "#FF00FF": "Magenta", "#00FFFF": "Cyan",
       "#F5F5DC": "Beige", "#98FB98": "Pale Green", "#E6E6FA": "Lavender", "#FFD700": "Gold"
     };
-    return names[hex.toUpperCase()] || `Tone ${hex.toUpperCase()}`;
+    return names[str.toUpperCase()] || str.toUpperCase();
   };
 
   const syncNewTone = (hex, name) => {
     if (!hex) return;
+    const normalizedVal = hex.startsWith("#") ? hex.toUpperCase() : hex.trim();
     setSynapticPalette(prev => {
       // Don't add duplicates
-      if (prev.some(t => t.hex.toUpperCase() === hex.toUpperCase())) return prev;
-      const toneName = name?.trim() || resolveColorName(hex);
-      return [...prev, { hex: hex.toUpperCase(), name: toneName }];
+      if (prev.some(t => t.hex.toUpperCase() === normalizedVal.toUpperCase())) return prev;
+      const toneName = name?.trim() || resolveColorName(normalizedVal);
+      return [...prev, { hex: normalizedVal, name: toneName }];
     });
   };
 
@@ -827,8 +885,28 @@ export const ProductsPage = () => {
       supplierId: freshProduct.supplierId || "",
       sku: freshProduct.sku || "",
     });
-    setVariants(freshProduct.variants || []);
-    setSynapticPalette([]);
+    const loadedVariants = freshProduct.variants || [];
+    setVariants(loadedVariants);
+    // Preserve any existing custom hex/rgb colours from this product in Recent Colours
+    const existingCustomTones = [];
+    const seenCustom = new Set();
+    loadedVariants.forEach((v) => {
+      if (!v?.attributes) return;
+      Object.entries(v.attributes).forEach(([k, val]) => {
+        if (!isColorAttribute(k)) return;
+        const list = Array.isArray(val) ? val : [val];
+        list.forEach((item) => {
+          if (typeof item === "string" && isExplicitColorCode(item)) {
+            const normalized = item.startsWith("#") ? item.toUpperCase() : item.trim();
+            if (!seenCustom.has(normalized.toLowerCase())) {
+              seenCustom.add(normalized.toLowerCase());
+              existingCustomTones.push({ hex: normalized, name: normalized });
+            }
+          }
+        });
+      });
+    });
+    setSynapticPalette(existingCustomTones);
     setIsActive(freshProduct.isActive !== false);
     setSku(freshProduct.sku || "");
   };
@@ -2505,11 +2583,21 @@ export const ProductsPage = () => {
                           .join(' / ')
                         : `${v.size || ''} / ${v.color || ''}`.replace(/^ \/ | \/ $/, '');
 
-                      const allAttrValues = Object.values(v.attributes || {}).flat();
-                      const swatchColors = allAttrValues.filter(val => typeof val === 'string' && val.startsWith('#'));
+                      const colorAttrValues = Object.entries(v.attributes || {})
+                        .filter(([key]) => isColorAttribute(key))
+                        .flatMap(([, val]) => (Array.isArray(val) ? val : [val]))
+                        .filter((val) => typeof val === "string" && val.trim().length > 0);
+                      const fallbackExplicitColors = Object.values(v.attributes || {})
+                        .flat()
+                        .filter((val) => typeof val === "string" && isExplicitColorCode(val));
+                      const swatchColors = [...colorAttrValues, ...fallbackExplicitColors];
                       if (v.colorCode) swatchColors.unshift(v.colorCode);
 
-                      const uniqueSwatches = [...new Set(swatchColors)];
+                      const uniqueSwatches = Array.from(
+                        new Map(
+                          swatchColors.map((c) => [getDisplayColor(c).toLowerCase(), c])
+                        ).values()
+                      );
 
                       return (
                         <div key={idx} className="flex items-center justify-between bg-[#FAF8F5] border border-[#E4DED6] p-4 rounded-[18px] hover:border-[#C9A77A] transition-all">
@@ -2520,7 +2608,8 @@ export const ProductsPage = () => {
                                   <div
                                     key={cIdx}
                                     className="w-3.5 h-3.5 rounded-full shadow-2xs border border-white ring-1 ring-[#D6CDBF]"
-                                    style={{ backgroundColor: color, zIndex: uniqueSwatches.length - cIdx }}
+                                    style={{ backgroundColor: getDisplayColor(color), zIndex: uniqueSwatches.length - cIdx }}
+                                    title={color}
                                   />
                                 ))
                               ) : (

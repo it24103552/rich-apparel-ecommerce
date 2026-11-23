@@ -5,20 +5,8 @@ import { useCart } from "../../hooks/useCart";
 import { Button } from "../../components/common/Button";
 import { CartSkeleton } from "../../components/loading/ClientSkeletons";
 import { formatPrice } from "../../utils/formatters";
+import { getDisplayColor } from "../../utils/colorUtils";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ChevronRight } from "lucide-react";
-
-const getDisplayColor = (color) => {
-  if (!color || typeof color !== 'string') return '#e5e5e5';
-  const c = color.toLowerCase().trim();
-  if (c.startsWith('#')) return c;
-  const colorMap = {
-    'white': '#ffffff', 'black': '#000000', 'red': '#ff3b30', 'blue': '#007aff',
-    'green': '#34c759', 'yellow': '#ffcc00', 'orange': '#ff9500', 'pink': '#ff2d55',
-    'purple': '#af52de', 'grey': '#8e8e93', 'gray': '#8e8e93', 'navy': '#000080',
-    'beige': '#f5f5dc', 'brown': '#a2845e'
-  };
-  return colorMap[c] || c;
-};
 
 export const CartPage = () => {
   const navigate = useNavigate();
