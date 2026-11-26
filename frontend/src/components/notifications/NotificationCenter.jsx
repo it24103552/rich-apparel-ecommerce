@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/useAuth";
 import { notificationsService } from "../../services";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Trash2, CheckCircle2, AlertCircle, ShoppingBag, Info, Store, RefreshCw, PenSquare, Bell } from "lucide-react";
+import { Trash2, CheckCircle2, AlertCircle, ShoppingBag, Info, Store, RefreshCw, PenSquare, X } from "lucide-react";
 
 dayjs.extend(relativeTime);
 
@@ -13,6 +13,7 @@ dayjs.extend(relativeTime);
 // `light` is a presentation-only flag for the warm light theme (Product Management).
 export const NotificationCenter = ({ dark = false, light = false }) => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const userRole = user?.role?.toLowerCase() || '';
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
@@ -20,6 +21,16 @@ export const NotificationCenter = ({ dark = false, light = false }) => {
     const [loading, setLoading] = useState(false);
     const dropdownRef = useRef(null);
     const processedIds = useRef(new Set()); // Track notification IDs to avoid duplicate toasts
+
+    const handleToastViewDetails = (notification, toastId) => {
+        if (!notification.isRead) {
+            handleMarkAsRead(notification.id);
+        }
+        toast.dismiss(toastId);
+        if (notification.link) {
+            navigate(notification.link);
+        }
+    };
 
     const fetchNotifications = async (isInitial = false) => {
         try {
@@ -33,31 +44,63 @@ export const NotificationCenter = ({ dark = false, light = false }) => {
                     if (!n.isRead && !processedIds.current.has(n.id)) {
                         // Trigger toast for new unread notification
                         toast.custom((t) => (
-                            <div className={`${t.visible ? 'animate-fade-in' : 'opacity-0'} max-w-md w-full bg-white shadow-[0_20px_50px_rgba(23,23,23,0.14)] rounded-2xl pointer-events-auto flex border border-[#E4DED6] transition-all duration-300`}>
-                                <div className="flex-1 w-0 p-4">
-                                    <div className="flex items-start">
-                                        <div className="flex-shrink-0 pt-0.5">
-                                            <div className="h-10 w-10 rounded-full bg-[#171717] flex items-center justify-center text-white shadow-sm">
-                                                <Bell className="w-5 h-5" />
-                                            </div>
+                            <div
+                                className={`${t.visible ? 'animate-fade-in' : 'opacity-0'} relative w-[min(24rem,calc(100vw-2rem))] sm:w-[400px] max-w-full rounded-2xl pointer-events-auto border transition-all duration-300 overflow-hidden ${
+                                    light
+                                        ? 'bg-white text-[#171717] border-[#E4DED6] shadow-[0_20px_50px_rgba(23,23,23,0.12)]'
+                                        : 'bg-[#141414] text-white border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.45)]'
+                                }`}
+                            >
+                                <div
+                                    className={`absolute left-2 top-5 w-1.5 h-1.5 rounded-full ${light ? 'bg-[#C9A77A]' : 'bg-white'}`}
+                                    aria-hidden="true"
+                                />
+                                <div className="pl-5 pr-4 py-3.5">
+                                    <div className="flex items-start gap-3.5">
+                                        <div className="flex-shrink-0 mt-0.5">
+                                            {getTypeIcon(n.type)}
                                         </div>
-                                        <div className="ml-3 flex-1">
-                                            <p className="text-sm font-headline font-bold text-[#171717] uppercase tracking-tight">
-                                                {n.title}
-                                            </p>
-                                            <p className="mt-1 text-xs text-[#5f5a53] leading-relaxed">
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-start justify-between gap-2 mb-0.5">
+                                                <p className={`text-sm font-bold leading-snug break-words ${light ? 'text-[#171717]' : 'text-white'}`}>
+                                                    {n.title}
+                                                </p>
+                                                <div className="flex items-center gap-1.5 shrink-0 pt-0.5">
+                                                    <span className={`text-[10px] whitespace-nowrap ${light ? 'text-[#8a857d]' : 'text-neutral-500'}`}>
+                                                        {n.createdAt ? dayjs(n.createdAt).fromNow() : 'Just now'}
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => toast.dismiss(t.id)}
+                                                        aria-label="Close notification"
+                                                        className={`p-0.5 -mr-1 rounded-md transition-colors cursor-pointer ${
+                                                            light
+                                                                ? 'text-[#8a857d] hover:text-[#171717] hover:bg-[#F1ECE5]'
+                                                                : 'text-neutral-500 hover:text-white hover:bg-white/[0.08]'
+                                                        }`}
+                                                    >
+                                                        <X className="w-3.5 h-3.5" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <p className={`text-xs font-medium leading-relaxed break-words ${light ? 'text-[#3d3a36]' : 'text-neutral-300'}`}>
                                                 {n.message}
                                             </p>
+                                            {n.link && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleToastViewDetails(n, t.id)}
+                                                    className={`inline-block mt-2 text-[10px] font-bold border-b transition-all cursor-pointer ${
+                                                        light
+                                                            ? 'text-[#171717] border-[#C9A77A] hover:border-[#171717]'
+                                                            : 'text-white border-white/20 hover:border-white/40'
+                                                    }`}
+                                                >
+                                                    View Details
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
-                                </div>
-                                <div className="flex border-l border-[#E4DED6]">
-                                    <button
-                                        onClick={() => toast.dismiss(t.id)}
-                                        className="w-full border border-transparent rounded-none rounded-r-2xl p-4 flex items-center justify-center text-xs font-black text-[#77736E] hover:text-[#171717] hover:bg-[#FAF8F5] focus:outline-none transition-colors uppercase tracking-widest"
-                                    >
-                                        Close
-                                    </button>
                                 </div>
                             </div>
                         ), { duration: 6000 });
