@@ -230,7 +230,6 @@ export const ClientHeader = () => {
     { name: "Men", path: "/category/men", hasChevron: true },
     { name: "Sporty", path: "/category/sporty", hasChevron: true },
     { name: "New Arrival", path: "/#new-arrivals", isScroll: true, hasChevron: false },
-    { name: "My Orders", path: "/orders", hasChevron: false, matchPrefix: true },
   ];
 
   const renderSearchDropdown = () => (
@@ -358,7 +357,7 @@ export const ClientHeader = () => {
           isScrolled ? "shadow-[0_6px_26px_rgba(24,20,16,0.08)]" : "shadow-[0_1px_0_rgba(24,20,16,0.03)]"
         }`}
       >
-        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-[66px] md:h-[74px] flex items-center justify-between gap-4 lg:gap-8">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-[66px] md:h-[74px] flex items-center justify-between gap-4 lg:gap-6 xl:gap-8">
           {/* Brand Wordmark */}
           <Link
             to="/"
@@ -374,7 +373,7 @@ export const ClientHeader = () => {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-5 xl:gap-8" aria-label="Main Navigation">
+          <nav className="hidden lg:flex items-center gap-7 xl:gap-9" aria-label="Main Navigation">
             {navLinks.map((link) => {
               const currentPath = location.pathname.toLowerCase();
               const targetPath = link.path.toLowerCase();
@@ -389,15 +388,15 @@ export const ClientHeader = () => {
                   to={link.path}
                   aria-current={isActive ? "page" : undefined}
                   onClick={(e) => handleNavLinkClick(e, link)}
-                  className={`relative py-2 inline-flex items-center gap-1 whitespace-nowrap text-[14px] font-bold tracking-[0.01em] transition-colors group ${
+                  className={`relative py-2 inline-flex items-center gap-1.5 whitespace-nowrap text-[16px] font-semibold tracking-[0.015em] leading-none transition-colors group ${
                     isActive ? "text-black" : "text-[#1a1816] hover:text-black"
                   }`}
                 >
                   <span>{link.name}</span>
                   {link.hasChevron && (
                     <ChevronDown
-                      className="w-3.5 h-3.5 text-[#5c544b] group-hover:text-black transition-colors"
-                      strokeWidth={2.25}
+                      className="w-4 h-4 shrink-0 text-[#5c544b] group-hover:text-black transition-colors"
+                      strokeWidth={2}
                     />
                   )}
                   <span
